@@ -1,0 +1,57 @@
+<UserControl x:Class="VideoCompressorGUI.ContentControls.Components.VideoRangeSlider"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             Background="Transparent"
+             d:DesignHeight="30" d:DesignWidth="500" Loaded="VideoRangeSlider_OnLoaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        
+        <Grid x:Name="lineParent" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="8" />
+            </Grid.ColumnDefinitions>
+            <Rectangle Grid.Column="0" Margin="3, 0, 0, 0" Width="2" Height="7" VerticalAlignment="Bottom" Fill="{DynamicResource PrimaryHueDarkBrush}" />
+            <Rectangle Grid.Column="1" Margin="-3, 0, -3, 0" Height="2" Fill="{DynamicResource PrimaryHueMidBrush}"></Rectangle>
+            <Rectangle Grid.Column="3" Margin="-3, 0, -3, 0" Height="2" Fill="{DynamicResource PrimaryHueMidBrush}"></Rectangle>
+            <Rectangle Grid.Column="4" Margin="0, 0, 3, 0" Width="2" Height="7" VerticalAlignment="Bottom" Fill="{DynamicResource PrimaryHueMidBrush}" />
+            <TextBlock Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="9" Text="00:23" x:Name="spanTextBlock" Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" />
+        </Grid>
+        
+        <Border Grid.Row="2" x:Name="sliderParent" HorizontalAlignment="Stretch" BorderBrush="{DynamicResource PrimaryHueMidBrush}" BorderThickness="10, 2, 10, 2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="4" />
+                </Grid.ColumnDefinitions>
+                <Thumb Grid.Column="0" x:Name="lowerThumb" DragDelta="Thumb_LowerDragDelta" Margin="-7, 0, 7, 0" Background="{DynamicResource PrimaryHueLightBrush}"></Thumb>
+                <Thumb Grid.Column="1" x:Name="midThumb0" DragDelta="Thumb_MidDragDelta" Margin="-4, 0, -4, 0" Background="{DynamicResource PrimaryHueLightBrush}"></Thumb>
+                <Thumb Grid.Column="2" x:Name="upperThumb" DragDelta="Thumb_UpperDragDelta" Margin="7, 0, -7, 0" Background="{DynamicResource PrimaryHueLightBrush}"/>
+            </Grid>
+        </Border>
+        
+        <Thumb Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="mainThumb" DragDelta="MainThumb_DragDelta">
+            <Thumb.Template>
+                <ControlTemplate>
+                    <Ellipse HorizontalAlignment="Center" VerticalAlignment="Center" Width="10" Height="10" Fill="{DynamicResource PrimaryHueDarkBrush}" />
+                </ControlTemplate>
+            </Thumb.Template>
+        </Thumb>
+        
+        <Rectangle Margin="0, 0, 0, 0" x:Name="anchorLeft" HorizontalAlignment="Left" IsHitTestVisible="False" Width="2"></Rectangle>
+        <Rectangle Margin="0, 0, 0, 0" x:Name="anchorRight" HorizontalAlignment="Right" IsHitTestVisible="False" Width="2"></Rectangle>
+        
+        <TextBox x:Name="textboxLowerPercentage"  IsHitTestVisible="False" Grid.Row="0" FontSize="12" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" Text="100%"/>
+        <TextBox x:Name="textboxUpperPercentage"  IsHitTestVisible="False" Grid.Row="0" FontSize="12" Height="20" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" Text="100%"/>
+    </Grid>
+</UserControl>

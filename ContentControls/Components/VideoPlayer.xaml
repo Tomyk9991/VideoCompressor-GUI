@@ -1,0 +1,95 @@
+<UserControl x:Class="VideoCompressorGUI.ContentControls.Components.VideoPlayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:decorators="clr-namespace:VideoCompressorGUI.Decorators"
+             xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource MaterialDesignFont}"
+             Loaded="VideoPlayer_OnLoaded">
+    <StackPanel x:Name="videoPlayerParent">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid>
+                <MediaElement Focusable="True" MediaEnded="Element_MediaEnded" LoadedBehavior="Manual" MouseLeftButtonUp="VideoPlayer_OnMouseUp" x:Name="videoPlayer"/>
+                <materialDesign:PackIcon Opacity="0.0" Kind="Play" x:Name="playPauseIcon" HorizontalAlignment="Center" Width="370" Height="370" VerticalAlignment="Center"></materialDesign:PackIcon>
+                <Grid VerticalAlignment="Bottom" Margin="0, 0, 0, 5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="10*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Rectangle IsHitTestVisible="False" Margin="0, 0, 0, -6" Grid.ColumnSpan="4">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush StartPoint="1, 1" EndPoint="1, 0">
+                                <GradientStop Color="#313131" Offset="0.0" />
+                                <GradientStop Color="#00000000" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    
+                    <TextBlock Grid.Column="0" Text="00:00" x:Name="textblockPlayedTime" HorizontalAlignment="Center"></TextBlock>
+                    <Grid Margin="0, 0, 10, 0" Grid.Column="1">
+                        <Slider x:Name="soundVolumeSlider"
+                                ValueChanged="SoundVolumeSlider_OnValueChanged"
+                                Minimum="0"
+                                Maximum="100"
+                                Value="100" />
+                        <TextBlock IsHitTestVisible="False" Margin="25, 0, 0, 0" x:Name="volumeTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" Text="50%"></TextBlock>
+                    </Grid>
+                    <Slider Cursor="Hand" PreviewMouseDown="VideoPlaybackSlider_OnPreviewMouseDown" PreviewMouseUp="VideoPlaybackSlider_OnPreviewMouseUp"
+                            Grid.Column="2" 
+                            Minimum="0.0" Maximum="1.0" 
+                            SelectionStart="0" SelectionEnd="1.0"
+                            IsSelectionRangeEnabled="True"
+                            x:Name="videoPlaybackSlider"></Slider>
+                    <TextBlock Grid.Column="3" Text="00:23" x:Name="textblockTotalTime" HorizontalAlignment="Center"></TextBlock>
+                    
+                    <decorators:NoSizeDecorator Grid.Column="2">
+                        <materialDesign:Snackbar x:Name="snackbarNotifier"
+                                                 Margin="0, -30, 0, -20"
+                                                 Height="50"
+                                                 VerticalContentAlignment="Center"
+                                                 VerticalAlignment="Center"
+                                                 HorizontalContentAlignment="Center"
+                                                 IsActive="False"
+                                                 MessageQueue="{materialDesign:MessageQueue}" />
+                    </decorators:NoSizeDecorator>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="1" Margin="0, 10, 0, 0">
+                <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="10*"/>
+                        <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" TextAlignment="Center" VerticalAlignment="Center" Text="00:00" x:Name="textBlockLowerValue"></TextBlock>
+                <mah:RangeSlider Margin="0, 0, 0, 0" Grid.Column="2"
+                                 LowerValueChanged="Timeline_OnLowerValueChanged"
+                                 UpperValueChanged="Timeline_OnUpperValueChanged"
+                                 mah:SliderHelper.ThumbFillHoverBrush="DeepPink" mah:SliderHelper.ThumbFillBrush="DeepPink"
+                                 mah:SliderHelper.TrackValueFillBrush="DeepPink" mah:SliderHelper.TrackValueFillHoverBrush="DeepPink"
+                                 mah:SliderHelper.ThumbFillPressedBrush="DeepPink" mah:SliderHelper.TrackValueFillPressedBrush="DeepPink"
+                                 LowerValue="0" UpperValue="100" x:Name="timeline" Style="{DynamicResource MaterialDesignRangeSlider}">
+                </mah:RangeSlider>
+                <TextBlock Grid.Column="3" TextAlignment="Center" VerticalAlignment="Center" Text="00:23" x:Name="textBlockUpperValue"></TextBlock>
+            </Grid>
+        </Grid>
+    </StackPanel>
+</UserControl>
