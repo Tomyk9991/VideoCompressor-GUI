@@ -6,17 +6,30 @@
              mc:Ignorable="d"
              Background="Transparent"
              d:DesignHeight="30" d:DesignWidth="500" Loaded="VideoRangeSlider_OnLoaded">
-    <Grid>
+    <Grid x:Name="parent">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
         
+        <Rectangle Grid.Row="0" Grid.RowSpan="2">
+            <Rectangle.OpacityMask>
+                <LinearGradientBrush StartPoint="1, 1" EndPoint="1, 0">
+                    <GradientStop Color="#313131" Offset="1.0" />
+                    <GradientStop Color="#00000000" Offset="0.0" />
+                </LinearGradientBrush>
+            </Rectangle.OpacityMask>
+            <Rectangle.Fill>
+                <ImageBrush Opacity="0.1" ViewportUnits="Absolute" Viewport="0, 0, 42, 42" ImageSource="https://thumbs.dreamstime.com/b/diagonal-lines-pattern-grey-stripe-texture-background-repeat-straight-line-vector-illustration-154721512.jpg" TileMode="Tile" />
+            </Rectangle.Fill>
+        </Rectangle>
+
+        
         <Grid x:Name="lineParent" Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="8" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="30" />
+                <ColumnDefinition x:Name="textColumnDefinition" Width="30" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="8" />
             </Grid.ColumnDefinitions>
@@ -24,6 +37,7 @@
             <Rectangle Grid.Column="1" Margin="-3, 0, -3, 0" Height="2" Fill="{DynamicResource PrimaryHueMidBrush}"></Rectangle>
             <Rectangle Grid.Column="3" Margin="-3, 0, -3, 0" Height="2" Fill="{DynamicResource PrimaryHueMidBrush}"></Rectangle>
             <Rectangle Grid.Column="4" Margin="0, 0, 3, 0" Width="2" Height="7" VerticalAlignment="Bottom" Fill="{DynamicResource PrimaryHueMidBrush}" />
+            
             <TextBlock Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="9" Text="00:23" x:Name="spanTextBlock" Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" />
         </Grid>
         
@@ -50,8 +64,5 @@
         
         <Rectangle Margin="0, 0, 0, 0" x:Name="anchorLeft" HorizontalAlignment="Left" IsHitTestVisible="False" Width="2"></Rectangle>
         <Rectangle Margin="0, 0, 0, 0" x:Name="anchorRight" HorizontalAlignment="Right" IsHitTestVisible="False" Width="2"></Rectangle>
-        
-        <TextBox x:Name="textboxLowerPercentage"  IsHitTestVisible="False" Grid.Row="0" FontSize="12" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" Text="100%"/>
-        <TextBox x:Name="textboxUpperPercentage"  IsHitTestVisible="False" Grid.Row="0" FontSize="12" Height="20" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" Text="100%"/>
     </Grid>
 </UserControl>

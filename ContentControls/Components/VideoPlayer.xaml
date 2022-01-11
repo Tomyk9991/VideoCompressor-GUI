@@ -5,7 +5,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:decorators="clr-namespace:VideoCompressorGUI.Decorators"
              xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -52,12 +51,7 @@
                                 Value="100" />
                         <TextBlock IsHitTestVisible="False" Margin="25, 0, 0, 0" x:Name="volumeTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" Text="50%"></TextBlock>
                     </Grid>
-                    <Slider Cursor="Hand" PreviewMouseDown="VideoPlaybackSlider_OnPreviewMouseDown" PreviewMouseUp="VideoPlaybackSlider_OnPreviewMouseUp"
-                            Grid.Column="2" 
-                            Minimum="0.0" Maximum="1.0" 
-                            SelectionStart="0" SelectionEnd="1.0"
-                            IsSelectionRangeEnabled="True"
-                            x:Name="videoPlaybackSlider"></Slider>
+                    <components:VideoRangeSlider Height="30" Grid.Column="2" x:Name="videoPlaybackSlider"/>
                     <TextBlock Grid.Column="3" Text="00:23" x:Name="textblockTotalTime" HorizontalAlignment="Center"></TextBlock>
                     
                     <decorators:NoSizeDecorator Grid.Column="2">
@@ -71,24 +65,6 @@
                                                  MessageQueue="{materialDesign:MessageQueue}" />
                     </decorators:NoSizeDecorator>
                 </Grid>
-            </Grid>
-            <Grid Grid.Row="1" Margin="0, 10, 0, 0">
-                <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="10*"/>
-                        <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" TextAlignment="Center" VerticalAlignment="Center" Text="00:00" x:Name="textBlockLowerValue"></TextBlock>
-                <mah:RangeSlider Margin="0, 0, 0, 0" Grid.Column="2"
-                                 LowerValueChanged="Timeline_OnLowerValueChanged"
-                                 UpperValueChanged="Timeline_OnUpperValueChanged"
-                                 mah:SliderHelper.ThumbFillHoverBrush="DeepPink" mah:SliderHelper.ThumbFillBrush="DeepPink"
-                                 mah:SliderHelper.TrackValueFillBrush="DeepPink" mah:SliderHelper.TrackValueFillHoverBrush="DeepPink"
-                                 mah:SliderHelper.ThumbFillPressedBrush="DeepPink" mah:SliderHelper.TrackValueFillPressedBrush="DeepPink"
-                                 LowerValue="0" UpperValue="100" x:Name="timeline" Style="{DynamicResource MaterialDesignRangeSlider}">
-                </mah:RangeSlider>
-                <TextBlock Grid.Column="3" TextAlignment="Center" VerticalAlignment="Center" Text="00:23" x:Name="textBlockUpperValue"></TextBlock>
             </Grid>
         </Grid>
     </StackPanel>

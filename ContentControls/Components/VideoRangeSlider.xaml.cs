@@ -1,5 +1,4 @@
 using System;
-using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -9,11 +8,11 @@ namespace VideoCompressorGUI.ContentControls.Components;
 
 public partial class VideoRangeSlider : UserControl
 {
-    public event Action OnLowerThumbChanged;
-    public event Action OnUpperThumbChanged;
+    public event Action<double> OnLowerThumbChanged;
+    public event Action<double> OnUpperThumbChanged;
     
     
-    public int MinimalThumbDistance => 18;
+    public int MinimalThumbDistance => 20;
 
     /// <summary> Percentage of the lower thumb </summary>
     public double LowerThumb { get; private set; }
@@ -42,7 +41,7 @@ public partial class VideoRangeSlider : UserControl
     private double minimalPixelValue = 0;
     private double maximalPixelValue = 0;
 
-    private double minimalDistance = 36;
+    private double minimalDistance = 40;
     private double maximalDistance = 0;
 
     public VideoRangeSlider()
@@ -58,12 +57,14 @@ public partial class VideoRangeSlider : UserControl
     {
         CalculateMinimalMaximalPixelValues();
         CalculatePercentages();
+        
+        this.Value = 0.99d;
     }
 
     private void CalculatePercentages()
     {
-        double lowerValue = lowerThumb.TransformToAncestor(Application.Current.MainWindow).Transform(new Point(0, 0)).X;
-        double upperValue = upperThumb.TransformToAncestor(Application.Current.MainWindow).Transform(new Point(0, 0)).X;
+        double lowerValue = lowerThumb.TransformToAncestor(parent).Transform(new Point(0, 0)).X;
+        double upperValue = upperThumb.TransformToAncestor(parent).Transform(new Point(0, 0)).X;
         
         double distance = upperValue - lowerValue; // [36; 1000]
         double percentageDistance = MathHelper.Map(distance, minimalDistance, maximalDistance, 0.0d, 1.0d);
@@ -83,17 +84,14 @@ public partial class VideoRangeSlider : UserControl
 
         this.LowerThumb = Math.Min(this.LowerThumb, this.UpperThumb);
         this.UpperThumb = Math.Max(this.LowerThumb, this.UpperThumb);
-
-        this.textboxLowerPercentage.Text = this.LowerThumb.ToString("F");
-        this.textboxUpperPercentage.Text = this.UpperThumb.ToString("F");
     }
 
     private void CalculateMinimalMaximalPixelValues()
     {
         this.minimalPixelValue =
-            anchorLeft.TransformToAncestor(Application.Current.MainWindow).Transform(new Point(0, 0)).X;
+            anchorLeft.TransformToAncestor(parent).Transform(new Point(0, 0)).X;
         this.maximalPixelValue =
-            anchorRight.TransformToAncestor(Application.Current.MainWindow).Transform(new Point(0, 0)).X;
+            anchorRight.TransformToAncestor(parent).Transform(new Point(0, 0)).X;
         
         this.maximalDistance = this.maximalPixelValue - this.minimalPixelValue;
     }
@@ -113,9 +111,9 @@ public partial class VideoRangeSlider : UserControl
         double value = Math.Max(0.0d, sliderParent.Margin.Right - e);
 
         Point lowerThumbPoint =
-            lowerThumb.TransformToAncestor(Application.Current.MainWindow).Transform(new Point(0, 0));
+            lowerThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
         Point upperThumbPoint =
-            upperThumb.TransformToAncestor(Application.Current.MainWindow).Transform(new Point(0, 0));
+            upperThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
 
         if (lowerThumbPoint.X < (upperThumbPoint.X - MinimalThumbDistance) || e > 0)
         {
@@ -123,9 +121,13 @@ public partial class VideoRangeSlider : UserControl
             lineParent.Margin = new Thickness(lineParent.Margin.Left, 0, value, 0);
         }
 
+
         this.ClampingRight = value == 0.0d;
 
+        ValidateDistance(upperThumbPoint.X - lowerThumbPoint.X);
         CalculatePercentages();
+
+        this.OnUpperThumbChanged?.Invoke(this.UpperThumb);
         
         return this.ClampingRight;
     }
@@ -135,32 +137,61 @@ public partial class VideoRangeSlider : UserControl
         double value = Math.Max(0.0d, sliderParent.Margin.Left + e);
 
         Point lowerThumbPoint =
-            lowerThumb.TransformToAncestor(Application.Current.MainWindow).Transform(new Point(0, 0));
+            lowerThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
         Point upperThumbPoint =
-            upperThumb.TransformToAncestor(Application.Current.MainWindow).Transform(new Point(0, 0));
+            upperThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
         
         if (lowerThumbPoint.X < (upperThumbPoint.X - MinimalThumbDistance) || e < 0)
         {
             sliderParent.Margin = new Thickness(value, 0, sliderParent.Margin.Right, 0);
             lineParent.Margin = new Thickness(value, 0, lineParent.Margin.Right, 0);
         }
+        
 
         this.ClampingLeft = value == 0.0d;
         
+        ValidateDistance(upperThumbPoint.X - lowerThumbPoint.X);
         CalculatePercentages();
         
+        this.OnLowerThumbChanged?.Invoke(this.LowerThumb);
+        
         return this.ClampingLeft;
+    }
+
+    private void ValidateDistance(double distance)
+    {
+        if (distance < this.minimalDistance)
+        {
+            this.spanTextBlock.Visibility = Visibility.Collapsed;
+            this.textColumnDefinition.Width = new GridLength(0);
+        }
+        else
+        {
+            this.spanTextBlock.Visibility = Visibility.Visible;
+            this.textColumnDefinition.Width = new GridLength(30);
+        }
     }
     
     private void SetValueThumb(double v)
     {
-        double left = v * (this.maximalPixelValue - (minimalDistance - minimalDistance / 2) - 5);
+        double thickness = (minimalDistance - minimalDistance / 2) - 5;
+        
+        double availableMargin = maximalPixelValue - minimalPixelValue;
+        double left = v * (availableMargin - thickness);
+        
         mainThumb.Margin = new Thickness(left, 0, 0, 0);
     }
 
     private void MainThumb_DragDelta(object sender, DragDeltaEventArgs e)
     {
-        double value = Math.Max(0.0d, Math.Min(mainThumb.Margin.Left + e.HorizontalChange, this.maximalPixelValue - (minimalDistance - minimalDistance / 2) - 5));
+        double thickness = (minimalDistance - minimalDistance / 2) - 5;
+        double value = Math.Max(0.0d, Math.Min(mainThumb.Margin.Left + e.HorizontalChange, this.maximalPixelValue - thickness));
+        
+        double main = mainThumb.TransformToAncestor(parent).Transform(new Point(0, 0)).X;
+        
+        this._value = MathHelper.Map(main, minimalPixelValue + thickness, maximalPixelValue - thickness, 0.0d, 1.0d);
+        this._value = Math.Max(0.0d, Math.Min(_value, 1.0d));
+
         mainThumb.Margin = new Thickness(value, 0, 0, 0);
     }
 

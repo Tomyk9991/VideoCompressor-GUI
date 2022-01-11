@@ -18,7 +18,7 @@ public partial class VideoPlayer : UserControl
     };
 
     private DateTime latestSelectionStartChange = DateTime.Now;
-    
+
 
     private bool isPlayingVideo = false;
     private double playbackSpeed = 1.0d;
@@ -69,50 +69,6 @@ public partial class VideoPlayer : UserControl
 
     #region Timeline
 
-    private void Timeline_OnLowerValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        => RangeSliderValueChanged(e.NewValue, textBlockLowerValue, true);
-
-    private void Timeline_OnUpperValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        => RangeSliderValueChanged(e.NewValue, textBlockUpperValue, false);
-
-    private void RangeSliderValueChanged(double newValue, TextBlock target, bool isLower)
-    {
-        if (target != null)
-        {
-            if (isLower)
-            {
-                this.videoPlaybackSlider.SelectionStart = newValue / 100.0;
-                
-                double startInSeconds = videoPlaybackSlider.SelectionStart *
-                                        currentlySelectedVideo.MetaData.Duration.TotalSeconds;
-
-                double endInSeconds = videoPlaybackSlider.SelectionEnd *
-                                      currentlySelectedVideo.MetaData.Duration.TotalSeconds;
-
-                if (startInSeconds != endInSeconds && DateTime.Now - latestSelectionStartChange > TimeSpan.FromMilliseconds(125))
-                {
-                    latestSelectionStartChange = DateTime.Now;
-                    this.videoPlayer.Position = TimeSpan.FromSeconds(startInSeconds);
-                }
-            }
-            else
-                this.videoPlaybackSlider.SelectionEnd = newValue / 100.0;
-
-            target.Text = ConvertPercentageToClockOutput(newValue / 100.0);
-        }
-    }
-
-    private string ConvertPercentageToClockOutput(double percentage)
-    {
-        if (this.currentlySelectedVideo != null)
-        {
-            double totalSeconds = this.currentlySelectedVideo.MetaData.Duration.TotalSeconds;
-            return (percentage * totalSeconds).ToMinutesAndSecondsFromSeconds();
-        }
-
-        return "";
-    }
-
     #endregion
 
     public void UpdateSource(VideoFileMetaData association)
@@ -122,9 +78,9 @@ public partial class VideoPlayer : UserControl
         this.currentlySelectedVideo = association;
         this.videoPlayer.Source = new Uri(association.File);
 
-        textBlockLowerValue.Text = 0.0d.ToMinutesAndSecondsFromSeconds();
-        textBlockUpperValue.Text =
-            this.currentlySelectedVideo.MetaData.Duration.TotalSeconds.ToMinutesAndSecondsFromSeconds();
+        // this.videoPlaybackSlider.textboxLower.Text = 0.0d.ToMinutesAndSecondsFromSeconds();
+        // this.videoPlaybackSlider.textboxUpper.Text = this.currentlySelectedVideo
+        //         .MetaData.Duration.TotalSeconds.ToMinutesAndSecondsFromSeconds();
 
         isPlayingVideo = false;
         TogglePlayPause();
@@ -150,13 +106,12 @@ public partial class VideoPlayer : UserControl
             videoPlaybackSlider.Value = videoPlayer.Position.TotalSeconds /
                                         currentlySelectedVideo.MetaData.Duration.TotalSeconds;
 
-
             textblockPlayedTime.Text = videoPlayer.Position.TotalSeconds.ToMinutesAndSecondsFromSeconds();
 
-            double startInSeconds = videoPlaybackSlider.SelectionStart *
+            double startInSeconds = videoPlaybackSlider.LowerThumb *
                                     currentlySelectedVideo.MetaData.Duration.TotalSeconds;
 
-            double endInSeconds = videoPlaybackSlider.SelectionEnd *
+            double endInSeconds = videoPlaybackSlider.UpperThumb *
                                   currentlySelectedVideo.MetaData.Duration.TotalSeconds;
 
             if (startInSeconds != endInSeconds && (int)videoPlayer.Position.TotalSeconds >= (int)endInSeconds)
@@ -164,27 +119,6 @@ public partial class VideoPlayer : UserControl
                 this.videoPlayer.Position = TimeSpan.FromSeconds(startInSeconds);
             }
         }
-    }
-
-    private void VideoPlaybackSlider_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
-    {
-        shouldUpdatePlayback = false;
-    }
-
-    private void VideoPlaybackSlider_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
-    {
-        shouldUpdatePlayback = false;
-
-        videoPlayer.Position =
-            TimeSpan.FromSeconds(videoPlaybackSlider.Value * currentlySelectedVideo.MetaData.Duration.TotalSeconds);
-
-        if (!isPlayingVideo)
-        {
-            this.isPlayingVideo = true;
-            videoPlayer.PlayAnimated(Dispatcher, playPauseIcon);
-        }
-
-        shouldUpdatePlayback = true;
     }
 
     #endregion
