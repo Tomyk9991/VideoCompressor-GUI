@@ -2,8 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Media;
-using System.Windows.Shapes;
+using System.Windows.Input;
 using VideoCompressorGUI.Utils;
 
 namespace VideoCompressorGUI.ContentControls.Components;
@@ -12,7 +11,7 @@ public partial class VideoRangeSlider : UserControl
 {
     public event Action<double> OnLowerThumbChanged;
     public event Action<double> OnUpperThumbChanged;
-
+    
     public event Action<double> OnStartedMainDrag;
     public event Action<double> OnEndedMainDrag;
     
@@ -199,15 +198,7 @@ public partial class VideoRangeSlider : UserControl
 
     private void MainThumb_DragDelta(object sender, DragDeltaEventArgs e)
     {
-        double thickness = (minimalDistance - minimalDistance / 2) - 5;
-        double value = Math.Max(0.0d, Math.Min(mainThumb.Margin.Left + e.HorizontalChange, this.maximalPixelValue - thickness));
-        
-        double main = mainThumb.TransformToAncestor(parent).Transform(new Point(0, 0)).X;
-        
-        this._value = MathHelper.Map(main, minimalPixelValue + thickness, maximalPixelValue - thickness, 0.0d, 1.0d);
-        this._value = Math.Max(0.0d, Math.Min(_value, 1.0d));
-
-        mainThumb.Margin = new Thickness(value, 0, 0, 0);
+        MainThumb_Dragged(mainThumb.Margin.Left + e.HorizontalChange);
     }
 
     private void MainThumb_Dragged(double newXPos)
@@ -215,12 +206,12 @@ public partial class VideoRangeSlider : UserControl
         double thickness = (minimalDistance - minimalDistance / 2) - 5;
         double value = Math.Max(0.0d, Math.Min(newXPos, this.maximalPixelValue - thickness));
         
+        mainThumb.Margin = new Thickness(value, 0, 0, 0);
+
         double main = mainThumb.TransformToAncestor(parent).Transform(new Point(0, 0)).X;
         
         this._value = MathHelper.Map(main, minimalPixelValue + thickness, maximalPixelValue - thickness, 0.0d, 1.0d);
         this._value = Math.Max(0.0d, Math.Min(_value, 1.0d));
-
-        mainThumb.Margin = new Thickness(value, 0, 0, 0);
     }
 
     private void Thumb_MidDragDelta(object sender, DragDeltaEventArgs e)
@@ -253,20 +244,34 @@ public partial class VideoRangeSlider : UserControl
     
     private void MidThumb0_OnDragCompleted(object sender, DragCompletedEventArgs e)
     {
+        Console.WriteLine("ended");
         if (!wasDraggingMidThumb)
         {
-            MainThumb_Dragged(lastClickedPixelValueX);
+            _value = lastClickedPixelValueX / this.maximalPixelValue;
+            SetValueThumb(lastClickedPixelValueX / this.maximalPixelValue);
+            
+            this.OnEndedMainDrag?.Invoke(this.Value);
         }
-
-        wasDraggingMidThumb = false;
+        
         lastClickedPixelValueX = 0;
     }
 
     private void MidThumb0_OnDragStarted(object sender, DragStartedEventArgs e)
     {
+        Console.WriteLine("started");
         Point lowerThumbPoint =
             lowerThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
         
         lastClickedPixelValueX = lowerThumbPoint.X + (e.HorizontalOffset + 2.5d);
+    }
+
+    private void UIElement_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
+    {
+        double x = e.GetPosition(anchorLeft).X;
+        
+        _value = x / this.maximalPixelValue;
+        SetValueThumb(x / this.maximalPixelValue);
+            
+        this.OnEndedMainDrag?.Invoke(this.Value);
     }
 }

@@ -32,9 +32,12 @@ public partial class VideoPlayer : UserControl
         instance.OnKeyPressed += rhKB.OnKeybinding;
 
         this.videoPlaybackSlider.BlockValueOverrideOnDrag = true;
-        this.videoPlaybackSlider.OnEndedMainDrag += d => OnPlaybackMainValueChanged(d);
+        this.videoPlaybackSlider.OnEndedMainDrag += d =>
+        {
+            OnPlaybackMainValueChanged(d);
+        };
         this.videoPlaybackSlider.OnUpperThumbChanged += UpdateDistanceForTextSpan;
-        
+
         this.videoPlaybackSlider.OnLowerThumbChanged += (d) =>
         {
             UpdateDistanceForTextSpan(d);

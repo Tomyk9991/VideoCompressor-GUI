@@ -12,17 +12,31 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         
-        <Rectangle Grid.Row="0" Grid.RowSpan="2">
-            <Rectangle.OpacityMask>
+        <Thumb PreviewMouseUp="UIElement_OnPreviewMouseUp"  DragStarted="MainThumb_OnDragStarted"
+               DragCompleted="MainThumb_OnDragCompleted"
+               Grid.Row="0" Grid.RowSpan="2">
+            <Thumb.OpacityMask>
                 <LinearGradientBrush StartPoint="1, 1" EndPoint="1, 0">
                     <GradientStop Color="#313131" Offset="1.0" />
                     <GradientStop Color="#00000000" Offset="0.0" />
                 </LinearGradientBrush>
-            </Rectangle.OpacityMask>
-            <Rectangle.Fill>
+            </Thumb.OpacityMask>
+            <Thumb.Background>
                 <ImageBrush Opacity="0.1" ViewportUnits="Absolute" Viewport="0, 0, 42, 42" ImageSource="https://thumbs.dreamstime.com/b/diagonal-lines-pattern-grey-stripe-texture-background-repeat-straight-line-vector-illustration-154721512.jpg" TileMode="Tile" />
-            </Rectangle.Fill>
-        </Rectangle>
+            </Thumb.Background>
+        </Thumb>
+        
+        <!-- <Rectangle Grid.Row="0" Grid.RowSpan="2"> -->
+        <!--     <Rectangle.OpacityMask> -->
+        <!--         <LinearGradientBrush StartPoint="1, 1" EndPoint="1, 0"> -->
+        <!--             <GradientStop Color="#313131" Offset="1.0" /> -->
+        <!--             <GradientStop Color="#00000000" Offset="0.0" /> -->
+        <!--         </LinearGradientBrush> -->
+        <!--     </Rectangle.OpacityMask> -->
+        <!--     <Rectangle.Fill> -->
+        <!--         <ImageBrush Opacity="0.1" ViewportUnits="Absolute" Viewport="0, 0, 42, 42" ImageSource="https://thumbs.dreamstime.com/b/diagonal-lines-pattern-grey-stripe-texture-background-repeat-straight-line-vector-illustration-154721512.jpg" TileMode="Tile" /> -->
+        <!--     </Rectangle.Fill> -->
+        <!-- </Rectangle> -->
 
         
         <Grid x:Name="lineParent" Grid.Row="0">
