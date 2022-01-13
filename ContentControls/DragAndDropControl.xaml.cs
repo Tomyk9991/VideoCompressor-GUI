@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Ookii.Dialogs.Wpf;
+using VideoCompressorGUI.Settings;
 using VideoCompressorGUI.Utils;
 
 namespace VideoCompressorGUI.ContentControls;
@@ -14,12 +15,34 @@ namespace VideoCompressorGUI.ContentControls;
 public partial class DragAndDropControl : UserControl
 {
     private Mp4FileValidator validator = new();
-    private ContentControl contentControl;
     
-    public DragAndDropControl(ContentControl contentControl)
+    public DragAndDropControl()
     {
         InitializeComponent();
-        this.contentControl = contentControl;
+
+        Dispatcher.DelayInvoke(() =>
+        {
+            // var loadedGeneralSettings = SettingsFolder.Load<GeneralSettingsData>();
+            //
+            // if (loadedGeneralSettings.AutomaticallyUseNewestVideos)
+            // {
+            //     List<string> files = loadedGeneralSettings.FetchNewFiles();
+            //     
+            //     loadedGeneralSettings.LatestTimeWatched = DateTime.Now;
+            //     SettingsFolder.Save(loadedGeneralSettings);
+            //
+            //     if (files.Count != 0)
+            //         HandleFiles(files);
+            // }
+            
+            HandleFiles(new List<string>
+            {
+                "F:/Videos/Valorant/smart teleport.mp4",
+                "F:/Videos/Valorant/absolute clean C hold.mp4",
+                "F:/Videos/Valorant/buggy flash.mp4",
+                "F:/Videos/Valorant/juicy.mp4"
+            });
+        }, TimeSpan.FromMilliseconds(1));
     }
 
     private void HandleFiles(List<string> files)
@@ -42,8 +65,7 @@ public partial class DragAndDropControl : UserControl
 
         if (!wasInvalid)
         {
-            VideoEditorControl editor = new VideoEditorControl(this.contentControl, files);
-            this.contentControl.Content = editor;
+            ((MainWindow)Application.Current.MainWindow).PushContentControl(new VideoEditorControl(files));
         }
     }
 
@@ -62,7 +84,7 @@ public partial class DragAndDropControl : UserControl
         }
     }
 
-    private async void UIElement_OnDrop(object sender, DragEventArgs e)
+    private void UIElement_OnDrop(object sender, DragEventArgs e)
     {
         if (e.Data.GetDataPresent(DataFormats.FileDrop))
         {

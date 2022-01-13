@@ -10,9 +10,16 @@ public partial class VideoRangeSlider : UserControl
 {
     public event Action<double> OnLowerThumbChanged;
     public event Action<double> OnUpperThumbChanged;
+
+    public event Action<double> OnStartedMainDrag;
+    public event Action<double> OnEndedMainDrag;
     
     
     public int MinimalThumbDistance => 20;
+    
+    // Determines, if the value can be changed, when the value drag is active 
+    public bool BlockValueOverrideOnDrag { get; set; }
+    private bool isDraggingMainDrag = false;
 
     /// <summary> Percentage of the lower thumb </summary>
     public double LowerThumb { get; private set; }
@@ -31,12 +38,16 @@ public partial class VideoRangeSlider : UserControl
         get => _value;
         set
         {
-            _value = value;
-            SetValueThumb(_value);
+            if (!isDraggingMainDrag)
+            {
+                _value = value;
+                SetValueThumb(_value);
+            }
         }
     }
-    
-    
+
+
+
     // Describes the minimal and maximal values the thumbs can reach 
     private double minimalPixelValue = 0;
     private double maximalPixelValue = 0;
@@ -47,7 +58,8 @@ public partial class VideoRangeSlider : UserControl
     public VideoRangeSlider()
     {
         InitializeComponent();
-        MainWindow.OnWindowSizeChanged += (e) =>
+        MainWindow instance = (MainWindow) Application.Current.MainWindow;
+        instance.OnWindowSizeChanged += (e) =>
         {
             CalculateMinimalMaximalPixelValues();
         };
@@ -57,8 +69,6 @@ public partial class VideoRangeSlider : UserControl
     {
         CalculateMinimalMaximalPixelValues();
         CalculatePercentages();
-        
-        this.Value = 0.99d;
     }
 
     private void CalculatePercentages()
@@ -124,7 +134,7 @@ public partial class VideoRangeSlider : UserControl
 
         this.ClampingRight = value == 0.0d;
 
-        ValidateDistance(upperThumbPoint.X - lowerThumbPoint.X);
+        ValidateDistanceForTextSpan(upperThumbPoint.X - lowerThumbPoint.X);
         CalculatePercentages();
 
         this.OnUpperThumbChanged?.Invoke(this.UpperThumb);
@@ -150,7 +160,7 @@ public partial class VideoRangeSlider : UserControl
 
         this.ClampingLeft = value == 0.0d;
         
-        ValidateDistance(upperThumbPoint.X - lowerThumbPoint.X);
+        ValidateDistanceForTextSpan(upperThumbPoint.X - lowerThumbPoint.X);
         CalculatePercentages();
         
         this.OnLowerThumbChanged?.Invoke(this.LowerThumb);
@@ -158,7 +168,7 @@ public partial class VideoRangeSlider : UserControl
         return this.ClampingLeft;
     }
 
-    private void ValidateDistance(double distance)
+    private void ValidateDistanceForTextSpan(double distance)
     {
         if (distance < this.minimalDistance)
         {
@@ -207,5 +217,18 @@ public partial class VideoRangeSlider : UserControl
             if (!MoveUpperThumb(e.HorizontalChange))
                 MoveLowerThumb(e.HorizontalChange);
         }
+    }
+
+    private void MainThumb_OnDragStarted(object sender, DragStartedEventArgs e)
+    {
+        isDraggingMainDrag = true;
+        this.OnStartedMainDrag?.Invoke(this.Value);
+    }
+
+
+    private void MainThumb_OnDragCompleted(object sender, DragCompletedEventArgs e)
+    {
+        isDraggingMainDrag = false;
+        this.OnEndedMainDrag?.Invoke(this.Value);
     }
 }

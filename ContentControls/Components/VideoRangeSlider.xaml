@@ -54,7 +54,11 @@
             </Grid>
         </Border>
         
-        <Thumb Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="mainThumb" DragDelta="MainThumb_DragDelta">
+        <Thumb Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="mainThumb"
+               DragDelta="MainThumb_DragDelta"
+               DragStarted="MainThumb_OnDragStarted"
+               DragCompleted="MainThumb_OnDragCompleted"
+               >
             <Thumb.Template>
                 <ControlTemplate>
                     <Ellipse HorizontalAlignment="Center" VerticalAlignment="Center" Width="10" Height="10" Fill="{DynamicResource PrimaryHueDarkBrush}" />

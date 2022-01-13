@@ -1,0 +1,40 @@
+<UserControl x:Class="VideoCompressorGUI.ContentControls.Components.CollapsibleGroupBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
+             mc:Ignorable="d"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource MaterialDesignFont}">
+    <GroupBox
+        Style="{StaticResource MaterialDesignGroupBox}"
+        Header="Neuste Videos automatisch hinzufügen"
+        materialDesign:ShadowAssist.ShadowDepth="Depth3"
+        BorderThickness="0">
+        <ContentControl x:Name="collapsibleContentControl" Content="{Binding CollapsibleContent, RelativeSource={RelativeSource AncestorType={x:Type components:CollapsibleGroupBox}}}" />
+        <GroupBox.HeaderTemplate>
+            <DataTemplate>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding}" />
+                    <CheckBox 
+                        Grid.Column="1" HorizontalAlignment="Right"
+                        Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked"
+                        Style="{StaticResource MaterialDesignUserForegroundCheckBox}"
+                        IsChecked="{Binding IsVisibleContent, RelativeSource={RelativeSource AncestorType={x:Type components:CollapsibleGroupBox}}}" />
+                </Grid>
+            </DataTemplate>
+        </GroupBox.HeaderTemplate>
+    </GroupBox>
+</UserControl>

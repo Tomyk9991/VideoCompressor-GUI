@@ -66,6 +66,16 @@ public static class ClassExtensions
             Interlocked.Decrement(ref clickedTimes);
         }, TimeSpan.FromMilliseconds(300));
     }
+
+    public static string ToMilliSecondsFromSeconds(this double value)
+    {
+        if (value is > 0 and < 1.0d)
+        {
+            return  (value * 1000.0d).ToString("000") + "ms";
+        }
+
+        return "INVALID";
+    }
     
     public static string ToMinutesAndSecondsFromSeconds(this double value)
     {

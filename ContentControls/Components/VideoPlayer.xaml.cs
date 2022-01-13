@@ -17,12 +17,8 @@ public partial class VideoPlayer : UserControl
         Interval = TimeSpan.FromSeconds(0.1)
     };
 
-    private DateTime latestSelectionStartChange = DateTime.Now;
-
-
     private bool isPlayingVideo = false;
     private double playbackSpeed = 1.0d;
-    private bool shouldUpdatePlayback = true;
 
     public VideoPlayer()
     {
@@ -30,9 +26,26 @@ public partial class VideoPlayer : UserControl
 
         PlaybackSpeedKeyBinding pbsKB = new PlaybackSpeedKeyBinding(this.snackbarNotifier, this.videoPlayer);
         ResumeHaltKeyBinding rhKB = new ResumeHaltKeyBinding(TogglePlayPause);
-        MainWindow.OnKeyPressed += pbsKB.OnKeybinding;
-        MainWindow.OnKeyPressed += rhKB.OnKeybinding;
 
+        MainWindow instance = (MainWindow)Application.Current.MainWindow;
+        instance.OnKeyPressed += pbsKB.OnKeybinding;
+        instance.OnKeyPressed += rhKB.OnKeybinding;
+
+        this.videoPlaybackSlider.BlockValueOverrideOnDrag = true;
+        this.videoPlaybackSlider.OnEndedMainDrag += d => OnPlaybackMainValueChanged(d);
+        this.videoPlaybackSlider.OnUpperThumbChanged += UpdateDistanceForTextSpan;
+        
+        this.videoPlaybackSlider.OnLowerThumbChanged += (d) =>
+        {
+            UpdateDistanceForTextSpan(d);
+
+            if (isPlayingVideo)
+            {
+                TogglePlayPause();
+            }
+            
+            OnPlaybackMainValueChanged(d, false);
+        };
 
         this.videoPlayerParent.Visibility = Visibility.Hidden;
     }
@@ -45,6 +58,8 @@ public partial class VideoPlayer : UserControl
 
     private void Element_MediaEnded(object sender, RoutedEventArgs e)
     {
+        // Wird nur ausgeführt, wenn das Element auf natürliche Art fertiggestellt wird
+        UpperVideoThumbLimitReached();
     }
 
     #region Resume / Pause
@@ -67,10 +82,6 @@ public partial class VideoPlayer : UserControl
 
     #endregion
 
-    #region Timeline
-
-    #endregion
-
     public void UpdateSource(VideoFileMetaData association)
     {
         if (association == null || this.currentlySelectedVideo == association) return;
@@ -88,7 +99,8 @@ public partial class VideoPlayer : UserControl
         Dispatcher.DelayInvoke(() => { videoPlayer.Focus(); }, TimeSpan.FromMilliseconds(100));
 
         textblockTotalTime.Text = association.MetaData.Duration.TotalSeconds.ToMinutesAndSecondsFromSeconds();
-
+        UpdateDistanceForTextSpan(0.0d);
+        
         timerVideoTime.Tick -= (o, args) => { };
         timerVideoTime.Tick += OnTimerTick;
         timerVideoTime.Start();
@@ -98,25 +110,52 @@ public partial class VideoPlayer : UserControl
 
     #region Video playback
 
+    private void UpdateDistanceForTextSpan(double _)
+    {
+        // calculate percentage value to duration
+        double lowerTime = this.videoPlaybackSlider.LowerThumb * currentlySelectedVideo.MetaData.Duration.TotalSeconds;
+        double upperTime = this.videoPlaybackSlider.UpperThumb * currentlySelectedVideo.MetaData.Duration.TotalSeconds;
+
+        double distance = (upperTime - lowerTime);
+        this.videoPlaybackSlider.spanTextBlock.Text = distance >= 1 
+            ? distance.ToMinutesAndSecondsFromSeconds() 
+            : distance.ToMilliSecondsFromSeconds();
+    }
+    
+    //gets called from videorangeslider, when user drags the main value
+    private void OnPlaybackMainValueChanged(double percentage, bool shouldToggle = true)
+    {
+        videoPlayer.Position = TimeSpan.FromMilliseconds(percentage * currentlySelectedVideo.MetaData.Duration.TotalMilliseconds);
+
+        if (shouldToggle && !isPlayingVideo)
+            TogglePlayPause();
+    }
+
+    //Wird aufgerufen, unabhängig davon, ob das Video zu Ende ist, oder der Thumb erreicht wurde
+    private void UpperVideoThumbLimitReached()
+    {
+        double startInMilliseconds = videoPlaybackSlider.LowerThumb *
+                                     currentlySelectedVideo.MetaData.Duration.TotalMilliseconds;
+        
+        this.videoPlayer.Position = TimeSpan.FromMilliseconds(startInMilliseconds);
+    }
+
     private void OnTimerTick(object sender, EventArgs e)
     {
-        if (shouldUpdatePlayback && videoPlayer.NaturalDuration.HasTimeSpan &&
+        if (videoPlayer.NaturalDuration.HasTimeSpan &&
             videoPlayer.NaturalDuration.TimeSpan.TotalSeconds > 0)
         {
-            videoPlaybackSlider.Value = videoPlayer.Position.TotalSeconds /
-                                        currentlySelectedVideo.MetaData.Duration.TotalSeconds;
+            videoPlaybackSlider.Value = (videoPlayer.Position /
+                                        currentlySelectedVideo.MetaData.Duration);
 
             textblockPlayedTime.Text = videoPlayer.Position.TotalSeconds.ToMinutesAndSecondsFromSeconds();
-
-            double startInSeconds = videoPlaybackSlider.LowerThumb *
-                                    currentlySelectedVideo.MetaData.Duration.TotalSeconds;
-
-            double endInSeconds = videoPlaybackSlider.UpperThumb *
-                                  currentlySelectedVideo.MetaData.Duration.TotalSeconds;
-
-            if (startInSeconds != endInSeconds && (int)videoPlayer.Position.TotalSeconds >= (int)endInSeconds)
+            
+            double endInMilliseconds = videoPlaybackSlider.UpperThumb *
+                                       currentlySelectedVideo.MetaData.Duration.TotalMilliseconds;
+            
+            if ((int)videoPlayer.Position.TotalMilliseconds >= (int) endInMilliseconds)
             {
-                this.videoPlayer.Position = TimeSpan.FromSeconds(startInSeconds);
+                UpperVideoThumbLimitReached();
             }
         }
     }
