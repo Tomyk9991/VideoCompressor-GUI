@@ -49,7 +49,7 @@
                     <ColumnDefinition Width="4" />
                 </Grid.ColumnDefinitions>
                 <Thumb Grid.Column="0" x:Name="lowerThumb" DragDelta="Thumb_LowerDragDelta" Margin="-7, 0, 7, 0" Background="{DynamicResource PrimaryHueLightBrush}"></Thumb>
-                <Thumb Grid.Column="1" x:Name="midThumb0" DragDelta="Thumb_MidDragDelta" Margin="-4, 0, -4, 0" Background="{DynamicResource PrimaryHueLightBrush}"></Thumb>
+                <Thumb DragStarted="MidThumb0_OnDragStarted" DragCompleted="MidThumb0_OnDragCompleted" Grid.Column="1" x:Name="midThumb0" DragDelta="Thumb_MidDragDelta" Margin="-4, 0, -4, 0" Background="{DynamicResource PrimaryHueLightBrush}"></Thumb>
                 <Thumb Grid.Column="2" x:Name="upperThumb" DragDelta="Thumb_UpperDragDelta" Margin="7, 0, -7, 0" Background="{DynamicResource PrimaryHueLightBrush}"/>
             </Grid>
         </Border>

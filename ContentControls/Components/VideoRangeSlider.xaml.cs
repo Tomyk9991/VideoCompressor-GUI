@@ -2,6 +2,8 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
+using System.Windows.Shapes;
 using VideoCompressorGUI.Utils;
 
 namespace VideoCompressorGUI.ContentControls.Components;
@@ -30,6 +32,9 @@ public partial class VideoRangeSlider : UserControl
 
     private bool ClampingLeft { get; set; }
     private bool ClampingRight { get; set; }
+
+    private bool wasDraggingMidThumb = false;
+    private double lastClickedPixelValueX = 0;
 
 
     private double _value = 0;
@@ -205,8 +210,22 @@ public partial class VideoRangeSlider : UserControl
         mainThumb.Margin = new Thickness(value, 0, 0, 0);
     }
 
+    private void MainThumb_Dragged(double newXPos)
+    {
+        double thickness = (minimalDistance - minimalDistance / 2) - 5;
+        double value = Math.Max(0.0d, Math.Min(newXPos, this.maximalPixelValue - thickness));
+        
+        double main = mainThumb.TransformToAncestor(parent).Transform(new Point(0, 0)).X;
+        
+        this._value = MathHelper.Map(main, minimalPixelValue + thickness, maximalPixelValue - thickness, 0.0d, 1.0d);
+        this._value = Math.Max(0.0d, Math.Min(_value, 1.0d));
+
+        mainThumb.Margin = new Thickness(value, 0, 0, 0);
+    }
+
     private void Thumb_MidDragDelta(object sender, DragDeltaEventArgs e)
     {
+        wasDraggingMidThumb = true;
         if (e.HorizontalChange < 0)
         {
             if (!MoveLowerThumb(e.HorizontalChange))
@@ -230,5 +249,24 @@ public partial class VideoRangeSlider : UserControl
     {
         isDraggingMainDrag = false;
         this.OnEndedMainDrag?.Invoke(this.Value);
+    }
+    
+    private void MidThumb0_OnDragCompleted(object sender, DragCompletedEventArgs e)
+    {
+        if (!wasDraggingMidThumb)
+        {
+            MainThumb_Dragged(lastClickedPixelValueX);
+        }
+
+        wasDraggingMidThumb = false;
+        lastClickedPixelValueX = 0;
+    }
+
+    private void MidThumb0_OnDragStarted(object sender, DragStartedEventArgs e)
+    {
+        Point lowerThumbPoint =
+            lowerThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
+        
+        lastClickedPixelValueX = lowerThumbPoint.X + (e.HorizontalOffset + 2.5d);
     }
 }
