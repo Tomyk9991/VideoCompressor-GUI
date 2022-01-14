@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using FFmpeg.NET.Events;
+using ffmpegCompressor;
 using MaterialDesignThemes.Wpf;
 using VideoCompressorGUI.CompressPresets;
 using VideoCompressorGUI.Settings;
+using VideoCompressorGUI.Utils;
 
 namespace VideoCompressorGUI.ContentControls;
 
 public partial class VideoEditorControl : UserControl
 {
-    private List<string> files;
-
     private CompressPreset currentlySelectedPreset = null;
     private CompressPresetCollection preset;
+    private VideoFileMetaData currentlySelectedVideoFile;
 
     public VideoEditorControl(List<string> files)
     {
@@ -24,10 +26,12 @@ public partial class VideoEditorControl : UserControl
         this.currentlySelectedPreset = preset.CompressPresets[0];
         FillContextMenu(preset);
 
-        this.files = files;
-
         this.videoBrowser.UpdateSource(files);
-        this.videoBrowser.OnSelectionChanged += this.videoPlayer.UpdateSource;
+        this.videoBrowser.OnSelectionChanged += (a) =>
+        {
+            this.currentlySelectedVideoFile = a;
+            this.videoPlayer.UpdateSource(a);
+        };
     }
 
     private void FillContextMenu(CompressPresetCollection collection)
@@ -44,8 +48,7 @@ public partial class VideoEditorControl : UserControl
                         : PackIconKind.None
                 }
             };
-
-
+            
             menuItem.Click += (sender, args) =>
             {
                 var menuItem = (MenuItem)sender;
@@ -68,9 +71,36 @@ public partial class VideoEditorControl : UserControl
         this.currentlySelectedPreset = newPreset;
     }
 
-    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+    private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
     {
-        Console.WriteLine("Komprimiere...");
+        Compressor compressor = new Compressor();
+        textblockProgress.Text = "Beginne Komprimierung...";
+        
+        compressor.OnCompressProgress += OnCompressProgress;
+        compressor.OnCompressFinished += OnCompressFinished;
+        
+        await compressor.Compress(currentlySelectedPreset, currentlySelectedVideoFile);
+    }
+
+    private void OnCompressFinished()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            textblockProgress.Text = "";
+        });
+    }
+
+    private void OnCompressProgress(double percentage)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            textblockProgress.Text = (percentage * 100.0d).ToString("F") + "%";
+            
+            this.currentlySelectedVideoFile.CompressData.Progress = percentage;
+            this.currentlySelectedVideoFile.CompressData.ProgressColor = CompressData.FromPercentage(percentage);
+            
+            Console.WriteLine("Progress " + percentage);
+        });
     }
 
     private void ContextMenu_OnClick(object sender, RoutedEventArgs e)

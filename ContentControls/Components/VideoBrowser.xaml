@@ -25,7 +25,7 @@
                  Background="#343434" HorizontalContentAlignment="Stretch" SelectionChanged="ListboxFiles_OnSelectionChanged" x:Name="listboxFiles">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid >
+                    <Grid>
                         <Grid.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Click="MenuItem_OnClick" Header="Löschen"></MenuItem>
@@ -33,7 +33,21 @@
                         </Grid.ContextMenu>
                         <materialDesign:Card Grid.Column="0" 
                                              materialDesign:ShadowAssist.ShadowDepth="Depth3"
-                                             materialDesign:ShadowAssist.ShadowEdges="Bottom,Right">   
+                                             materialDesign:ShadowAssist.ShadowEdges="Bottom,Right">
+                            
+                            
+                            <materialDesign:Card.Background>
+                                <LinearGradientBrush StartPoint="0, 1" EndPoint="1, 1">
+                                    <GradientStop Color="{Binding CompressData.ProgressColor}" Offset="{Binding CompressData.Progress}" />
+                                    <GradientStop Color="#00000000" Offset="{Binding CompressData.Progress}" />
+                                </LinearGradientBrush>
+                            </materialDesign:Card.Background>   
+                            
+                            
+                            
+                            
+                            
+                            
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*"/>

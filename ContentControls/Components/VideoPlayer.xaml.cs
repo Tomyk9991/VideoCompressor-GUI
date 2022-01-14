@@ -92,10 +92,6 @@ public partial class VideoPlayer : UserControl
         this.currentlySelectedVideo = association;
         this.videoPlayer.Source = new Uri(association.File);
 
-        // this.videoPlaybackSlider.textboxLower.Text = 0.0d.ToMinutesAndSecondsFromSeconds();
-        // this.videoPlaybackSlider.textboxUpper.Text = this.currentlySelectedVideo
-        //         .MetaData.Duration.TotalSeconds.ToMinutesAndSecondsFromSeconds();
-
         isPlayingVideo = false;
         TogglePlayPause();
 

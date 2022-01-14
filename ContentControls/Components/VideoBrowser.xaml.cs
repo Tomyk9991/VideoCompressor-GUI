@@ -35,6 +35,7 @@ public partial class VideoBrowser : UserControl
     public VideoBrowser()
     {
         InitializeComponent();
+        TempFolder.Clear();
     }
     
     public void Initialize(List<string> newFiles)

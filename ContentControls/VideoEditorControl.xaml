@@ -36,7 +36,12 @@
             <components:VideoPlayer Margin="15, 15, 15, 15" Grid.Row="0" Grid.Column="1" x:Name="videoPlayer" />
 
             <Grid Margin="0, 0, 15, 15" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="1">
-                <Button Click="ButtonBase_OnClick"
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="textblockProgress" Grid.Column="0" VerticalAlignment="Center" Margin="0, 0, 15, 0" Foreground="White" />
+                <Button Grid.Column="1" Click="ButtonBase_OnClick"
                         Style="{StaticResource MaterialDesignRaisedButton}"
                         materialDesign:ShadowAssist.ShadowDepth="Depth5"
                         Margin="0, 0, 7.5, 0"

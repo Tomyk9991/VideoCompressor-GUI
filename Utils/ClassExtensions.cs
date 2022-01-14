@@ -4,9 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using FFmpeg.NET;
 using MaterialDesignThemes.Wpf;
+using VideoCompressorGUI.CompressPresets;
 
 namespace VideoCompressorGUI.Utils;
 
@@ -21,6 +24,26 @@ public static class ClassExtensions
         playPauseIcon.Height = 100;
         playPauseIcon.Kind = PackIconKind.Play;
         ToggleHelper(videoPlayer, dispatcher, playPauseIcon, true);
+    }
+
+    public static Color LerpTo(this Color from, Color to, double value)
+    {
+        from.R = (byte)MathHelper.Lerp(from.R, to.R, value);
+        from.G = (byte)MathHelper.Lerp(from.G, to.G, value);
+        from.B = (byte)MathHelper.Lerp(from.B, to.B, value);
+
+        return from;
+    }
+
+    public static ConversionOptions BuildConversionOptions(this Engine ffmpeg, VideoFileMetaData file, CompressPreset preset)
+    {
+        ConversionOptions options = new ConversionOptions
+        {
+            VideoBitRate = preset.Bitrate,
+            VideoFps = (int) file.MetaData.VideoData.Fps
+        };
+
+        return options;
     }
 
     public static void PauseAnimated(this MediaElement videoPlayer, Dispatcher dispatcher, PackIcon playPauseIcon)
