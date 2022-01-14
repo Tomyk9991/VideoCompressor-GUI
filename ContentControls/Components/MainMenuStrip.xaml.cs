@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using VideoCompressorGUI.ContentControls.Settingspages;
 
 namespace VideoCompressorGUI.ContentControls.Components;
 
@@ -18,5 +19,10 @@ public partial class MainMenuStrip : UserControl
     private void Settings_OnClick(object sender, RoutedEventArgs e)
     {
         ((MainWindow)Application.Current.MainWindow).PushContentControl(new Settings());
+    }
+
+    private void PresetsEdit_OnClick(object sender, RoutedEventArgs e)
+    {
+        ((MainWindow) Application.Current.MainWindow).PushContentControl(new PresetsEditor());
     }
 }

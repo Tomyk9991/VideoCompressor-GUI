@@ -6,10 +6,13 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d">
     <Menu IsMainMenu="True">
-        <MenuItem FontSize="12" VerticalAlignment="Center" Header="_File">
+        <MenuItem FontSize="12" VerticalAlignment="Center" Header="_Datei">
             <MenuItem Click="Settings_OnClick" Header="Einstellungen" Icon="{materialDesign:PackIcon Kind=Settings}" />
             <Separator />
             <MenuItem Click="Exit_OnClick" Header="Exit" Icon="{materialDesign:PackIcon Kind=ExitToApp}" />
+        </MenuItem>
+        <MenuItem FontSize="12" VerticalAlignment="Center" Header="_Presets">
+            <MenuItem Click="PresetsEdit_OnClick" Header="Presets bearbeiten" Icon="{materialDesign:PackIcon Kind=Edit}" />
         </MenuItem>
     </Menu>
 </UserControl>

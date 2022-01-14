@@ -18,7 +18,7 @@
              Unloaded="GeneralSettings_OnUnloaded">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <components:CollapsibleGroupBox x:Name="collapsibleGroupBoxNewestVideo">
+            <components:CollapsibleGroupBox x:Name="collapsibleGroupBoxNewestVideo" Header="Neuste Videos automatisch hinzufügen">
                 <components:CollapsibleGroupBox.CollapsibleContent>
                     <Grid>
                         <Grid.ColumnDefinitions>

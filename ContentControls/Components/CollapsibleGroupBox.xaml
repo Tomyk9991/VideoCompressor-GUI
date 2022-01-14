@@ -16,9 +16,8 @@
              FontFamily="{DynamicResource MaterialDesignFont}">
     <GroupBox
         Style="{StaticResource MaterialDesignGroupBox}"
-        Header="Neuste Videos automatisch hinzufügen"
-        materialDesign:ShadowAssist.ShadowDepth="Depth3"
-        BorderThickness="0">
+        Header="{Binding Header, RelativeSource={RelativeSource AncestorType={x:Type components:CollapsibleGroupBox}}}"
+        materialDesign:ShadowAssist.ShadowDepth="Depth3">
         <ContentControl x:Name="collapsibleContentControl" Content="{Binding CollapsibleContent, RelativeSource={RelativeSource AncestorType={x:Type components:CollapsibleGroupBox}}}" />
         <GroupBox.HeaderTemplate>
             <DataTemplate>

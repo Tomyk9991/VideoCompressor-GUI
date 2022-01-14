@@ -12,7 +12,7 @@ public partial class Settings : UserControl
 
     private void CloseSettings_OnClick(object sender, RoutedEventArgs e)
     {
-        // Save settings()
+        // lower settings pages are responsible for their saves
         ((MainWindow) Application.Current.MainWindow).PopContentControl();
     }
 }

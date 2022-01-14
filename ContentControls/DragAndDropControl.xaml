@@ -18,44 +18,22 @@
         <materialDesign:Card x:Name="DragDropCard">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="5*"/>
-                    <RowDefinition Height="3*"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0">
+                    <components:MainMenuStrip Height="20" VerticalAlignment="Top"/>
+                </DockPanel>
                 
-                <Viewbox Grid.Row="0">
-                    <materialDesign:PackIcon Kind="SelectDrag">
-                    </materialDesign:PackIcon>
+                <Viewbox Grid.Row="1" Margin="0, -10, 0, 0">
+                    <materialDesign:PackIcon Kind="SelectDrag" />
                 </Viewbox>
-                <TextBlock Margin="0, 0, 0, 32" TextDecorations="Underline" TextAlignment="Center" Grid.Row="1">
+                
+                <TextBlock Margin="0, 0, 0, 32" TextDecorations="Underline" TextAlignment="Center" Grid.Row="2">
                     <Label Cursor="Hand" MouseUp="UIElement_OnMouseUp" FontStyle="Oblique" Content="Oder durchsuchen Sie hier"></Label>
                 </TextBlock>
                 <materialDesign:Snackbar VerticalAlignment="Center" x:Name="snackbar" MessageQueue="{materialDesign:MessageQueue}" IsActive="False" Grid.Row="1" />
-                
-                <materialDesign:Card Grid.Row="2" Width="300" Height="30"
-                                     materialDesign:ShadowAssist.ShadowDepth="Depth3"
-                                     materialDesign:ShadowAssist.ShadowEdges="Bottom,Right">
-                    <materialDesign:Card.Background>
-                        <LinearGradientBrush StartPoint="0, 1" EndPoint="1, 1">
-                            <GradientStop Color="#515151" Offset="0.1" />
-                            <GradientStop Color="#00000000" Offset="0.1" />
-                        </LinearGradientBrush>
-                    </materialDesign:Card.Background>   
-                            
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="5*"/>
-                            <ColumnDefinition Width="1*"/>
-                        </Grid.ColumnDefinitions>
-                                    
-                        <Image Stretch="Uniform" Source="{Binding ThumbnailPath}" />
-                        <StackPanel Margin="15, 15, 15, 0" Grid.Column="1">
-                            <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding File}"></TextBlock>
-                            <TextBlock Text="{Binding MetaData.Duration, StringFormat={}Länge: {0:hh':'mm':'ss}}"></TextBlock>
-                        </StackPanel>
-                    </Grid>
-                </materialDesign:Card>
             </Grid>
         </materialDesign:Card>
     </Grid>

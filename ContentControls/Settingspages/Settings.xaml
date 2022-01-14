@@ -17,7 +17,7 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
-        <materialDesign:Card>
+        <materialDesign:Card Margin="0, 0, 50, 0">
             <TabControl
                 materialDesign:ColorZoneAssist.Mode="Standard"
                 materialDesign:ShadowAssist.ShadowDepth="Depth3"
@@ -32,7 +32,7 @@
                                 Text="General" />
                         </StackPanel>
                     </TabItem.Header>
-                    <settingspages:GeneralSettings Margin="0, 0, 50, 0" />
+                    <settingspages:GeneralSettings />
                 </TabItem>
             </TabControl>
         </materialDesign:Card>
