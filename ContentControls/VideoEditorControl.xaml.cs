@@ -98,8 +98,6 @@ public partial class VideoEditorControl : UserControl
             
             this.currentlySelectedVideoFile.CompressData.Progress = percentage;
             this.currentlySelectedVideoFile.CompressData.ProgressColor = CompressData.FromPercentage(percentage);
-            
-            Console.WriteLine("Progress " + percentage);
         });
     }
 

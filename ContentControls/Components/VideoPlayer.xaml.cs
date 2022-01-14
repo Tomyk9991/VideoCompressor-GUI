@@ -87,7 +87,15 @@ public partial class VideoPlayer : UserControl
 
     public void UpdateSource(VideoFileMetaData association)
     {
-        if (association == null || this.currentlySelectedVideo == association) return;
+        if (association == null || this.currentlySelectedVideo == association)
+        {
+            this.videoPlayer.Source = null;
+            videoPlayerParent.Visibility = Visibility.Collapsed;
+            timerVideoTime.Tick -= (o, args) => { };
+            return;
+        }
+        
+        
 
         this.currentlySelectedVideo = association;
         this.videoPlayer.Source = new Uri(association.File);

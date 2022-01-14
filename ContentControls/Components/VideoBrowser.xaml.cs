@@ -167,5 +167,7 @@ public partial class VideoBrowser : UserControl
         
         this.listboxFiles.ItemsSource = Array.Empty<Object>();
         this.listboxFiles.ItemsSource = videoFileMetaData;
+
+        this.OnSelectionChanged?.Invoke(null);
     }
 }
