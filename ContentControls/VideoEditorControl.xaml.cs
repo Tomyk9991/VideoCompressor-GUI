@@ -30,6 +30,9 @@ public partial class VideoEditorControl : UserControl
         this.videoBrowser.OnSelectionChanged += (a) =>
         {
             this.currentlySelectedVideoFile = a;
+
+            compressButton.IsEnabled = a != null;
+            
             this.videoPlayer.UpdateSource(a);
         };
     }

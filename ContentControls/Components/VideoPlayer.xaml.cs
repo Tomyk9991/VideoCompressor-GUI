@@ -92,6 +92,7 @@ public partial class VideoPlayer : UserControl
             this.videoPlayer.Source = null;
             videoPlayerParent.Visibility = Visibility.Collapsed;
             timerVideoTime.Tick -= (o, args) => { };
+            
             return;
         }
         
