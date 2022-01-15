@@ -48,7 +48,6 @@ public partial class GeneralSettings : UserControl
         if ((bool)dialog.ShowDialog(Window.GetWindow(this)))
         {
             var selectedFolder = dialog.SelectedPath;
-            Console.WriteLine(selectedFolder);
             this.SelectedPath = selectedFolder;
         }
     }
@@ -57,11 +56,11 @@ public partial class GeneralSettings : UserControl
     {
         GeneralSettingsData data = new GeneralSettingsData
         {
+            LatestTimeWatched = DateTime.Now,
             AutomaticallyUseNewestVideos = collapsibleGroupBoxNewestVideo.IsVisibleContent && this.SelectedPath != "",
             PathToNewestVideos = collapsibleGroupBoxNewestVideo.IsVisibleContent ? this.SelectedPath : "",
-            LatestTimeWatched = DateTime.Now
         };
-
+        
         SettingsFolder.Save(data);
     }
 

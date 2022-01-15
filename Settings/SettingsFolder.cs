@@ -73,7 +73,7 @@ public class SettingsFolder
     public static void Save<T>(T value, string key = "")
     {
         string path = ROOT + "/" + filenameDictionary[typeof(T)][key];
-        string json = JsonConvert.SerializeObject(value);
+        string json = JsonConvert.SerializeObject(value, Formatting.Indented);
 
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine($"Saving to: {path}");

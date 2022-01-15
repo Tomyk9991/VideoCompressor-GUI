@@ -9,7 +9,9 @@ public class GeneralSettingsData : ISettingsLoadable<GeneralSettingsData>
 {
     public bool AutomaticallyUseNewestVideos { get; set; }
     public string PathToNewestVideos { get; set; }
-    public DateTime LatestTimeWatched;
+    public DateTime LatestTimeWatched { get; set; }
+    
+    
     
     public GeneralSettingsData CreateDefault()
     {

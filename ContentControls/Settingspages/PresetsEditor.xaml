@@ -75,37 +75,33 @@
                         <components:CollapsibleGroupBox
                             IsVisibilityChanged="CollapsibleGroupboxPredefinedBitrate_OnIsVisibilityChanged"
                             x:Name="collapsibleGroupboxPredefinedBitrate" Header="Vordefinierte Bitrate">
-                            <components:CollapsibleGroupBox.CollapsibleContent>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="30" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <materialDesign:PackIcon Margin="0, 0, 5, 0" Grid.Column="0"
-                                                             Kind="Numbers" HorizontalAlignment="Center"
-                                                             VerticalAlignment="Center" />
-                                    <TextBox PreviewTextInput="OnBitrate_Enter" Grid.Column="1"
-                                             materialDesign:HintAssist.Hint="Bitrate" />
-                                </Grid>
-                            </components:CollapsibleGroupBox.CollapsibleContent>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon x:Name="packnam" Margin="0, 0, 5, 0" Grid.Column="0"
+                                                         Kind="Numbers" HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center" />
+                                <TextBox PreviewTextInput="OnBitrate_Enter" Grid.Column="1"
+                                         materialDesign:HintAssist.Hint="Bitrate" />
+                            </Grid>
                         </components:CollapsibleGroupBox>
                     
                         <components:CollapsibleGroupBox
                             IsVisibilityChanged="CollapsibleGroupboxCalculatedBitrate_OnIsVisibilityChanged"
                             x:Name="collapsibleGroupboxCalculatedBitrate" Header="Berechnung der Mediengröße">
-                            <components:CollapsibleGroupBox.CollapsibleContent>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="30" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <materialDesign:PackIcon Margin="0, 0, 5, 0" Grid.Column="0"
-                                                             Kind="Numbers" HorizontalAlignment="Center"
-                                                             VerticalAlignment="Center" />
-                                    <TextBox PreviewTextInput="OnTargetSize_Enter" Grid.Column="1"
-                                             materialDesign:HintAssist.Hint="Zielgröße der Datei" />
-                                </Grid>
-                            </components:CollapsibleGroupBox.CollapsibleContent>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon Margin="0, 0, 5, 0" Grid.Column="0"
+                                                         Kind="Numbers" HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center" />
+                                <TextBox PreviewTextInput="OnTargetSize_Enter" Grid.Column="1"
+                                         materialDesign:HintAssist.Hint="Zielgröße der Datei" />
+                            </Grid>
                         </components:CollapsibleGroupBox>
                         <Grid HorizontalAlignment="Right" Margin="0, 5, 5, 0">
                             <StackPanel Orientation="Horizontal">
@@ -118,7 +114,7 @@
                                         <TextBlock x:Name="savingButtonsTextBox" Text="Hinzufügen"></TextBlock>
                                     </StackPanel>
                                 </Button>
-                                <Button Margin="5, 0, 0, 0" 
+                                <Button Visibility="Collapsed" Margin="5, 0, 0, 0" 
                                         x:Name="deleteButton"
                                         HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <StackPanel Orientation="Horizontal">
