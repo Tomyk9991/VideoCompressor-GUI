@@ -18,8 +18,6 @@ public partial class PresetsEditor : UserControl
     private TextBlock lastPresetTextBlock = null;
     private CompressPreset lastPreset = null;
     
-    private Regex onlyDigitsRegex = new("[^0-9]+");
-    
     public PresetsEditor()
     {
         InitializeComponent();
@@ -34,6 +32,19 @@ public partial class PresetsEditor : UserControl
         {
             AddTab(compressPresetCollection.CompressPresets[i]);
         }
+    }
+
+    private bool ValidateCanUse()
+    {
+        var r1 = nameNotEmptyValidationRule.Validate(nameTextBox.Text, null);
+        var r2 = isDigitValidationRule.Validate(bitrateTextBox.Text, null);
+        var r3 = isDigitValidationRule.Validate(targetSizeTextBox.Text, null);
+        
+        bool everythingValid = r1.IsValid && (!collapsibleGroupboxPredefinedBitrate.IsVisibleContent || r2.IsValid) && (!collapsibleGroupboxCalculatedBitrate.IsVisibleContent || r3.IsValid);
+        
+        savingButton.IsEnabled = everythingValid;
+
+        return everythingValid;
     }
 
     private void AddTab(CompressPreset preset)
@@ -66,19 +77,24 @@ public partial class PresetsEditor : UserControl
 
     private void OnPresetChanged(CompressPreset newPreset)
     {
-        isAdding = false;
+        isAdding = true;
 
         savingButtonsTextBox.Text = "Übernehmen";
         savingButtonsIcon.Kind = PackIconKind.Update;
 
         savingButton.IsEnabled = true;
-
         deleteButton.Visibility = Visibility.Visible;
+
+        nameTextBox.Text = newPreset.PresetName;
+
+        this.collapsibleGroupboxPredefinedBitrate.IsVisibleContent = newPreset.UseBitrate;
+        this.collapsibleGroupboxCalculatedBitrate.IsVisibleContent = newPreset.UseTargetSizeCalculation;
         
-        /* Basierend auf preset setzen
-        this.collapsibleGroupboxPredefinedBitrate.IsVisibleContent = true;
-        this.collapsibleGroupboxCalculatedBitrate.IsVisibleContent = false;
-         */
+        if (newPreset.UseBitrate)
+            bitrateTextBox.Text = newPreset.Bitrate.Value.ToString();
+
+        if (newPreset.UseTargetSizeCalculation)
+            targetSizeTextBox.Text = newPreset.TargetSize.Value.ToString();
     }
     
     private void StackPanelPresetNew_OnClick(object sender, RoutedEventArgs e)
@@ -89,24 +105,26 @@ public partial class PresetsEditor : UserControl
         savingButtonsIcon.Kind = PackIconKind.Add;
 
         savingButton.IsEnabled = false;
-        
         deleteButton.Visibility = Visibility.Collapsed;
+
+        nameTextBox.Text = "";
         
         this.collapsibleGroupboxPredefinedBitrate.IsVisibleContent = true;
         this.collapsibleGroupboxCalculatedBitrate.IsVisibleContent = false;
+        
+        bitrateTextBox.Text = "";
+        targetSizeTextBox.Text = "";
     }
 
-    private void OnBitrate_Enter(object sender, TextCompositionEventArgs e)
+    private void OnName_Enter(object sender, TextChangedEventArgs e)
     {
-        e.Handled = OnlyDigits(e.Text);
+        ValidateCanUse();
     }
-
-    private void OnTargetSize_Enter(object sender, TextCompositionEventArgs e)
+    
+    private void OnDigit_Enter(object sender, TextChangedEventArgs e)
     {
-        e.Handled = OnlyDigits(e.Text);
+        ValidateCanUse();
     }
-
-    private bool OnlyDigits(string s) => onlyDigitsRegex.Match(s).Success;
 
     private void ClosePresets_OnClick(object sender, RoutedEventArgs e)
     {
@@ -129,15 +147,17 @@ public partial class PresetsEditor : UserControl
         
         b.SetIsVisibleContentWithoutEventFire(newValue);
         a.SetIsVisibleContentWithoutEventFire(!newValue);
-    }
 
+        ValidateCanUse();
+    }
+    
     private void SaveOrAdd_OnClick(object sender, RoutedEventArgs e)
     {
         if (isAdding)
         {
             // new preset. need for save
-            var result = nameNotEmptyValidationRule.Validate(nameTextBox.Text, null);
-            if (result.IsValid)
+            bool everythingValid = ValidateCanUse();
+            if (everythingValid)
             {
                 // save it. display it on the left
                 // navigate to it
@@ -147,11 +167,5 @@ public partial class PresetsEditor : UserControl
         {
             // preset is already in existence and needs to be updated
         }
-    }
-
-    private void OnName_Enter(object sender, TextChangedEventArgs e)
-    {
-        var result = nameNotEmptyValidationRule.Validate(nameTextBox.Text, null);
-        savingButton.IsEnabled = result.IsValid;
     }
 }

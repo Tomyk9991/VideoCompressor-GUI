@@ -64,7 +64,7 @@
                                             RelativeSource="{RelativeSource Self}" Path="Text"
                                             UpdateSourceTrigger="LostFocus">
                                             <Binding.ValidationRules>
-                                                <validationRules:NotEmptyValidationRule
+                                                <validationRules:ZeroToEightLengthValidationRule
                                                     x:Name="nameNotEmptyValidationRule" ValidatesOnTargetUpdated="True" />
                                             </Binding.ValidationRules>
                                         </Binding>
@@ -80,11 +80,24 @@
                                     <ColumnDefinition Width="30" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <materialDesign:PackIcon x:Name="packnam" Margin="0, 0, 5, 0" Grid.Column="0"
+                                <materialDesign:PackIcon Margin="0, 0, 5, 0" Grid.Column="0"
                                                          Kind="Numbers" HorizontalAlignment="Center"
                                                          VerticalAlignment="Center" />
-                                <TextBox PreviewTextInput="OnBitrate_Enter" Grid.Column="1"
-                                         materialDesign:HintAssist.Hint="Bitrate" />
+                                
+                                <TextBox TextChanged="OnDigit_Enter" x:Name="bitrateTextBox"
+                                         Grid.Column="1" Margin="0, 0, 0, 9"
+                                         materialDesign:HintAssist.Hint="Bitrate">
+                                    <TextBox.Text>
+                                        <Binding
+                                            RelativeSource="{RelativeSource Self}" Path="Text"
+                                            UpdateSourceTrigger="LostFocus">
+                                            <Binding.ValidationRules>
+                                                <validationRules:IsDigitValidationRule
+                                                    x:Name="isDigitValidationRule" ValidatesOnTargetUpdated="True" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
                             </Grid>
                         </components:CollapsibleGroupBox>
                     
@@ -99,8 +112,20 @@
                                 <materialDesign:PackIcon Margin="0, 0, 5, 0" Grid.Column="0"
                                                          Kind="Numbers" HorizontalAlignment="Center"
                                                          VerticalAlignment="Center" />
-                                <TextBox PreviewTextInput="OnTargetSize_Enter" Grid.Column="1"
-                                         materialDesign:HintAssist.Hint="Zielgröße der Datei" />
+                                
+                                <TextBox TextChanged="OnDigit_Enter" x:Name="targetSizeTextBox"
+                                         Grid.Column="1" Margin="0, 0, 0, 9"
+                                         materialDesign:HintAssist.Hint="Zielgröße der Datei">
+                                    <TextBox.Text>
+                                        <Binding
+                                            RelativeSource="{RelativeSource Self}" Path="Text"
+                                            UpdateSourceTrigger="LostFocus">
+                                            <Binding.ValidationRules>
+                                                <validationRules:IsDigitValidationRule ValidatesOnTargetUpdated="True" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
                             </Grid>
                         </components:CollapsibleGroupBox>
                         <Grid HorizontalAlignment="Right" Margin="0, 5, 5, 0">

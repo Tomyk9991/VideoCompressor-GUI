@@ -1,0 +1,39 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        
+        <Style TargetType="components:CollapsibleGroupBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="components:CollapsibleGroupBox">
+                        <GroupBox
+                            Style="{StaticResource MaterialDesignGroupBox}"
+                            Header="{Binding Header, RelativeSource={RelativeSource AncestorType={x:Type components:CollapsibleGroupBox}}}"
+                            materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                            
+                            <ContentControl Visibility="{TemplateBinding IsVisibleContent, Converter={StaticResource BoolToVis}}" Content="{TemplateBinding Content}" />
+                            <GroupBox.HeaderTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding }" />
+                                        <CheckBox
+                                            Grid.Column="1" HorizontalAlignment="Right"
+                                            Style="{StaticResource MaterialDesignUserForegroundCheckBox}"
+                                            IsChecked="{Binding IsVisibleContent, RelativeSource={RelativeSource AncestorType={x:Type components:CollapsibleGroupBox}}}"
+                                            >
+                                        </CheckBox>
+                                    </Grid>
+                                </DataTemplate>
+                            </GroupBox.HeaderTemplate>
+                        </GroupBox>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+</ResourceDictionary>

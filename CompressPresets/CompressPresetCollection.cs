@@ -14,7 +14,7 @@ public class CompressPresetCollection : ISettingsLoadable<CompressPresetCollecti
         {
             CompressPresets = new List<CompressPreset>
             {
-                new("Discord", true, 4500, true),
+                new("Discord", true, 4500, false, null),
             }
         };
     }
