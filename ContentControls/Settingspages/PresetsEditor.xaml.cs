@@ -1,8 +1,8 @@
 using System;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using MaterialDesignThemes.Wpf;
 using VideoCompressorGUI.CompressPresets;
 using VideoCompressorGUI.ContentControls.Components;
@@ -17,16 +17,22 @@ public partial class PresetsEditor : UserControl
 
     private TextBlock lastPresetTextBlock = null;
     private CompressPreset lastPreset = null;
-    
+    private Grid lastParentTextBlockElement = null;
+
+    private Brush originalButtonNewPresetItemColor;
+
+    private CompressPresetCollection compressPresetCollection;
+
     public PresetsEditor()
     {
         InitializeComponent();
         
-        savingButtonsTextBox.Text = "Hinzufügen";
-        this.collapsibleGroupboxPredefinedBitrate.IsVisibleContent = true;
-        this.collapsibleGroupboxCalculatedBitrate.IsVisibleContent = false;
 
-        var compressPresetCollection = SettingsFolder.Load<CompressPresetCollection>();
+        originalButtonNewPresetItemColor = buttonNewPresetItem.Background.Clone();
+        collapsibleGroupboxPredefinedBitrate.IsVisibleContent = true;
+
+        this.compressPresetCollection = SettingsFolder.Load<CompressPresetCollection>();
+        this.nameNotEmptyValidationRule.collection = this.compressPresetCollection;
         
         for (int i = 0; i < compressPresetCollection.CompressPresets.Count; i++)
         {
@@ -36,18 +42,22 @@ public partial class PresetsEditor : UserControl
 
     private bool ValidateCanUse()
     {
+        nameNotEmptyValidationRule.IgnorePreset = lastPreset;
+        
         var r1 = nameNotEmptyValidationRule.Validate(nameTextBox.Text, null);
         var r2 = isDigitValidationRule.Validate(bitrateTextBox.Text, null);
         var r3 = isDigitValidationRule.Validate(targetSizeTextBox.Text, null);
-        
-        bool everythingValid = r1.IsValid && (!collapsibleGroupboxPredefinedBitrate.IsVisibleContent || r2.IsValid) && (!collapsibleGroupboxCalculatedBitrate.IsVisibleContent || r3.IsValid);
+
+        bool everythingValid = r1.IsValid && 
+                               (!collapsibleGroupboxPredefinedBitrate.IsVisibleContent || r2.IsValid) && 
+                               (!collapsibleGroupboxCalculatedBitrate.IsVisibleContent || r3.IsValid || (collapsibleGroupboxCalculatedBitrate.IsVisibleContent && targetSizeAskLaterCheckBox.IsChecked.Value));
         
         savingButton.IsEnabled = everythingValid;
 
         return everythingValid;
     }
 
-    private void AddTab(CompressPreset preset)
+    private void AddTab(CompressPreset preset, bool switchToTab = false)
     {
         TextBlock textBlock = new TextBlock
         {
@@ -61,29 +71,46 @@ public partial class PresetsEditor : UserControl
             Cursor = Cursors.Hand,
             Height = 60
         };
-        
-        grid.MouseDown += (_, _) =>
+
+        MouseButtonEventHandler gridOnMouseDown = (_, _) =>
         {
+            if (lastPresetTextBlock != null)
+                lastPresetTextBlock.Foreground = Brushes.White;
+            
             lastPresetTextBlock = textBlock;
             lastPreset = preset;
+            lastParentTextBlockElement = grid;
+            
+            lastPresetTextBlock.Foreground = originalButtonNewPresetItemColor;
             
             OnPresetChanged(preset);
         };
         
+        grid.MouseDown += gridOnMouseDown;
+        
 
         grid.Children.Add(textBlock);
         presetsStackPanel.Children.Insert(0, grid);
+
+        if (switchToTab)
+        {
+            gridOnMouseDown.Invoke(null, null);
+        }
     }
 
     private void OnPresetChanged(CompressPreset newPreset)
     {
-        isAdding = true;
+        isAdding = false;
 
         savingButtonsTextBox.Text = "Übernehmen";
         savingButtonsIcon.Kind = PackIconKind.Update;
 
         savingButton.IsEnabled = true;
         deleteButton.Visibility = Visibility.Visible;
+        
+        buttonNewPresetItem.Background = Brushes.White;
+        buttonNewPresetItem.BorderBrush = Brushes.White;
+        buttonsNewPresetItemIcon.Foreground = Brushes.Black;
 
         nameTextBox.Text = newPreset.PresetName;
 
@@ -93,13 +120,13 @@ public partial class PresetsEditor : UserControl
         if (newPreset.UseBitrate)
             bitrateTextBox.Text = newPreset.Bitrate.Value.ToString();
 
-        if (newPreset.UseTargetSizeCalculation)
-            targetSizeTextBox.Text = newPreset.TargetSize.Value.ToString();
+        if (newPreset.UseTargetSizeCalculation && !newPreset.AskLater)
+            targetSizeTextBox.Text = !newPreset.AskLater ? newPreset.TargetSize.Value.ToString() : "";
     }
     
     private void StackPanelPresetNew_OnClick(object sender, RoutedEventArgs e)
     {
-        isAdding = false;
+        isAdding = true;
         
         savingButtonsTextBox.Text = "Hinzufügen";
         savingButtonsIcon.Kind = PackIconKind.Add;
@@ -107,10 +134,21 @@ public partial class PresetsEditor : UserControl
         savingButton.IsEnabled = false;
         deleteButton.Visibility = Visibility.Collapsed;
 
+        if (lastPresetTextBlock != null)
+            lastPresetTextBlock.Foreground = Brushes.White;
+
+        buttonNewPresetItem.Background = originalButtonNewPresetItemColor;
+        buttonNewPresetItem.BorderBrush = originalButtonNewPresetItemColor;
+        buttonsNewPresetItemIcon.Foreground = Brushes.White;
+
         nameTextBox.Text = "";
+        bitrateTextBox.Text = "";
+        targetSizeTextBox.Text = "";
         
         this.collapsibleGroupboxPredefinedBitrate.IsVisibleContent = true;
         this.collapsibleGroupboxCalculatedBitrate.IsVisibleContent = false;
+
+        this.targetSizeAskLaterCheckBox.IsChecked = false;
         
         bitrateTextBox.Text = "";
         targetSizeTextBox.Text = "";
@@ -153,19 +191,54 @@ public partial class PresetsEditor : UserControl
     
     private void SaveOrAdd_OnClick(object sender, RoutedEventArgs e)
     {
-        if (isAdding)
+        bool everythingValid = ValidateCanUse();
+        
+        if (everythingValid)
         {
-            // new preset. need for save
-            bool everythingValid = ValidateCanUse();
-            if (everythingValid)
+            string presetName = nameTextBox.Text;
+            bool useBitrate = collapsibleGroupboxPredefinedBitrate.IsVisibleContent;
+            bool useTargetSize = collapsibleGroupboxCalculatedBitrate.IsVisibleContent;
+            bool askLater = targetSizeAskLaterCheckBox.IsChecked.Value;
+
+            int? bitrate = useBitrate ? int.Parse(bitrateTextBox.Text) : null;
+            int? targetSize = useTargetSize ? (askLater ? null : int.Parse(targetSizeTextBox.Text)) : null;
+            
+            if (isAdding)
             {
-                // save it. display it on the left
-                // navigate to it
+                CompressPreset newPreset =
+                    new CompressPreset(presetName, useBitrate, bitrate, useTargetSize, askLater, targetSize);
+
+                compressPresetCollection.CompressPresets.Add(newPreset);
+                AddTab(newPreset, true);
             }
+            else
+            {
+                lastPreset.PresetName = presetName;
+                lastPreset.UseBitrate = useBitrate;
+                lastPreset.UseTargetSizeCalculation = useTargetSize;
+                lastPreset.AskLater = askLater;
+                
+                lastPreset.TargetSize = targetSize;
+                lastPreset.Bitrate = bitrate;
+
+
+                lastPresetTextBlock.Text = presetName;
+            }
+            
+            SettingsFolder.Save(compressPresetCollection);
         }
-        else
+    }
+
+    private void DeleteSelectedPreset_OnClick(object sender, RoutedEventArgs e)
+    {
+        compressPresetCollection.CompressPresets.Remove(lastPreset);
+
+        if (lastParentTextBlockElement != null)
         {
-            // preset is already in existence and needs to be updated
+            presetsStackPanel.Children.Remove(lastParentTextBlockElement);
+            StackPanelPresetNew_OnClick(null, null);
         }
+        
+        SettingsFolder.Save(compressPresetCollection);
     }
 }

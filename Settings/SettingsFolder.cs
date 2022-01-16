@@ -75,7 +75,7 @@ public class SettingsFolder
         string path = ROOT + "/" + filenameDictionary[typeof(T)][key];
         string json = JsonConvert.SerializeObject(value, Formatting.Indented);
 
-        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine($"Saving to: {path}");
         Console.WriteLine(json);
         Console.ResetColor();

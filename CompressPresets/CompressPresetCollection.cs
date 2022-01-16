@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using VideoCompressorGUI.Settings;
 
@@ -14,8 +15,21 @@ public class CompressPresetCollection : ISettingsLoadable<CompressPresetCollecti
         {
             CompressPresets = new List<CompressPreset>
             {
-                new("Discord", true, 4500, false, null),
+                new("Discord", true, 4500, false, false, null),
             }
         };
+    }
+
+    public bool Contains(Func<CompressPreset, bool> func)
+    {
+        foreach (CompressPreset preset in CompressPresets)
+        {
+            if (func.Invoke(preset))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
