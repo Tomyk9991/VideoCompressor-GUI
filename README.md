@@ -13,3 +13,6 @@
   - Progress of actual compressions shouldn't work, when changing "currentlySelected..."
     - Check it and fix it potentially
   - Progressbar's width should stretch under the thumbnail
+- ### Video playback slider
+  -  ctrl + scroll "scroll" deeper in the timestep
+  -  scroll to offset timestep to left or right 
