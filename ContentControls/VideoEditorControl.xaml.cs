@@ -15,16 +15,16 @@ namespace VideoCompressorGUI.ContentControls;
 public partial class VideoEditorControl : UserControl
 {
     private CompressPreset currentlySelectedPreset = null;
-    private CompressPresetCollection preset;
+    private CompressPresetCollection presets;
     private VideoFileMetaData currentlySelectedVideoFile;
 
     public VideoEditorControl(List<string> files)
     {
         InitializeComponent();
-        preset = SettingsFolder.Load<CompressPresetCollection>();
+        presets = SettingsFolder.Load<CompressPresetCollection>();
 
-        this.currentlySelectedPreset = preset.CompressPresets[0];
-        FillContextMenu(preset);
+        this.currentlySelectedPreset = presets.CompressPresets[0];
+        FillContextMenu(presets);
 
         this.videoBrowser.UpdateSource(files);
         this.videoBrowser.OnSelectionChanged += (a) =>

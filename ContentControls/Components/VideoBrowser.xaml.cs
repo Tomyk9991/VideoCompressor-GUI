@@ -1,14 +1,14 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Threading;
 using FFmpeg.NET;
 using ffmpegCompressor;
 using VideoCompressorGUI.Utils;
@@ -18,7 +18,9 @@ namespace VideoCompressorGUI.ContentControls.Components;
 public partial class VideoBrowser : UserControl
 {
     private List<string> files = new();
-    private List<VideoFileMetaData> videoFileMetaData = new();
+    private ObservableCollection<VideoFileMetaData> videoFileMetaData = new();
+
+    private object syncLock = new();
 
     private VideoFileMetaData currentlyContextMenuOpen = null;
 
@@ -26,48 +28,35 @@ public partial class VideoBrowser : UserControl
     private readonly Compressor compressor = new();
     
     public event Action<VideoFileMetaData> OnSelectionChanged;
-    
-    private readonly DispatcherTimer ticker = new()
-    {
-        Interval = TimeSpan.FromSeconds(0.33)
-    };
-    
+
     public VideoBrowser()
     {
         InitializeComponent();
+        
+        BindingOperations.EnableCollectionSynchronization(videoFileMetaData, syncLock);
+        
         TempFolder.Clear();
     }
     
     public void Initialize(List<string> newFiles)
     {
-        progressBar.Visibility = Visibility.Visible;
-        ticker.Tick -= (o, args) => { };
-        ticker.Tick += (o, e) =>
-        {
-            this.listboxFiles.ItemsSource = Array.Empty<Object>();
-            this.listboxFiles.ItemsSource = videoFileMetaData;
-        };
-        
-        ticker.Start();
-        
+        loadingProgressBar.Visibility = Visibility.Visible;
+
         BackgroundWorker worker = new BackgroundWorker();
         worker.DoWork += (s, e) =>
         {
             ExtractMetaData(newFiles).GetAwaiter().GetResult();
-
-            Console.WriteLine("Finished importing...");
-            Dispatcher.Invoke(() =>
-            {
-                progressBar.Visibility = Visibility.Collapsed;
-                this.listboxFiles.ItemsSource = Array.Empty<Object>();
-                
-                videoFileMetaData.Sort((t1, t2) => t2.CreatedOn.CompareTo(t1.CreatedOn));
-                this.listboxFiles.ItemsSource = videoFileMetaData;
-            });
-            
-            this.ticker.Stop();
         };
 
+        worker.RunWorkerCompleted += (_, _) =>
+        {
+            loadingProgressBar.Visibility = Visibility.Collapsed;
+            this.listboxFiles.ItemsSource = Array.Empty<Object>();
+
+            videoFileMetaData = new ObservableCollection<VideoFileMetaData>(videoFileMetaData.OrderByDescending(t1 => t1.CreatedOn));
+            this.listboxFiles.ItemsSource = videoFileMetaData;
+        };
+        
         worker.RunWorkerAsync();
     }
 
@@ -93,7 +82,7 @@ public partial class VideoBrowser : UserControl
                 var nonGenericTasks = thumbnail.Concat(metaData.Cast<Task>());
                 await Task.WhenAll(nonGenericTasks);
 
-                lock (videoFileMetaData)
+                lock (syncLock)
                 {
                     videoFileMetaData.Add(new VideoFileMetaData(file, thumbnail[0].Result, metaData[0].Result, now));
                 }
@@ -162,9 +151,9 @@ public partial class VideoBrowser : UserControl
         this.videoFileMetaData.Remove(this.currentlyContextMenuOpen);
 
         this.currentlyContextMenuOpen = null;
-        
-        videoFileMetaData.Sort((t1, t2) => t2.CreatedOn.CompareTo(t1.CreatedOn));
-        
+
+        videoFileMetaData = new ObservableCollection<VideoFileMetaData>(videoFileMetaData.OrderByDescending(t1 => t1.CreatedOn));
+
         this.listboxFiles.ItemsSource = Array.Empty<Object>();
         this.listboxFiles.ItemsSource = videoFileMetaData;
 

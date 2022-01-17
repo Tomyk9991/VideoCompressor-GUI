@@ -18,11 +18,13 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="9*" />
         </Grid.RowDefinitions>
-        <ProgressBar x:Name="progressBar" Visibility="Collapsed" Height="40" Width="40" Grid.Row="0" Style="{StaticResource MaterialDesignCircularProgressBar}"
+        <ProgressBar x:Name="loadingProgressBar" Visibility="Collapsed" Height="40" Width="40" Grid.Row="0"
+                     Style="{StaticResource MaterialDesignCircularProgressBar}"
                      Value="0" IsIndeterminate="True" />
-        <ListBox AllowDrop="True" Drop="ListboxFiles_OnDrop" Grid.Row="1" 
+        <ListBox AllowDrop="True" Drop="ListboxFiles_OnDrop" Grid.Row="1"
                  VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling"
-                 Background="#343434" HorizontalContentAlignment="Stretch" SelectionChanged="ListboxFiles_OnSelectionChanged" x:Name="listboxFiles">
+                 Background="#343434" HorizontalContentAlignment="Stretch"
+                 SelectionChanged="ListboxFiles_OnSelectionChanged" x:Name="listboxFiles">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -31,34 +33,32 @@
                                 <MenuItem Click="MenuItem_OnClick" Header="Löschen"></MenuItem>
                             </ContextMenu>
                         </Grid.ContextMenu>
-                        <materialDesign:Card Grid.Column="0" 
+                        <materialDesign:Card Grid.Column="0"
                                              materialDesign:ShadowAssist.ShadowDepth="Depth3"
                                              materialDesign:ShadowAssist.ShadowEdges="Bottom,Right">
-                            
-                            
+
+
                             <materialDesign:Card.Background>
                                 <LinearGradientBrush StartPoint="0, 1" EndPoint="1, 1">
-                                    <GradientStop Color="{Binding CompressData.ProgressColor}" Offset="{Binding CompressData.Progress}" />
+                                    <GradientStop Color="{Binding CompressData.ProgressColor}"
+                                                  Offset="{Binding CompressData.Progress}" />
                                     <GradientStop Color="#00000000" Offset="{Binding CompressData.Progress}" />
                                 </LinearGradientBrush>
-                            </materialDesign:Card.Background>   
-                            
-                            
-                            
-                            
-                            
-                            
+                            </materialDesign:Card.Background>
+
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="3*"/>
-                                    <ColumnDefinition Width="5*"/>
-                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="5*" />
+                                    <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
-                                    
+
                                 <Image Stretch="Uniform" Source="{Binding ThumbnailPath}" />
                                 <StackPanel Margin="15, 15, 15, 0" Grid.Column="1">
                                     <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding File}"></TextBlock>
-                                    <TextBlock Text="{Binding MetaData.Duration, StringFormat={}Länge: {0:hh':'mm':'ss}}"></TextBlock>
+                                    <TextBlock
+                                        Text="{Binding MetaData.Duration, StringFormat={}Länge: {0:hh':'mm':'ss}}">
+                                    </TextBlock>
                                 </StackPanel>
                             </Grid>
                         </materialDesign:Card>
@@ -66,7 +66,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <materialDesign:Snackbar VerticalAlignment="Bottom" x:Name="snackbar" MessageQueue="{materialDesign:MessageQueue}" IsActive="False" Grid.Row="1">
-        </materialDesign:Snackbar>
+        <materialDesign:Snackbar VerticalAlignment="Bottom" x:Name="snackbar"
+                                 MessageQueue="{materialDesign:MessageQueue}" IsActive="False" Grid.Row="1" />
     </Grid>
 </UserControl>
