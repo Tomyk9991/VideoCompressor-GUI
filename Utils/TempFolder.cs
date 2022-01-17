@@ -12,6 +12,7 @@ public static class TempFolder
     static TempFolder()
     {
         ROOT = AppDomain.CurrentDomain.BaseDirectory + "/temp";
+        Directory.CreateDirectory(ROOT);
     }
     
     public static void Clear()

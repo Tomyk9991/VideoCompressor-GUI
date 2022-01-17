@@ -193,7 +193,7 @@ public partial class VideoEditorControl : UserControl
         compressor.OnCompressProgress += OnCompressProgress;
         compressor.OnCompressFinished += OnCompressFinished;
 
-        string folderWithoutFile = Path.GetDirectoryName(currentlySelectedVideoFile.File);
+        string folderWithoutFile = folderPathTextBox.Text;
         string fileEnding = fileEndingTextBox.Text;
         string builtName = filenameTextBox.Text;
         
