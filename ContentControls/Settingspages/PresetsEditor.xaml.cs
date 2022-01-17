@@ -120,8 +120,12 @@ public partial class PresetsEditor : UserControl
         if (newPreset.UseBitrate)
             bitrateTextBox.Text = newPreset.Bitrate.Value.ToString();
 
+        targetSizeAskLaterCheckBox.IsChecked = newPreset.AskLater;
+        
         if (newPreset.UseTargetSizeCalculation && !newPreset.AskLater)
+        {
             targetSizeTextBox.Text = !newPreset.AskLater ? newPreset.TargetSize.Value.ToString() : "";
+        }
     }
     
     private void StackPanelPresetNew_OnClick(object sender, RoutedEventArgs e)
@@ -240,5 +244,10 @@ public partial class PresetsEditor : UserControl
         }
         
         SettingsFolder.Save(compressPresetCollection);
+    }
+
+    private void TargetSizeAskLaterCheckBox_OnChecked(object sender, RoutedEventArgs e)
+    {
+        ValidateCanUse();
     }
 }

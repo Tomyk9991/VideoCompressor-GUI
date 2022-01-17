@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,7 +17,44 @@ namespace VideoCompressorGUI.Utils;
 public static class ClassExtensions
 {
     private static int clickedTimes = 0;
-    private static object mutex = new object();
+    
+    public static string BuildNameFromString(this string name)
+    {
+        if (name.EndsWith(")"))
+        {
+            int index = name.Length - 2;
+            string number = "";
+			
+            while (char.IsDigit(name[index]))
+            {
+                number += name[index];
+                index--;
+            }
+			
+		
+            if(name[index] == '(' || (name[index] == '-' && (index - 1) >= 0 && name[index -1] == '(')) {
+                if (name[index] == '-') {
+                    number += '-';
+                }
+                number = new string(number.Reverse().ToArray());
+                int pos = int.Parse(number);
+                return name.ReplaceLastOccurrence(number, (pos + 1).ToString());
+            }
+        }
+		
+        return name + "(1)";
+    }
+    
+    public static string ReplaceLastOccurrence(this string source, string find, string replace)
+    {
+        int place = source.LastIndexOf(find);
+
+        if(place == -1)
+            return source;
+
+        string result = source.Remove(place, find.Length).Insert(place, replace);
+        return result;
+    }
     
     public static void PlayAnimated(this MediaElement videoPlayer, Dispatcher dispatcher, PackIcon playPauseIcon)
     {
@@ -39,9 +77,11 @@ public static class ClassExtensions
     {
         ConversionOptions options = new ConversionOptions
         {
-            VideoBitRate = preset.Bitrate,
-            VideoFps = (int) file.MetaData.VideoData.Fps
+            VideoBitRate = preset.UseTargetSizeCalculation ? preset.CalculateBitrateWithFixedTargetSize(file.MetaData.Duration.TotalSeconds) : preset.Bitrate,
+            VideoFps = (int) file.MetaData.VideoData.Fps,
         };
+        
+        // options.CutMedia();
 
         return options;
     }

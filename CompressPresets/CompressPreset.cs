@@ -27,4 +27,10 @@ public class CompressPreset
         return "{\n\tPreset name: " + PresetName + "\n\tuse bitrate: " + UseBitrate + "\n\tbitrate: " + Bitrate +
                "\n\tuse target size calculation: " + UseTargetSizeCalculation + "\n\task later: " + AskLater + "\n\ttarget size: " + TargetSize + "\n}";
     }
+
+    public int CalculateBitrateWithFixedTargetSize(double videoLengthInSeconds)
+    {
+        int targetBitSize = this.TargetSize.Value * 1000 * 8;
+        return (int) (targetBitSize / videoLengthInSeconds);
+    }
 }

@@ -10,7 +10,9 @@ public class VideoFileMetaData
     public string ThumbnailPath { get; set; }
     public MetaData MetaData { get; set; }
     public DateTime CreatedOn { get; set; }
+    
     public CompressData CompressData { get; set; }
+    public CutStartEndParameter CutSeek { get; set; }
 
     public VideoFileMetaData(string file, string thumbnailPath, MetaData metaData, DateTime createdOn)
     {
@@ -19,5 +21,6 @@ public class VideoFileMetaData
         MetaData = metaData;
         CreatedOn = createdOn;
         CompressData = new CompressData();
+        CutSeek = new CutStartEndParameter(TimeSpan.Zero, metaData.Duration);
     }
 }

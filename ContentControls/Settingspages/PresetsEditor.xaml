@@ -129,7 +129,7 @@
                                         </Binding>
                                     </TextBox.Text>
                                 </TextBox>
-                                    <CheckBox x:Name="targetSizeAskLaterCheckBox" Grid.Column="2" Content="Beim Komprimieren festlegen" />
+                                    <CheckBox x:Name="targetSizeAskLaterCheckBox" Checked="TargetSizeAskLaterCheckBox_OnChecked" Unchecked="TargetSizeAskLaterCheckBox_OnChecked" Grid.Column="2" Content="Beim Komprimieren festlegen" />
                             </Grid>
                         </components:CollapsibleGroupBox>
                         <Grid HorizontalAlignment="Right" Margin="0, 5, 5, 0">

@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Ookii.Dialogs.Wpf;
-using VideoCompressorGUI.Settings;
 using VideoCompressorGUI.Utils;
 
 namespace VideoCompressorGUI.ContentControls;
@@ -41,6 +39,11 @@ public partial class DragAndDropControl : UserControl
             //     "F:/Videos/Valorant/absolute clean C hold.mp4",
             //     "F:/Videos/Valorant/buggy flash.mp4",
             //     "F:/Videos/Valorant/juicy.mp4"
+            // });
+            
+            // HandleFiles(new List<string>
+            // {
+            //     "F:/Videos/Testing/test.mp4",
             // });
         }, TimeSpan.FromMilliseconds(1));
     }

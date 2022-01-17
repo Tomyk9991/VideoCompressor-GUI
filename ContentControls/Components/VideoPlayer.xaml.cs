@@ -36,11 +36,17 @@ public partial class VideoPlayer : UserControl
         {
             OnPlaybackMainValueChanged(d);
         };
-        this.videoPlaybackSlider.OnUpperThumbChanged += UpdateDistanceForTextSpan;
+        this.videoPlaybackSlider.OnUpperThumbChanged += (d) =>
+        {
+            this.currentlySelectedVideo.CutSeek.End = d * currentlySelectedVideo.MetaData.Duration;
+            UpdateDistanceForTextSpan(d);
+        };
 
         this.videoPlaybackSlider.OnLowerThumbChanged += (d) =>
         {
             UpdateDistanceForTextSpan(d);
+
+            this.currentlySelectedVideo.CutSeek.Start = d * currentlySelectedVideo.MetaData.Duration;
 
             if (isPlayingVideo)
             {

@@ -7,7 +7,18 @@ using VideoCompressorGUI.CompressPresets;
 using VideoCompressorGUI.Utils;
 
 namespace ffmpegCompressor;
-    
+
+public class CutStartEndParameter
+{
+    public TimeSpan Start { get; set; }
+    public TimeSpan End { get; set; }
+
+    public CutStartEndParameter(TimeSpan start, TimeSpan end)
+    {
+        Start = start;
+        End = end;
+    }
+}
 
 public class Compressor
 {
@@ -45,17 +56,21 @@ public class Compressor
         return await this.ffmpeg.GetMetaDataAsync(inputFile, CancellationToken.None);
     }
 
-    public async Task<MediaFile> Compress(CompressPreset preset, VideoFileMetaData videoFile)
+    public async Task<MediaFile> Compress(CompressPreset preset, VideoFileMetaData videoFile, CompressOptions compressOptions)
     {
         InputFile inputFile = new InputFile(videoFile.File);
-        string outputName = Path.GetDirectoryName(videoFile.File) + "/Output.mp4";
-        OutputFile outputFile = new OutputFile(outputName);
+        OutputFile outputFile = new OutputFile(compressOptions.OutputPath);
         
         ConversionOptions options = this.ffmpeg.BuildConversionOptions(videoFile, preset);
+
+        if (videoFile.CutSeek != null)
+        {
+            options.CutMedia(videoFile.CutSeek.Start, (videoFile.CutSeek.End - videoFile.CutSeek.Start));
+        }
         
         this.ffmpeg.Progress += (_, args) =>
         {
-            OnCompressProgress?.Invoke(videoFile, (double) args.ProcessedDuration.TotalSeconds / args.TotalDuration.TotalSeconds);
+            OnCompressProgress?.Invoke(videoFile, args.ProcessedDuration.TotalSeconds / (videoFile.CutSeek.End - videoFile.CutSeek.Start).TotalSeconds);
         };
 
         this.ffmpeg.Complete += (_, _) =>

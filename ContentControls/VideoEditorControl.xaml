@@ -6,12 +6,14 @@
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
+             xmlns:validationRules="clr-namespace:VideoCompressorGUI.WPFCustomBehaviours.ValidationRules"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
              TextOptions.TextFormattingMode="Ideal"
              TextOptions.TextRenderingMode="Auto"
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="900" d:DesignWidth="1600"
+             Loaded="VideoEditorControl_OnLoaded"
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
@@ -33,13 +35,14 @@
             </Grid.ColumnDefinitions>
             <components:VideoBrowser x:Name="videoBrowser" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></components:VideoBrowser>
             <components:VideoPlayer Margin="15, 15, 15, 15" Grid.Row="0" Grid.Column="1" x:Name="videoPlayer" />
-
+            
+            <!-- Compress buttons -->
             <Grid Margin="0, 0, 15, 15" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="1" Click="ButtonBase_OnClick" 
+                <Button Grid.Column="1" Click="InitCompressDialog_OnClick"
                         IsEnabled="False" x:Name="compressButton"
                         Style="{StaticResource MaterialDesignRaisedButton}"
                         materialDesign:ShadowAssist.ShadowDepth="Depth5"
@@ -50,8 +53,10 @@
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Margin="-10, 0, 5, 0" VerticalAlignment="Center"
-                                   HorizontalAlignment="Center" Text="Komprimiere..." />
+                        <StackPanel Orientation="Horizontal" Margin="-10, 0, 5, 0" VerticalAlignment="Center">
+                            <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center" Kind="Compress" />
+                            <TextBlock Text="Komprimiere..."></TextBlock>
+                        </StackPanel>
 
                         <Grid Grid.Column="1" HorizontalAlignment="Right" Margin="0, 0, -15, 0">
                             <Grid.ColumnDefinitions>
@@ -73,6 +78,113 @@
                     </Grid>
                 </Button>
             </Grid>
+            
+            <components:Dialog x:Name="compressOptionsDialog" MouseDown="OutsideDialog_OnPreviewMouseDown" Visibility="Collapsed" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2">
+                <Grid MouseDown="InsideDialog_OnClick">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <materialDesign:Card Background="{DynamicResource MaterialDesignDarkBackground}" Grid.Row="1" Grid.Column="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" MinHeight="35" MaxHeight="45" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            
+                            <!-- Header -->
+                            <materialDesign:Card Grid.Row="0" Background="{DynamicResource PrimaryHueDarkBrush}">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Letzte Komprimierungoptionen"/>
+                            </materialDesign:Card>
+                            
+                            <StackPanel Grid.Row="1">
+                                <Grid Margin="0, 15, 10, 20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Grid.Column="0"
+                                                             Kind="Folder" HorizontalAlignment="Center"
+                                                             VerticalAlignment="Center" />
+                                
+                                    <Grid Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Margin="0, 0, 5, 0" Grid.Column="0" x:Name="folderPathTextBox" PreviewMouseUp="OnSelectFolderPath" IsReadOnly="True"
+                                                 materialDesign:HintAssist.Hint="Zielordner" />
+                                        
+                                        <TextBox Margin="0, 0, 5, 0" Grid.Column="1" x:Name="filenameTextBox"
+                                                 materialDesign:HintAssist.Hint="Dateiname" TextChanged="OnFileNameChanged">
+                                            <TextBox.Text>
+                                                <Binding
+                                                    RelativeSource="{RelativeSource Self}" Path="Text"
+                                                    UpdateSourceTrigger="LostFocus">
+                                                    <Binding.ValidationRules>
+                                                        <validationRules:ValidFileNameValidationRule x:Name="validFileNameValidationRule" ValidatesOnTargetUpdated="True" />
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </TextBox.Text>
+                                        </TextBox>
+                                        
+                                        <TextBox Grid.Column="2" Text=".mp4" x:Name="fileEndingTextBox" IsEnabled="false" IsReadOnly="True" materialDesign:HintAssist.Hint="Format" />
+                                    </Grid>
+                                </Grid>
+                                <!-- Ask later questions -->
+                                <Grid x:Name="targetSizeQuestionParent">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Margin="0, 0, 5, 20" Grid.Column="0"
+                                                             Kind="Numbers" HorizontalAlignment="Center"
+                                                             VerticalAlignment="Center" />
+                                
+                                    <TextBox x:Name="targetSizeTextbox" Grid.Column="1" Margin="0, 0, 10, 20"
+                                             materialDesign:HintAssist.Hint="Zielgröße der Datei">
+                                        <TextBox.Text>
+                                            <Binding
+                                                RelativeSource="{RelativeSource Self}" Path="Text"
+                                                UpdateSourceTrigger="LostFocus">
+                                                <Binding.ValidationRules>
+                                                    <validationRules:IsDigitValidationRule x:Name="isDigitValidationRule" ValidatesOnTargetUpdated="True" />
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </TextBox.Text>
+                                    </TextBox>
+                                </Grid>
+                                <!-- Control buttons -->
+                                <StackPanel HorizontalAlignment="Right" Margin="0, 0, 10, 10" Orientation="Horizontal">
+                                    <Button x:Name="dialogCompressButton" Click="DialogCompress_OnClick" Margin="0, 0, 5, 0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center" Kind="Compress" />
+                                            <TextBlock Text="Komprimiere..."></TextBlock>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Click="DialogCancel_OnClick">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center" Kind="Close" />
+                                            <TextBlock Text="Abbrechen"></TextBlock>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                            
+                        </Grid>
+                    </materialDesign:Card>
+                </Grid>
+            </components:Dialog>
         </Grid>
     </Grid>
 </UserControl>
