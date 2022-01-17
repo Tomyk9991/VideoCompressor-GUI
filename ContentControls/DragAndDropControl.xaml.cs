@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Ookii.Dialogs.Wpf;
+using VideoCompressorGUI.Settings;
 using VideoCompressorGUI.Utils;
 
 namespace VideoCompressorGUI.ContentControls;
@@ -20,18 +21,18 @@ public partial class DragAndDropControl : UserControl
 
         Dispatcher.DelayInvoke(() =>
         {
-            // var loadedGeneralSettings = SettingsFolder.Load<GeneralSettingsData>();
-            //
-            // if (loadedGeneralSettings.AutomaticallyUseNewestVideos)
-            // {
-            //     List<string> files = loadedGeneralSettings.FetchNewFiles();
-            //     
-            //     loadedGeneralSettings.LatestTimeWatched = DateTime.Now;
-            //     SettingsFolder.Save(loadedGeneralSettings);
-            //
-            //     if (files.Count != 0)
-            //         HandleFiles(files);
-            // }
+            var loadedGeneralSettings = SettingsFolder.Load<GeneralSettingsData>();
+            
+            if (loadedGeneralSettings.AutomaticallyUseNewestVideos)
+            {
+                List<string> files = loadedGeneralSettings.FetchNewFiles();
+                
+                loadedGeneralSettings.LatestTimeWatched = DateTime.Now;
+                SettingsFolder.Save(loadedGeneralSettings);
+            
+                if (files.Count != 0)
+                    HandleFiles(files);
+            }
             
             // HandleFiles(new List<string>
             // {
@@ -40,7 +41,7 @@ public partial class DragAndDropControl : UserControl
             //     "F:/Videos/Valorant/buggy flash.mp4",
             //     "F:/Videos/Valorant/juicy.mp4"
             // });
-            
+            //
             // HandleFiles(new List<string>
             // {
             //     "F:/Videos/Testing/test.mp4",
