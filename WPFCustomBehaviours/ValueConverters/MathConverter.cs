@@ -11,7 +11,7 @@ public class MathConverter : IValueConverter
         if (targetType != typeof(string))
             throw new ArgumentException("Target type has to be of type string");
 
-        if ((double)value > 1.0d)
+        if ((double)value <= 0.0d || (double) value > 1.0d)
             return "";
         
         

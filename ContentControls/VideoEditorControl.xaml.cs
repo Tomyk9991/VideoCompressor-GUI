@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using ffmpegCompressor;
 using MaterialDesignThemes.Wpf;
 using Ookii.Dialogs.Wpf;
@@ -89,6 +90,23 @@ public partial class VideoEditorControl : UserControl
         {
             file.CompressData.Progress = 1.0d;
             file.CompressData.ProgressColor = CompressData.FromPercentage(1.0d);
+            
+            var animation = new DoubleAnimation
+            {
+                From = 1.0d,
+                To = 1.2d,
+                BeginTime = TimeSpan.FromSeconds(0),
+                Duration = TimeSpan.FromSeconds(1.0),
+                FillBehavior = FillBehavior.Stop
+            };
+            
+            animation.Completed += (s, e) =>
+            {
+                file.CompressData.Progress = 0.0d;
+                file.CompressData.ProgressColor = CompressData.FromPercentage(0.0d);
+            };
+
+            animation.BeginAnimation(OpacityProperty, animation);
         });
     }
 
