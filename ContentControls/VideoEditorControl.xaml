@@ -39,7 +39,6 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="textblockProgress" Grid.Column="0" VerticalAlignment="Center" Margin="0, 0, 15, 0" Foreground="White" />
                 <Button Grid.Column="1" Click="ButtonBase_OnClick" 
                         IsEnabled="False" x:Name="compressButton"
                         Style="{StaticResource MaterialDesignRaisedButton}"

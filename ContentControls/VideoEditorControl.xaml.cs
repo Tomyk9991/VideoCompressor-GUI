@@ -77,7 +77,6 @@ public partial class VideoEditorControl : UserControl
     private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
     {
         Compressor compressor = new Compressor();
-        textblockProgress.Text = "Beginne Komprimierung...";
         
         compressor.OnCompressProgress += OnCompressProgress;
         compressor.OnCompressFinished += OnCompressFinished;
@@ -85,22 +84,20 @@ public partial class VideoEditorControl : UserControl
         await compressor.Compress(currentlySelectedPreset, currentlySelectedVideoFile);
     }
 
-    private void OnCompressFinished()
+    private void OnCompressFinished(VideoFileMetaData file)
     {
         Dispatcher.Invoke(() =>
         {
-            textblockProgress.Text = "";
+            file.CompressData.Progress = 1.0d;
         });
     }
 
-    private void OnCompressProgress(double percentage)
+    private void OnCompressProgress(VideoFileMetaData file, double percentage)
     {
         Dispatcher.Invoke(() =>
         {
-            textblockProgress.Text = (percentage * 100.0d).ToString("F") + "%";
-            
-            this.currentlySelectedVideoFile.CompressData.Progress = percentage;
-            this.currentlySelectedVideoFile.CompressData.ProgressColor = CompressData.FromPercentage(percentage);
+            file.CompressData.Progress = percentage;
+            file.CompressData.ProgressColor = CompressData.FromPercentage(percentage);
         });
     }
 

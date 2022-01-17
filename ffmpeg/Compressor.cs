@@ -14,8 +14,8 @@ public class Compressor
     private Engine ffmpeg;
     private Mp4FileValidator validator = new();
 
-    public event Action<double> OnCompressProgress;
-    public event Action OnCompressFinished;
+    public event Action<VideoFileMetaData, double> OnCompressProgress;
+    public event Action<VideoFileMetaData> OnCompressFinished;
     
     public Compressor()
     {
@@ -50,19 +50,17 @@ public class Compressor
         InputFile inputFile = new InputFile(videoFile.File);
         string outputName = Path.GetDirectoryName(videoFile.File) + "/Output.mp4";
         OutputFile outputFile = new OutputFile(outputName);
-
-        Console.WriteLine(preset.Bitrate);
-
+        
         ConversionOptions options = this.ffmpeg.BuildConversionOptions(videoFile, preset);
         
         this.ffmpeg.Progress += (_, args) =>
         {
-            OnCompressProgress?.Invoke((double) args.ProcessedDuration.TotalSeconds / args.TotalDuration.TotalSeconds);
+            OnCompressProgress?.Invoke(videoFile, (double) args.ProcessedDuration.TotalSeconds / args.TotalDuration.TotalSeconds);
         };
 
         this.ffmpeg.Complete += (_, _) =>
         {
-            OnCompressFinished?.Invoke();
+            OnCompressFinished?.Invoke(videoFile);
         };
 
         return await this.ffmpeg.ConvertAsync(inputFile, outputFile, options, CancellationToken.None);

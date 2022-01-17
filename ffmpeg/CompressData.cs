@@ -28,7 +28,7 @@ public class CompressData : INotifyPropertyChanged
 
     public CompressData()
     {
-        _progress = 1.0d;
+        _progress = 1.2d;
     }
     
 

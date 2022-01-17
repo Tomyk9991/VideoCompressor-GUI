@@ -35,13 +35,13 @@ public partial class DragAndDropControl : UserControl
             //         HandleFiles(files);
             // }
             
-            HandleFiles(new List<string>
-            {
-                "F:/Videos/Valorant/smart teleport.mp4",
-                "F:/Videos/Valorant/absolute clean C hold.mp4",
-                "F:/Videos/Valorant/buggy flash.mp4",
-                "F:/Videos/Valorant/juicy.mp4"
-            });
+            // HandleFiles(new List<string>
+            // {
+            //     "F:/Videos/Valorant/smart teleport.mp4",
+            //     "F:/Videos/Valorant/absolute clean C hold.mp4",
+            //     "F:/Videos/Valorant/buggy flash.mp4",
+            //     "F:/Videos/Valorant/juicy.mp4"
+            // });
         }, TimeSpan.FromMilliseconds(1));
     }
 
