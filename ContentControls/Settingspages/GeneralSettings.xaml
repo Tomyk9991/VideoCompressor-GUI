@@ -16,32 +16,74 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}"
              Unloaded="GeneralSettings_OnUnloaded">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel>
-            <components:CollapsibleGroupBox x:Name="collapsibleGroupBoxNewestVideo" Header="Neuste Videos automatisch hinzufügen">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBox Text="{Binding SelectedPath, RelativeSource={RelativeSource AncestorType={x:Type settingspages:GeneralSettings}}}" 
-                        PreviewMouseUp="SelectedPath_OnClick" Grid.Column="0" IsReadOnly="True" Margin="0, 0, 5, 0"
-                             materialDesign:HintAssist.Hint="Oberster Pfad für die Videos"></TextBox>
-                    <Grid Grid.Column="1">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <materialDesign:Card Grid.Row="0" Background="{StaticResource PrimaryHueDarkBrush}">
+            <TextBlock FontSize="16" HorizontalAlignment="Center" Text="Allgemeine Einstellungen"/>
+        </materialDesign:Card>
+        
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Grid Margin="5, 0, 0, 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Margin="0, 15, 0, 0" Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="15" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Rectangle Grid.Column="0" Width="10" Height="1" Fill="#9f9f9f" />
+                        <TextBlock Grid.Column="1" Text="Nach dem Komprimieren"/>
+                        <Rectangle Grid.Column="2" Margin="5, 0, 5, 0" Height="1" Fill="#9f9f9f" />
+                    </Grid>
+                    <Grid Margin="0, 0, 0, 30" Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        
-                        <Button Width="50" Margin="0, 0, 5, 0" Click="SelectPathButton_OnClick" Grid.Column="0">
-                            <materialDesign:PackIcon Kind="CreateNewFolder" />
-                        </Button>
-                        <Button Width="50" Click="DeletePathButton_OnClick" Grid.Column="1">
-                            <materialDesign:PackIcon Kind="Delete" />
-                        </Button>
+                        <StackPanel Margin="0, 15, 0, 0" Grid.Column="0">
+                            <CheckBox x:Name="openExplorerAfterCompressCheckbox" Content="Öffne den Explorer nach der Komprimierung" />
+                        </StackPanel>
+                        <StackPanel Margin="0, 15, 0, 0" Grid.Column="1">
+                            <CheckBox IsChecked="False" x:Name="deleteOriginalFileAfterCompressCheckbox" Content="Lösche die die Originaldatei, nach der Komprimierung" />
+                            <CheckBox x:Name="removeFromItemsListAfterCompressCheckbox" 
+                                      IsEnabled="{Binding ElementName=deleteOriginalFileAfterCompressCheckbox, Path=IsChecked, Converter={StaticResource InvertBooleanConverter}}"
+                                      Content="Lösche das Listenobjekt nach der Komprimierung" />
+                        </StackPanel>
                     </Grid>
                 </Grid>
-            </components:CollapsibleGroupBox>
-        </StackPanel>
-    </ScrollViewer>
+                <components:CollapsibleGroupBox x:Name="collapsibleGroupBoxNewestVideo" Header="Neuste Videos automatisch hinzufügen">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding SelectedPath, RelativeSource={RelativeSource AncestorType={x:Type settingspages:GeneralSettings}}}" 
+                            PreviewMouseUp="SelectedPath_OnClick" Grid.Column="0" IsReadOnly="True" Margin="0, 0, 5, 0"
+                                 materialDesign:HintAssist.Hint="Oberster Pfad für die Videos"></TextBox>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            
+                            <Button Width="50" Margin="0, 0, 5, 0" Click="SelectPathButton_OnClick" Grid.Column="0">
+                                <materialDesign:PackIcon Kind="CreateNewFolder" />
+                            </Button>
+                            <Button Width="50" Click="DeletePathButton_OnClick" Grid.Column="1">
+                                <materialDesign:PackIcon Kind="Delete" />
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </components:CollapsibleGroupBox>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

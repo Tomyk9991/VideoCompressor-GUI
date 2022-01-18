@@ -3,6 +3,8 @@
 ---
 
 ## Todos
+- ### Bugs
+  - Disable compress button, when "ask later" for target size is enabled 
 
 - ### Settings
   - #### Inside settings:

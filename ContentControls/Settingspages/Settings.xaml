@@ -20,13 +20,14 @@
         <materialDesign:Card Margin="0, 0, 50, 0">
             <TabControl
                 materialDesign:ColorZoneAssist.Mode="Standard"
-                materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                materialDesign:ShadowAssist.ShadowDepth="Depth0"
                 Style="{StaticResource MaterialDesignNavigatilRailTabControl}">
                 <TabItem>
+                    
                     <TabItem.Header>
                         <StackPanel Width="auto" Height="auto">
                             <materialDesign:PackIcon Width="24" Height="24"
-                                HorizontalAlignment="Center" Kind="Folder" />
+                                                     HorizontalAlignment="Center" Kind="Folder" />
                             <TextBlock
                                 HorizontalAlignment="Center"
                                 Text="General" />

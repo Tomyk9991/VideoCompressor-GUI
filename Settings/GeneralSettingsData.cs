@@ -11,15 +11,20 @@ public class GeneralSettingsData : ISettingsLoadable<GeneralSettingsData>
     public string PathToNewestVideos { get; set; }
     public DateTime LatestTimeWatched { get; set; }
     
-    
-    
+    public bool OpenExplorerAfterCompress { get; set; }
+    public bool DeleteOriginalFileAfterCompress { get; set; }
+    public bool RemoveFromItemsList { get; set; }
+
     public GeneralSettingsData CreateDefault()
     {
         return new GeneralSettingsData
         {
             AutomaticallyUseNewestVideos = false,
             PathToNewestVideos = "",
-            LatestTimeWatched = DateTime.Now
+            LatestTimeWatched = DateTime.Now,
+            OpenExplorerAfterCompress = false,
+            DeleteOriginalFileAfterCompress = false,
+            RemoveFromItemsList = false
         };
     }
 

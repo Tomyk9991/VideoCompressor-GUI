@@ -65,8 +65,15 @@
                                         </TextBlock>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1" Margin="0, 0, 5, 0">
-                                        <TextBlock HorizontalAlignment="Right" Text="{Binding CompressData.Progress, StringFormat={}{0:#0.00'%'}, Converter={StaticResource MathConverter}}"/>
-                                        <materialDesign:PackIcon Kind="FolderArrowRight" />
+                                    <TextBlock HorizontalAlignment="Right" Text="{Binding CompressData.Progress, StringFormat={}{0:#0.00'%'}, Converter={StaticResource MathConverter}}"/>
+                                        
+                                        <Button Width="20" Height="20"
+                                            Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                            Tag="{Binding File}"
+                                            ToolTip="Öffne den Explorer zur Datei"
+                                            Click="FolderListItem_OnClick">
+                                            <materialDesign:PackIcon Width="15" Height="15" Kind="FolderArrowRight" />
+                                        </Button>
                                     </StackPanel>
                                 </Grid>
                                 

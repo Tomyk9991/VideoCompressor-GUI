@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.PerformanceData;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using VideoCompressorGUI.ContentControls;
+using VideoCompressorGUI.ContentControls.Settingspages;
+using VideoCompressorGUI.Settings;
 
 namespace VideoCompressorGUI
 {
@@ -47,6 +50,13 @@ namespace VideoCompressorGUI
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             OnWindowSizeChanged?.Invoke(e);
+        }
+
+        private void MainWindow_OnClosing(object? sender, CancelEventArgs e)
+        {
+            GeneralSettingsData data = SettingsFolder.Load<GeneralSettingsData>();
+            data.LatestTimeWatched = DateTime.Now;
+            SettingsFolder.Save(data);
         }
     }
 }

@@ -29,6 +29,9 @@ public partial class GeneralSettings : UserControl
     {
         this.collapsibleGroupBoxNewestVideo.IsVisibleContent = settings.AutomaticallyUseNewestVideos;
         this.SelectedPath = settings.PathToNewestVideos;
+        this.openExplorerAfterCompressCheckbox.IsChecked = settings.OpenExplorerAfterCompress;
+        this.deleteOriginalFileAfterCompressCheckbox.IsChecked = settings.DeleteOriginalFileAfterCompress;
+        this.removeFromItemsListAfterCompressCheckbox.IsChecked = settings.RemoveFromItemsList;
     }
 
     private void SelectedPath_OnClick(object sender, MouseButtonEventArgs e)
@@ -59,6 +62,9 @@ public partial class GeneralSettings : UserControl
             LatestTimeWatched = DateTime.Now,
             AutomaticallyUseNewestVideos = collapsibleGroupBoxNewestVideo.IsVisibleContent && this.SelectedPath != "",
             PathToNewestVideos = collapsibleGroupBoxNewestVideo.IsVisibleContent ? this.SelectedPath : "",
+            OpenExplorerAfterCompress = openExplorerAfterCompressCheckbox.IsChecked.Value,
+            DeleteOriginalFileAfterCompress = deleteOriginalFileAfterCompressCheckbox.IsChecked.Value,
+            RemoveFromItemsList = removeFromItemsListAfterCompressCheckbox.IsChecked.Value
         };
         
         SettingsFolder.Save(data);

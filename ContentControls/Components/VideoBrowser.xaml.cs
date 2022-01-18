@@ -34,7 +34,6 @@ public partial class VideoBrowser : UserControl
         InitializeComponent();
         
         BindingOperations.EnableCollectionSynchronization(videoFileMetaData, syncLock);
-        
         TempFolder.Clear();
     }
     
@@ -95,6 +94,7 @@ public partial class VideoBrowser : UserControl
     private void ListboxFiles_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         VideoFileMetaData association = (sender as ListBox).SelectedItem as VideoFileMetaData;
+        
         currentlyContextMenuOpen = association;
 
         if (Mouse.LeftButton == MouseButtonState.Pressed)
@@ -147,6 +147,13 @@ public partial class VideoBrowser : UserControl
 
     private void MenuItem_OnClick(object sender, RoutedEventArgs e)
     {
+        RemoveItem(this.currentlyContextMenuOpen);
+    }
+
+    public void RemoveItem(VideoFileMetaData target)
+    {
+        this.currentlyContextMenuOpen = target;
+        
         this.files.Remove(this.currentlyContextMenuOpen.File);
         this.videoFileMetaData.Remove(this.currentlyContextMenuOpen);
 
@@ -158,5 +165,11 @@ public partial class VideoBrowser : UserControl
         this.listboxFiles.ItemsSource = videoFileMetaData;
 
         this.OnSelectionChanged?.Invoke(null);
+    }
+
+    private void FolderListItem_OnClick(object sender, RoutedEventArgs e)
+    {
+        UtilMethods.OpenExplorerAndSelectFile((string)((Button)sender).Tag);
+        e.Handled = true;
     }
 }

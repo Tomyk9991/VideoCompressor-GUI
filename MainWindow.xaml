@@ -13,6 +13,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         KeyDown="MainWindow_OnKeyDown"
+        Closing="MainWindow_OnClosing"
         SizeChanged="MainWindow_OnSizeChanged">
     <ContentControl x:Name="contentControl"></ContentControl>
 </Window>

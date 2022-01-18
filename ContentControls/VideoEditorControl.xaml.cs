@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,7 @@ public partial class VideoEditorControl : UserControl
 {
     private CompressPreset currentlySelectedPreset = null;
     private CompressPresetCollection presets;
+    private GeneralSettingsData generalSettings;
     private VideoFileMetaData currentlySelectedVideoFile;
 
     public VideoEditorControl(List<string> files)
@@ -41,6 +43,9 @@ public partial class VideoEditorControl : UserControl
     {
         presets = SettingsFolder.Load<CompressPresetCollection>();
         this.currentlySelectedPreset = presets.CompressPresets[0];
+
+        generalSettings = SettingsFolder.Load<GeneralSettingsData>();
+        
         FillContextMenu(presets);
     }
 
@@ -143,7 +148,10 @@ public partial class VideoEditorControl : UserControl
 
         if ((bool)dialog.ShowDialog(Window.GetWindow(this)))
         {
-            return dialog.SelectedPath;
+            string selectedPath = dialog.SelectedPath;
+            validFileNameValidationRule.FolderWithoutFile = selectedPath;
+            
+            return selectedPath;
         }
 
         return "";
@@ -157,7 +165,6 @@ public partial class VideoEditorControl : UserControl
     private void InitCompressDialog_OnClick(object sender, RoutedEventArgs e)
     {
         compressOptionsDialog.Visibility = Visibility.Visible;
-
         
         targetSizeQuestionParent.Visibility =
             currentlySelectedPreset.AskLater ? Visibility.Visible : Visibility.Collapsed;
@@ -201,6 +208,27 @@ public partial class VideoEditorControl : UserControl
         CompressOptions options = new CompressOptions(folderWithoutFile + "/" + builtName + fileEnding);
         
         compressOptionsDialog.Visibility = Visibility.Collapsed;
+        
+        compressor.OnCompressFinished += file =>
+        {
+            if (generalSettings.OpenExplorerAfterCompress)
+                UtilMethods.OpenExplorerAndSelectFile(options.OutputPath);
+
+            if (generalSettings.DeleteOriginalFileAfterCompress)
+            {
+                Console.WriteLine("Delete file: " + file.File);
+                File.Delete(file.File);
+            }
+
+            if (generalSettings.DeleteOriginalFileAfterCompress || generalSettings.RemoveFromItemsList)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    this.videoBrowser.RemoveItem(file);
+                });
+            }
+        };
+        
         await compressor.Compress(currentlySelectedPreset, currentlySelectedVideoFile, options);
     }
 
