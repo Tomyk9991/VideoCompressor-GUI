@@ -82,8 +82,8 @@ public partial class VideoRangeSlider : UserControl
         double distance = upperValue - lowerValue; // [36; 1000]
         double percentageDistance = MathHelper.Map(distance, minimalDistance, maximalDistance, 0.0d, 1.0d);
         
-        this.LowerThumb = MathHelper.Map(lowerValue, minimalPixelValue, maximalPixelValue - minimalDistance, 0.0d, 1.0d);
-        this.UpperThumb = MathHelper.Map(upperValue, minimalPixelValue + minimalDistance, maximalPixelValue, 0.0d, 1.0d);
+        this.LowerThumb = MathHelper.Map(lowerValue, minimalPixelValue, maximalPixelValue, 0.0d, 1.0d);
+        this.UpperThumb = MathHelper.Map(upperValue, minimalPixelValue, maximalPixelValue, 0.0d, 1.0d);
 
         if (percentageDistance == 0 && this.ClampingLeft)
             this.UpperThumb = this.LowerThumb;
@@ -187,12 +187,10 @@ public partial class VideoRangeSlider : UserControl
     
     private void SetValueThumb(double v)
     {
-        double thickness = (minimalDistance - minimalDistance / 2) - 5;
+        const double thickness = 5;
+        double left = v * (maximalDistance - thickness);
         
-        double availableMargin = maximalPixelValue - minimalPixelValue;
-        double left = v * (availableMargin - thickness);
-        
-        mainThumb.Margin = new Thickness(left, 0, 0, 0);
+        mainThumb.Margin = new Thickness(left + v * thickness, 0, 0, 0);
     }
 
     private void MainThumb_DragDelta(object sender, DragDeltaEventArgs e)

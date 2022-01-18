@@ -26,19 +26,6 @@
             </Thumb.Background>
         </Thumb>
         
-        <!-- <Rectangle Grid.Row="0" Grid.RowSpan="2"> -->
-        <!--     <Rectangle.OpacityMask> -->
-        <!--         <LinearGradientBrush StartPoint="1, 1" EndPoint="1, 0"> -->
-        <!--             <GradientStop Color="#313131" Offset="1.0" /> -->
-        <!--             <GradientStop Color="#00000000" Offset="0.0" /> -->
-        <!--         </LinearGradientBrush> -->
-        <!--     </Rectangle.OpacityMask> -->
-        <!--     <Rectangle.Fill> -->
-        <!--         <ImageBrush Opacity="0.1" ViewportUnits="Absolute" Viewport="0, 0, 42, 42" ImageSource="https://thumbs.dreamstime.com/b/diagonal-lines-pattern-grey-stripe-texture-background-repeat-straight-line-vector-illustration-154721512.jpg" TileMode="Tile" /> -->
-        <!--     </Rectangle.Fill> -->
-        <!-- </Rectangle> -->
-
-        
         <Grid x:Name="lineParent" Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="8" />
@@ -71,8 +58,7 @@
         <Thumb Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="mainThumb"
                DragDelta="MainThumb_DragDelta"
                DragStarted="MainThumb_OnDragStarted"
-               DragCompleted="MainThumb_OnDragCompleted"
-               >
+               DragCompleted="MainThumb_OnDragCompleted">
             <Thumb.Template>
                 <ControlTemplate>
                     <Ellipse HorizontalAlignment="Center" VerticalAlignment="Center" Width="10" Height="10" Fill="{DynamicResource PrimaryHueDarkBrush}" />
