@@ -27,7 +27,6 @@ public partial class VideoRangeSlider : UserControl
     /// <summary> Percentage of the upper thumb </summary>
     public double UpperThumb { get; private set; }
 
-    private bool initialized = false;
 
     private bool ClampingLeft { get; set; }
     private bool ClampingRight { get; set; }
@@ -244,7 +243,6 @@ public partial class VideoRangeSlider : UserControl
     
     private void MidThumb0_OnDragCompleted(object sender, DragCompletedEventArgs e)
     {
-        Console.WriteLine("ended");
         if (!wasDraggingMidThumb)
         {
             _value = lastClickedPixelValueX / this.maximalPixelValue;
@@ -258,7 +256,6 @@ public partial class VideoRangeSlider : UserControl
 
     private void MidThumb0_OnDragStarted(object sender, DragStartedEventArgs e)
     {
-        Console.WriteLine("started");
         Point lowerThumbPoint =
             lowerThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
         

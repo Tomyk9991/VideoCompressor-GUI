@@ -9,7 +9,7 @@ namespace ffmpegCompressor;
 
 public class CompressData : INotifyPropertyChanged
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
+    [CanBeNull] public event PropertyChangedEventHandler PropertyChanged;
     
     private double _progress;
     private Color _progressColor;
@@ -33,6 +33,7 @@ public class CompressData : INotifyPropertyChanged
     
 
     [NotifyPropertyChangedInvocator]
+    #nullable enable
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -18,7 +18,6 @@ public partial class VideoPlayer : UserControl
     };
 
     private bool isPlayingVideo = false;
-    private double playbackSpeed = 1.0d;
 
     public VideoPlayer()
     {

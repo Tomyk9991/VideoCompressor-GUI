@@ -52,6 +52,7 @@ namespace VideoCompressorGUI
             OnWindowSizeChanged?.Invoke(e);
         }
 
+        #nullable enable
         private void MainWindow_OnClosing(object? sender, CancelEventArgs e)
         {
             GeneralSettingsData data = SettingsFolder.Load<GeneralSettingsData>();

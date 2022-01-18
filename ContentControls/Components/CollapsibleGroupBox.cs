@@ -41,7 +41,7 @@ public class CollapsibleGroupBox : ContentControl
         { 
             SetValue(IsVisibleContentProperty, value);
             _isVisibleContent = value;
-            IsVisibleChanged(value);
+            IsVisibleChangedPrivate(value);
         }
     }
     
@@ -51,7 +51,7 @@ public class CollapsibleGroupBox : ContentControl
         SetValue(IsVisibleContentProperty, newValue);
     }
 
-    private void IsVisibleChanged(bool newValue)
+    private void IsVisibleChangedPrivate(bool newValue)
     {
         IsVisibilityChanged?.Invoke(this, newValue);
     }

@@ -19,7 +19,7 @@ namespace VideoCompressorGUI.ContentControls;
 
 public partial class VideoEditorControl : UserControl
 {
-    private CompressPreset currentlySelectedPreset = null;
+    private CompressPreset currentlySelectedPreset;
     private CompressPresetCollection presets;
     private GeneralSettingsData generalSettings;
     private VideoFileMetaData currentlySelectedVideoFile;
@@ -69,13 +69,13 @@ public partial class VideoEditorControl : UserControl
             menuItem.Click += (sender, args) =>
             {
                 var menuItem = (MenuItem)sender;
-                var newPreset = collection.CompressPresets.First(p => p.PresetName == menuItem.Header);
+                var newPreset = collection.CompressPresets.First(p => p.PresetName == (string) menuItem.Header);
                 OnPresetChanged(newPreset);
 
                 foreach (MenuItem item in buttonCompressContextMenu.Items)
                 {
                     ((PackIcon)item.Icon).Kind =
-                        item.Header == newPreset.PresetName ? PackIconKind.Check : PackIconKind.None;
+                        (string) item.Header == newPreset.PresetName ? PackIconKind.Check : PackIconKind.None;
                 }
             };
 
