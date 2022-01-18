@@ -202,7 +202,7 @@ public partial class PresetsEditor : UserControl
             string presetName = nameTextBox.Text;
             bool useBitrate = collapsibleGroupboxPredefinedBitrate.IsVisibleContent;
             bool useTargetSize = collapsibleGroupboxCalculatedBitrate.IsVisibleContent;
-            bool askLater = targetSizeAskLaterCheckBox.IsChecked.Value;
+            bool askLater = useTargetSize ? targetSizeAskLaterCheckBox.IsChecked.Value : false;
 
             int? bitrate = useBitrate ? int.Parse(bitrateTextBox.Text) : null;
             int? targetSize = useTargetSize ? (askLater ? null : int.Parse(targetSizeTextBox.Text)) : null;

@@ -152,7 +152,8 @@
                                                              VerticalAlignment="Center" />
                                 
                                     <TextBox x:Name="targetSizeTextbox" Grid.Column="1" Margin="0, 0, 10, 20"
-                                             materialDesign:HintAssist.Hint="Zielgröße der Datei">
+                                             materialDesign:HintAssist.Hint="Zielgröße der Datei"
+                                             TextChanged="TargetSizeTextbox_OnTextChanged">
                                         <TextBox.Text>
                                             <Binding
                                                 RelativeSource="{RelativeSource Self}" Path="Text"

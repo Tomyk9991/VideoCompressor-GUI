@@ -162,6 +162,11 @@ public partial class VideoEditorControl : UserControl
         ValidateCanCompress();
     }
     
+    private void TargetSizeTextbox_OnTextChanged(object sender, TextChangedEventArgs e)
+    {
+        ValidateCanCompress();
+    }
+    
     private void InitCompressDialog_OnClick(object sender, RoutedEventArgs e)
     {
         compressOptionsDialog.Visibility = Visibility.Visible;
@@ -203,6 +208,9 @@ public partial class VideoEditorControl : UserControl
         string folderWithoutFile = folderPathTextBox.Text;
         string fileEnding = fileEndingTextBox.Text;
         string builtName = filenameTextBox.Text;
+
+        if (this.currentlySelectedPreset.AskLater)
+            this.currentlySelectedPreset.TargetSize = int.Parse(this.targetSizeTextbox.Text);
         
         
         CompressOptions options = new CompressOptions(folderWithoutFile + "/" + builtName + fileEnding);
@@ -245,7 +253,8 @@ public partial class VideoEditorControl : UserControl
     {
         var r1 = validFileNameValidationRule.Validate(filenameTextBox.Text, CultureInfo.CurrentCulture);
         var r2 = folderPathTextBox.Text != "";
+        var r3 = isDigitValidationRule.Validate(targetSizeTextbox.Text, CultureInfo.CurrentCulture);
 
-        dialogCompressButton.IsEnabled = r1.IsValid && r2;
+        dialogCompressButton.IsEnabled = r1.IsValid && r2 && (r3.IsValid && targetSizeQuestionParent.Visibility == Visibility.Visible || targetSizeQuestionParent.Visibility == Visibility.Collapsed);
     }
 }
