@@ -182,7 +182,7 @@ public partial class CompressOptionDialog : UserControl
     private string SelectPath()
     {
         var dialog = new VistaFolderBrowserDialog();
-
+        
         if ((bool)dialog.ShowDialog(Window.GetWindow(this)))
         {
             string selectedPath = dialog.SelectedPath;

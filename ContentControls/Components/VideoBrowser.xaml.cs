@@ -17,7 +17,7 @@ namespace VideoCompressorGUI.ContentControls.Components;
 
 public partial class VideoBrowser : UserControl
 {
-    private List<string> files = new();
+    private HashSet<string> files = new();
     private ObservableCollection<VideoFileMetaData> videoFileMetaData = new();
 
     private object syncLock = new();
@@ -83,7 +83,10 @@ public partial class VideoBrowser : UserControl
 
                 lock (syncLock)
                 {
-                    videoFileMetaData.Add(new VideoFileMetaData(file, thumbnail[0].Result, metaData[0].Result, now));
+                    Dispatcher.Invoke(() =>
+                    {
+                        videoFileMetaData.Add(new VideoFileMetaData(file, thumbnail[0].Result, metaData[0].Result, now));
+                    });
                 }
             }));
         }
@@ -158,7 +161,7 @@ public partial class VideoBrowser : UserControl
     public int RemoveItem(VideoFileMetaData target)
     {
         this.currentlyContextMenuOpen = target;
-        
+
         this.files.Remove(this.currentlyContextMenuOpen.File);
         this.videoFileMetaData.Remove(this.currentlyContextMenuOpen);
 

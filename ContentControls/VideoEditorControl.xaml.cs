@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Animation;
-using ffmpegCompressor;
 using MaterialDesignThemes.Wpf;
 using VideoCompressorGUI.CompressPresets;
 using VideoCompressorGUI.Settings;
