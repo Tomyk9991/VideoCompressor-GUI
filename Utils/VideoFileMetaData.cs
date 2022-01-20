@@ -13,7 +13,7 @@ public class VideoFileMetaData
     
     public CompressData CompressData { get; set; }
     public CutStartEndParameter CutSeek { get; set; }
-
+    
     public VideoFileMetaData(string file, string thumbnailPath, MetaData metaData, DateTime createdOn)
     {
         File = file;

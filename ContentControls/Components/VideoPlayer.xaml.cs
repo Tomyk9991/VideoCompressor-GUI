@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using VideoCompressorGUI.Keybindings;
+using VideoCompressorGUI.Settings;
 using VideoCompressorGUI.Utils;
 
 namespace VideoCompressorGUI.ContentControls.Components;
@@ -43,10 +44,9 @@ public partial class VideoPlayer : UserControl
 
         this.videoPlaybackSlider.OnLowerThumbChanged += (d) =>
         {
-            UpdateDistanceForTextSpan(d);
-
             this.currentlySelectedVideo.CutSeek.Start = d * currentlySelectedVideo.MetaData.Duration;
-
+            UpdateDistanceForTextSpan(d);
+            
             if (isPlayingVideo)
             {
                 TogglePlayPause();
@@ -56,14 +56,28 @@ public partial class VideoPlayer : UserControl
         };
 
         this.videoPlayerParent.Visibility = Visibility.Hidden;
+
+        ((MainWindow)Application.Current.MainWindow).OnWindowClosing += _ => SavePersistentStates();
     }
+    
 
     private void VideoPlayer_OnLoaded(object sender, RoutedEventArgs e)
     {
-        SetVolume(50.0d);
+        var playerCache = SettingsFolder.Load<VideoPlayerCache>();
+        SetVolume(playerCache.Volume);
+    }
+    
+    private void VideoPlayer_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        SavePersistentStates();
     }
 
-
+    private void SavePersistentStates()
+    {
+        var playerCache = new VideoPlayerCache(soundVolumeSlider.Value);
+        SettingsFolder.Save(playerCache);
+    }
+     
     private void Element_MediaEnded(object sender, RoutedEventArgs e)
     {
         // Wird nur ausgeführt, wenn das Element auf natürliche Art fertiggestellt wird
@@ -101,14 +115,13 @@ public partial class VideoPlayer : UserControl
             return;
         }
         
-        
-
         this.currentlySelectedVideo = association;
         this.videoPlayer.Source = new Uri(association.File);
 
         isPlayingVideo = false;
         TogglePlayPause();
-
+        
+        
         Dispatcher.DelayInvoke(() => { videoPlayer.Focus(); }, TimeSpan.FromMilliseconds(100));
 
         textblockTotalTime.Text = association.MetaData.Duration.TotalSeconds.ToMinutesAndSecondsFromSeconds();
@@ -205,4 +218,5 @@ public partial class VideoPlayer : UserControl
     }
 
     #endregion
+
 }

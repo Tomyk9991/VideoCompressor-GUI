@@ -79,7 +79,10 @@
                 </Button>
             </Grid>
             
-            <components:Dialog x:Name="compressOptionsDialog" MouseDown="OutsideDialog_OnPreviewMouseDown" Visibility="Collapsed" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2">
+            <materialDesign:Card x:Name="compressOptionsDialog" MouseDown="OutsideDialog_OnPreviewMouseDown"
+                                 Visibility="Visible" 
+                                 Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
+                                 Background="#aa313131">
                 <Grid MouseDown="InsideDialog_OnClick">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -185,7 +188,7 @@
                         </Grid>
                     </materialDesign:Card>
                 </Grid>
-            </components:Dialog>
+            </materialDesign:Card>
         </Grid>
     </Grid>
 </UserControl>

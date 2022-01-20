@@ -32,6 +32,7 @@ public partial class GeneralSettings : UserControl
         this.openExplorerAfterCompressCheckbox.IsChecked = settings.OpenExplorerAfterCompress;
         this.deleteOriginalFileAfterCompressCheckbox.IsChecked = settings.DeleteOriginalFileAfterCompress;
         this.removeFromItemsListAfterCompressCheckbox.IsChecked = settings.RemoveFromItemsList;
+        this.openExplorerAfterLastCompressCheckbox.IsChecked = settings.OpenExplorerAfterLastCompression;
     }
 
     private void SelectedPath_OnClick(object sender, MouseButtonEventArgs e)
@@ -64,7 +65,8 @@ public partial class GeneralSettings : UserControl
             PathToNewestVideos = collapsibleGroupBoxNewestVideo.IsVisibleContent ? this.SelectedPath : "",
             OpenExplorerAfterCompress = openExplorerAfterCompressCheckbox.IsChecked.Value,
             DeleteOriginalFileAfterCompress = deleteOriginalFileAfterCompressCheckbox.IsChecked.Value,
-            RemoveFromItemsList = removeFromItemsListAfterCompressCheckbox.IsChecked.Value
+            RemoveFromItemsList = removeFromItemsListAfterCompressCheckbox.IsChecked.Value,
+            OpenExplorerAfterLastCompression = openExplorerAfterLastCompressCheckbox.IsChecked.Value
         };
         
         SettingsFolder.Save(data);

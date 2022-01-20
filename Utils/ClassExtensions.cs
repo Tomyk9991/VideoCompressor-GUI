@@ -11,6 +11,7 @@ using System.Windows.Threading;
 using FFmpeg.NET;
 using MaterialDesignThemes.Wpf;
 using VideoCompressorGUI.CompressPresets;
+using VideoCompressorGUI.Settings;
 
 namespace VideoCompressorGUI.Utils;
 

@@ -15,7 +15,8 @@
              d:DesignHeight="450" d:DesignWidth="800"
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}"
-             Loaded="VideoPlayer_OnLoaded">
+             Loaded="VideoPlayer_OnLoaded"
+             Unloaded="VideoPlayer_OnUnloaded">
     <StackPanel x:Name="videoPlayerParent">
         <Grid>
             <Grid.RowDefinitions>
@@ -52,7 +53,7 @@
                         <TextBlock IsHitTestVisible="False" Margin="25, 0, 0, 0" x:Name="volumeTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" Text="50%"></TextBlock>
                     </Grid>
                     <components:VideoRangeSlider Height="30" Grid.Column="2" x:Name="videoPlaybackSlider"/>
-                    <TextBlock Grid.Column="3" Text="00:23" x:Name="textblockTotalTime" HorizontalAlignment="Center"></TextBlock>
+                    <TextBlock Grid.Column="3" Text="00:23" x:Name="textblockTotalTime" HorizontalAlignment="Center" />
                     
                     <decorators:NoSizeDecorator Grid.Column="2">
                         <materialDesign:Snackbar x:Name="snackbarNotifier"

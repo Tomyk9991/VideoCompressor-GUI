@@ -49,7 +49,12 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <StackPanel Margin="0, 15, 0, 0" Grid.Column="0">
-                            <CheckBox x:Name="openExplorerAfterCompressCheckbox" Content="Öffne den Explorer nach der Komprimierung" />
+                            <CheckBox x:Name="openExplorerAfterCompressCheckbox" 
+                                      IsEnabled="{Binding ElementName=openExplorerAfterLastCompressCheckbox, Path=IsChecked, Converter={StaticResource InvertBooleanConverter}}"
+                                      Content="Öffne den Explorer nach der Komprimierung" />
+                            <CheckBox x:Name="openExplorerAfterLastCompressCheckbox"
+                                      IsEnabled="{Binding ElementName=openExplorerAfterCompressCheckbox, Path=IsChecked, Converter={StaticResource InvertBooleanConverter}}"
+                                      Content="Öffne den Explorer nach der letzten Komprimierung in der Liste" />
                         </StackPanel>
                         <StackPanel Margin="0, 15, 0, 0" Grid.Column="1">
                             <CheckBox IsChecked="False" x:Name="deleteOriginalFileAfterCompressCheckbox" Content="Lösche die die Originaldatei, nach der Komprimierung" />

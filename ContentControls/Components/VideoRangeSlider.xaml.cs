@@ -119,9 +119,9 @@ public partial class VideoRangeSlider : UserControl
         MoveUpperThumb(e.HorizontalChange);
     }
 
-    private bool MoveUpperThumb(double e)
+    private bool MoveUpperThumb(double e, bool useOffset = true)
     {
-        double value = Math.Max(0.0d, sliderParent.Margin.Right - e);
+        double value = useOffset ? Math.Max(0.0d, sliderParent.Margin.Right - e) : Math.Max(0.0d, e);
 
         Point lowerThumbPoint =
             lowerThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
@@ -145,9 +145,9 @@ public partial class VideoRangeSlider : UserControl
         return this.ClampingRight;
     }
 
-    private bool MoveLowerThumb(double e)
+    private bool MoveLowerThumb(double e, bool useOffset = true)
     {
-        double value = Math.Max(0.0d, sliderParent.Margin.Left + e);
+        double value = useOffset ? Math.Max(0.0d, sliderParent.Margin.Left + e) : Math.Max(0.0d, e);
 
         Point lowerThumbPoint =
             lowerThumb.TransformToAncestor(parent).Transform(new Point(0, 0));

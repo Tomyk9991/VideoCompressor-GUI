@@ -14,6 +14,7 @@ public class GeneralSettingsData : ISettingsLoadable<GeneralSettingsData>
     public bool OpenExplorerAfterCompress { get; set; }
     public bool DeleteOriginalFileAfterCompress { get; set; }
     public bool RemoveFromItemsList { get; set; }
+    public bool OpenExplorerAfterLastCompression { get; set; }
 
     public GeneralSettingsData CreateDefault()
     {
@@ -22,9 +23,11 @@ public class GeneralSettingsData : ISettingsLoadable<GeneralSettingsData>
             AutomaticallyUseNewestVideos = false,
             PathToNewestVideos = "",
             LatestTimeWatched = DateTime.Now,
+            
             OpenExplorerAfterCompress = false,
             DeleteOriginalFileAfterCompress = false,
-            RemoveFromItemsList = false
+            RemoveFromItemsList = false,
+            OpenExplorerAfterLastCompression = false
         };
     }
 

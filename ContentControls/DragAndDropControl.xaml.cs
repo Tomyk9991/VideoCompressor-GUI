@@ -27,9 +27,6 @@ public partial class DragAndDropControl : UserControl
             {
                 List<string> files = loadedGeneralSettings.FetchNewFiles();
                 
-                loadedGeneralSettings.LatestTimeWatched = DateTime.Now;
-                SettingsFolder.Save(loadedGeneralSettings);
-            
                 if (files.Count != 0)
                     HandleFiles(files);
             }

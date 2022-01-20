@@ -150,7 +150,12 @@ public partial class VideoBrowser : UserControl
         RemoveItem(this.currentlyContextMenuOpen);
     }
 
-    public void RemoveItem(VideoFileMetaData target)
+    /// <summary>
+    /// Removes the item from the list
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns>The amount of items in the list after the remove</returns>
+    public int RemoveItem(VideoFileMetaData target)
     {
         this.currentlyContextMenuOpen = target;
         
@@ -163,8 +168,9 @@ public partial class VideoBrowser : UserControl
 
         this.listboxFiles.ItemsSource = Array.Empty<Object>();
         this.listboxFiles.ItemsSource = videoFileMetaData;
-
+        
         this.OnSelectionChanged?.Invoke(null);
+        return this.videoFileMetaData.Count;
     }
 
     private void FolderListItem_OnClick(object sender, RoutedEventArgs e)

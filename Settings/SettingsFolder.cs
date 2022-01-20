@@ -29,7 +29,13 @@ public class SettingsFolder
                 {
                     { "", nameof(GeneralSettingsData) + ".json" }
                 }
-            }
+            },
+            {
+                typeof(VideoPlayerCache), new Dictionary<string, string>
+                {
+                    { "", nameof(VideoPlayerCache) + ".json" }
+                }
+            },
         };
 
         CheckFoldersAndFiles();

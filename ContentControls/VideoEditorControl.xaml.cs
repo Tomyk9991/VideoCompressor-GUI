@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -232,7 +231,10 @@ public partial class VideoEditorControl : UserControl
             {
                 Dispatcher.Invoke(() =>
                 {
-                    this.videoBrowser.RemoveItem(file);
+                    int count = this.videoBrowser.RemoveItem(file);
+
+                    if (count == 0 && generalSettings.OpenExplorerAfterLastCompression)
+                        UtilMethods.OpenExplorerAndSelectFile(options.OutputPath);
                 });
             }
         };

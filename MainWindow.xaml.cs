@@ -18,6 +18,7 @@ namespace VideoCompressorGUI
     {
         public event Action<KeyEventArgs, IInputElement> OnKeyPressed;
         public event Action<SizeChangedEventArgs> OnWindowSizeChanged;
+        public event Action<CancelEventArgs> OnWindowClosing;
 
         private Stack<ContentControl> controls = new();
 
@@ -58,6 +59,8 @@ namespace VideoCompressorGUI
             GeneralSettingsData data = SettingsFolder.Load<GeneralSettingsData>();
             data.LatestTimeWatched = DateTime.Now;
             SettingsFolder.Save(data);
+
+            OnWindowClosing?.Invoke(e);
         }
     }
 }
