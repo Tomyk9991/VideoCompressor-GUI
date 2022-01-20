@@ -2,7 +2,9 @@
 /.[Ii]dea/
 /bin
 /obj
+/.[Vv]scode
 todos.md
 ffmpeg.exe
 Folder*
 Annotations.cs
+*.DS_Store
