@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using ffmpegCompressor;
+using Microsoft.VisualBasic.FileIO;
 using Ookii.Dialogs.Wpf;
 using VideoCompressorGUI.CompressPresets;
 using VideoCompressorGUI.ContentControls.Components;
@@ -121,8 +122,9 @@ public partial class CompressOptionDialog : UserControl
 
             if (generalSettings.DeleteOriginalFileAfterCompress)
             {
-                Console.WriteLine("Delete file: " + file.File);
-                File.Delete(file.File);
+                Console.WriteLine("Move file to Bin: " + file.File);
+                FileSystem.DeleteFile(file.File, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
+                    UICancelOption.DoNothing);
             }
 
             if (generalSettings.DeleteOriginalFileAfterCompress || generalSettings.RemoveFromItemsList)

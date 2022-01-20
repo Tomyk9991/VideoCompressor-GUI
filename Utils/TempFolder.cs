@@ -22,7 +22,7 @@ public static class TempFolder
         bool cleanup = false;
         foreach (FileInfo file in di.GetFiles())
         {
-            if (DateTime.Now - file.CreationTime > TimeSpan.FromSeconds(60)/*TimeSpan.FromDays(30)*/)
+            if (DateTime.Now - file.CreationTime > TimeSpan.FromDays(7))
             {
                 cleanup = true;
                 Console.WriteLine("Clean up temp folder");
