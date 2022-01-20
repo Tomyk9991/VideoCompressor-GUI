@@ -9,8 +9,7 @@
              d:DesignHeight="200" d:DesignWidth="800"
              Loaded="CompressOptionDialog_OnLoaded">
     <materialDesign:Card MouseDown="OutsideDialog_OnPreviewMouseDown"
-                                 Visibility="Visible" 
-                                 Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
+                                 Visibility="Visible"
                                  Background="#aa313131">
                 <Grid MouseDown="InsideDialog_OnClick">
                     <Grid.RowDefinitions>
@@ -56,7 +55,7 @@
                                         <TextBox Margin="0, 0, 5, 0" Grid.Column="0" x:Name="folderPathTextBox" PreviewMouseUp="OnSelectFolderPath" IsReadOnly="True"
                                                  materialDesign:HintAssist.Hint="Zielordner" />
                                         
-                                        <TextBox Margin="0, 0, 5, 0" Grid.Column="1" x:Name="filenameTextBox"
+                                        <TextBox Focusable="True" Margin="0, 0, 5, 0" Grid.Column="1" x:Name="filenameTextBox"
                                                  materialDesign:HintAssist.Hint="Dateiname" TextChanged="OnFileNameChanged">
                                             <TextBox.Text>
                                                 <Binding

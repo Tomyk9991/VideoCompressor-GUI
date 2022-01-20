@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -25,6 +26,14 @@ public partial class CompressOptionDialog : UserControl
     public CompressOptionDialog()
     {
         InitializeComponent();
+        
+        ((MainWindow)Application.Current.MainWindow).OnKeyPressed += async (e, _) =>
+        {
+            if (ValidateCanCompress() && e.Key == Key.Enter)
+            {
+                await Compress();
+            }
+        };
     }
     
     private void CompressOptionDialog_OnLoaded(object sender, RoutedEventArgs e)
@@ -37,6 +46,12 @@ public partial class CompressOptionDialog : UserControl
         this.currentlySelectedPreset = preset;
         this.currentlySelectedVideoFile = file;
         this.videoBrowser = videoBrowser;
+        
+        Dispatcher.DelayInvoke(() =>
+        {
+            filenameTextBox.Focus();
+            filenameTextBox.CaretIndex = filenameTextBox.Text.Length;
+        }, TimeSpan.FromMilliseconds(1));
         
         targetSizeQuestionParent.Visibility =
             currentlySelectedPreset.AskLater ? Visibility.Visible : Visibility.Collapsed;
@@ -76,6 +91,11 @@ public partial class CompressOptionDialog : UserControl
     }
 
     private async void DialogCompress_OnClick(object sender, RoutedEventArgs e)
+    {
+        await Compress();
+    }
+
+    private async Task Compress()
     {
         Compressor compressor = new Compressor();
         
@@ -170,13 +190,19 @@ public partial class CompressOptionDialog : UserControl
         folderPathTextBox.Text = newPath == "" && folderPathTextBox.Text != "" ? folderPathTextBox.Text : newPath;
     }
     
-    private void ValidateCanCompress()
+    private bool ValidateCanCompress()
     {
         var r1 = validFileNameValidationRule.Validate(filenameTextBox.Text, CultureInfo.CurrentCulture);
         var r2 = folderPathTextBox.Text != "";
         var r3 = isDigitValidationRule.Validate(targetSizeTextbox.Text, CultureInfo.CurrentCulture);
 
-        dialogCompressButton.IsEnabled = r1.IsValid && r2 && (r3.IsValid && targetSizeQuestionParent.Visibility == Visibility.Visible || targetSizeQuestionParent.Visibility == Visibility.Collapsed);
+        bool result = r1.IsValid && 
+                      r2 && 
+                      (r3.IsValid && targetSizeQuestionParent.Visibility == Visibility.Visible || targetSizeQuestionParent.Visibility == Visibility.Collapsed);
+        
+        dialogCompressButton.IsEnabled = result;
+
+        return result;
     }
     
     private string SelectPath()
