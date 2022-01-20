@@ -31,7 +31,7 @@
                             </Grid.RowDefinitions>
                             
                             <!-- Header -->
-                            <materialDesign:Card Grid.Row="0" Background="{DynamicResource PrimaryHueDarkBrush}">
+                            <materialDesign:Card FontSize="16" Grid.Row="0" Background="{DynamicResource PrimaryHueDarkBrush}">
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Letzte Komprimierungoptionen"/>
                             </materialDesign:Card>
                             

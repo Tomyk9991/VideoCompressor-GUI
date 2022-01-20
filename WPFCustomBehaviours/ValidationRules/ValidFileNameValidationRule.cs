@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.IO;
 using System.Windows.Controls;
@@ -8,7 +9,7 @@ public class ValidFileNameValidationRule : ValidationRule
 {
     public string FolderWithoutFile { get; set; }
     public string FileEnding { get; set; }
-    
+
     public override ValidationResult Validate(object value, CultureInfo cultureInfo)
     {
         if (string.IsNullOrWhiteSpace((value ?? "").ToString()))

@@ -1,0 +1,45 @@
+<UserControl x:Class="VideoCompressorGUI.ContentControls.Settingspages.PathRulesSettings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
+             xmlns:dialogs="clr-namespace:VideoCompressorGUI.ContentControls.Dialogs"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800"
+             Loaded="PathRulesSettings_OnLoaded"
+             Unloaded="PathRulesSettings_OnUnloaded"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource MaterialDesignFont}"
+             Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <!-- Header -->
+        <materialDesign:Card Grid.Row="0" Background="{StaticResource PrimaryHueDarkBrush}">
+            <TextBlock FontSize="16" HorizontalAlignment="Center"
+                       Text="Standardfall der Pfadregeln für das Komprimierungsdateiziel" />
+        </materialDesign:Card>
+        <StackPanel Grid.Row="1">
+            <TextBlock Margin="15, 15, 15, 0" TextAlignment="Center" TextWrapping="WrapWithOverflow"
+                       Text="Sollte kein Fall angegeben sein, so wird das Komprimierungsdateiziel innerhalb des Ordners der Originaldatei impliziert." />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="9*" />
+                    <ColumnDefinition Width="50" />
+                </Grid.ColumnDefinitions>
+                <components:HeaderedSeperator Margin="0, 15, 0, 15" Header="Benutzerdefinierte Fälle" />
+                <Button x:Name="addRuleButton" Click="AddRuleButton_OnClick" Grid.Column="1" Margin="0, 0, 5, 0">
+                    <materialDesign:PackIcon Kind="Add" />
+                </Button>
+            </Grid>
+
+            <StackPanel x:Name="rulesItemsPanel"/>
+        </StackPanel>
+        <dialogs:OkCancelDialog x:Name="okCancelDialog" Visibility="Collapsed" Grid.Row="0" Grid.RowSpan="2"/>
+    </Grid>
+</UserControl>

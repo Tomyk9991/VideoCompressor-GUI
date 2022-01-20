@@ -5,8 +5,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
-             xmlns:decorators="clr-namespace:VideoCompressorGUI.Decorators"
              xmlns:settingspages="clr-namespace:VideoCompressorGUI.ContentControls.Settingspages"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
@@ -23,17 +21,28 @@
                 materialDesign:ShadowAssist.ShadowDepth="Depth0"
                 Style="{StaticResource MaterialDesignNavigatilRailTabControl}">
                 <TabItem>
-                    
                     <TabItem.Header>
                         <StackPanel Width="auto" Height="auto">
                             <materialDesign:PackIcon Width="24" Height="24"
                                                      HorizontalAlignment="Center" Kind="Folder" />
                             <TextBlock
                                 HorizontalAlignment="Center"
-                                Text="General" />
+                                Text="Generall" />
                         </StackPanel>
                     </TabItem.Header>
                     <settingspages:GeneralSettings />
+                </TabItem>
+                <TabItem Margin="5, 0, 5, 0">
+                    <TabItem.Header>
+                        <StackPanel Width="auto" Height="auto">
+                            <materialDesign:PackIcon Width="24" Height="24"
+                                                     HorizontalAlignment="Center" Kind="Scroll" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                Text="Pfadregeln" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <settingspages:PathRulesSettings />
                 </TabItem>
             </TabControl>
         </materialDesign:Card>

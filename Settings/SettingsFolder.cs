@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using VideoCompressorGUI.CompressPresets;
+using VideoCompressorGUI.ContentControls.Settingspages;
 
 namespace VideoCompressorGUI.Settings;
 
@@ -34,6 +35,12 @@ public class SettingsFolder
                 typeof(VideoPlayerCache), new Dictionary<string, string>
                 {
                     { "", nameof(VideoPlayerCache) + ".json" }
+                }
+            },
+            {
+                typeof(PathRuleCollection), new Dictionary<string, string>
+                {
+                    { "", nameof(PathRuleCollection) + ".json" }
                 }
             },
         };

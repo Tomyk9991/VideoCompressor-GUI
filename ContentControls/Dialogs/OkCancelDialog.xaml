@@ -1,0 +1,57 @@
+<UserControl x:Class="VideoCompressorGUI.ContentControls.Dialogs.OkCancelDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             d:DesignHeight="200" d:DesignWidth="800">
+    <materialDesign:Card MouseDown="OutsideDialog_OnPreviewMouseDown"
+                                 Visibility="Visible"
+                                 Background="#aa313131">
+                <Grid MouseDown="InsideDialog_OnClick">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <materialDesign:Card Background="{DynamicResource MaterialDesignDarkBackground}" Grid.Row="1" Grid.Column="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" MinHeight="35" MaxHeight="45" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            
+                            <!-- Header -->
+                            <materialDesign:Card Grid.Row="0" Background="{DynamicResource PrimaryHueDarkBrush}">
+                                <TextBlock FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Sind Sie sicher?"/>
+                            </materialDesign:Card>
+                            
+                            <StackPanel Margin="5, 15, 5, 0" Grid.Row="1">
+                                <TextBlock TextWrapping="WrapWithOverflow" Text="Sie sind im Begriff alle rot markierten Zeilen zu löschen, da diese fehlerhaft sind."/>
+                                <TextBlock TextWrapping="WrapWithOverflow" Text="Möchten Sie fortfahren?"/>
+                                <Grid Margin="0, 15, 0, 5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Click="Confirm_OnClick" Margin="0, 0, 2.5, 0" Grid.Column="0">
+                                        <TextBlock Text="Ja"/>
+                                    </Button>
+                                    <Button Click="Cancel_OnClick" Margin="2.5, 0, 0, 0" Grid.Column="1">
+                                        <TextBlock Text="Nein"/>
+                                    </Button>
+                                </Grid>
+                            </StackPanel>
+                            
+                        </Grid>
+                    </materialDesign:Card>
+                </Grid>
+            </materialDesign:Card>
+</UserControl>

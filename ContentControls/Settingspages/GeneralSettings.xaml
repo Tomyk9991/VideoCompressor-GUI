@@ -33,16 +33,9 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Grid Margin="0, 15, 0, 0" Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="15" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Rectangle Grid.Column="0" Width="10" Height="1" Fill="#9f9f9f" />
-                        <TextBlock Grid.Column="1" Text="Nach dem Komprimieren"/>
-                        <Rectangle Grid.Column="2" Margin="5, 0, 5, 0" Height="1" Fill="#9f9f9f" />
-                    </Grid>
+                    
+                    <components:HeaderedSeperator Margin="0, 15, 0, 0" Grid.Row="0" Header="Nach dem Komprimieren" />
+                    
                     <Grid Margin="0, 0, 0, 30" Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -65,7 +58,7 @@
                     </Grid>
                 </Grid>
                 <components:CollapsibleGroupBox x:Name="collapsibleGroupBoxNewestVideo" Header="Neuste Videos automatisch hinzufügen">
-                    <Grid>
+                    <Grid Margin="5, 0, 5, 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
