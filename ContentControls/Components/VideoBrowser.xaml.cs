@@ -127,18 +127,19 @@ public partial class VideoBrowser : UserControl
                         fileSystemWatchers.First(t => t.Watcher.Path == Path.GetDirectoryName(args.FullPath));
                     uint refCount = watcherToRemove.Decrease();
 
+                    Dispatcher.Invoke(() =>
+                    {
+                        VideoFileMetaData metaData = videoFileMetaData.First(t => t.File == args.FullPath);
+                        RemoveItem(metaData, false);
+                    });
+                    
                     if (refCount == 0)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.WriteLine("Remove watcher: " + watcherToRemove.Watcher.Path);
                         Console.ResetColor();
 
-                        Dispatcher.Invoke(() =>
-                        {
-                            fileSystemWatchers.Remove(watcherToRemove);
-                            VideoFileMetaData metaData = videoFileMetaData.First(t => t.File == newFile);
-                            RemoveItem(metaData, false);
-                        });
+                        fileSystemWatchers.Remove(watcherToRemove);
                     }
                 };
             }
