@@ -34,10 +34,10 @@ public partial class VideoBrowser : UserControl
         InitializeComponent();
         
         BindingOperations.EnableCollectionSynchronization(videoFileMetaData, syncLock);
-        TempFolder.Clear();
+        TempFolder.ClearOnTimeExpired();
     }
-    
-    public void Initialize(List<string> newFiles)
+
+    public void UpdateSource(List<string> newFiles)
     {
         loadingProgressBar.Visibility = Visibility.Visible;
 
@@ -57,11 +57,6 @@ public partial class VideoBrowser : UserControl
         };
         
         worker.RunWorkerAsync();
-    }
-
-    public void UpdateSource(List<string> files)
-    {
-        Initialize(files);
     }
 
     private async Task ExtractMetaData(List<string> newFiles)

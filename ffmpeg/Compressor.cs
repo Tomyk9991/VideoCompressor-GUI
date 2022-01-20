@@ -39,7 +39,13 @@ public class Compressor
             throw new ArgumentException("File hasn't the supported format");
 
         InputFile inputFile = new InputFile(file);
-        string generatedPath = TempFolder.GenerateNewName(".jpg");
+        string generatedPath = TempFolder.GenerateThumbnailName(inputFile.FileInfo.CreationTime, file, ".jpg");
+
+        if (File.Exists(generatedPath))
+        {
+            return generatedPath;
+        }
+        
         OutputFile outputFile = new OutputFile(generatedPath);
         ConversionOptions options = new ConversionOptions { Seek = TimeSpan.FromSeconds(0) };
 
