@@ -129,7 +129,7 @@ public partial class VideoBrowser : UserControl
 
                     Dispatcher.Invoke(() =>
                     {
-                        VideoFileMetaData metaData = videoFileMetaData.First(t => t.File == args.FullPath);
+                        VideoFileMetaData metaData = videoFileMetaData.FirstOrDefault(t => t.File == args.FullPath);
                         RemoveItem(metaData, false);
                     });
                     
@@ -226,10 +226,10 @@ public partial class VideoBrowser : UserControl
 
         if (checkWatchers)
         {
-            var watcherToRemove = fileSystemWatchers.First(t => t.Watcher.Path == Path.GetDirectoryName(target.File));
-            uint refCount = watcherToRemove.Decrease();
+            var watcherToRemove = fileSystemWatchers.FirstOrDefault(t => t.Watcher.Path == Path.GetDirectoryName(target.File));
+            uint? refCount = watcherToRemove?.Decrease();
             
-            if (refCount == 0)
+            if (refCount is 0)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Remove watcher: " + watcherToRemove.Watcher.Path);
