@@ -118,13 +118,13 @@ jobs:
         # Gives the release a custom name. Defaults to tag name
         # name: # optional
         # Gives a tag name. Defaults to github.GITHUB_REF
-        # tag_name: # optional
+        tag_name: Release # optional
         # Creates a draft release. Defaults to false
         draft: false # optional
         # Identify the release as a prerelease. Defaults to false
         prerelease: false # optional
         # Newline-delimited list of path globs for asset files to upload
-        files: bin/ # optional
+        files: \obj\Release\net6.0-windows\ # optional
         # Fails if any of the `files` globs match nothing. Defaults to false
         fail_on_unmatched_files: true # optional
         # Repository to make releases against, in <owner>/<repo> format
