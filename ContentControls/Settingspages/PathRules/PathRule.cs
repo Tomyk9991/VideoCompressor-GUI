@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using VideoCompressorGUI.Settings;
 
 namespace VideoCompressorGUI.ContentControls.Settingspages;
@@ -36,5 +37,20 @@ public class PathRuleCollection : ISettingsLoadable<PathRuleCollection>
     public void Remove(PathRule rule)
     {
         this.Collection.Remove(rule);
+    }
+
+    public bool ContainsDirectory(string directory, out string s)
+    {
+        for (int i = 0; i < this.Collection.Count; i++)
+        {
+            if (this.Collection[i].Directory == directory)
+            {
+                s = Collection[i].MappedDirectory;
+                return true;
+            }
+        }
+
+        s = "";
+        return false;
     }
 }

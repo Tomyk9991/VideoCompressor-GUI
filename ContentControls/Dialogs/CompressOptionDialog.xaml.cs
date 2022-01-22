@@ -11,6 +11,7 @@ using Microsoft.VisualBasic.FileIO;
 using Ookii.Dialogs.Wpf;
 using VideoCompressorGUI.CompressPresets;
 using VideoCompressorGUI.ContentControls.Components;
+using VideoCompressorGUI.ContentControls.Settingspages;
 using VideoCompressorGUI.Settings;
 using VideoCompressorGUI.Utils;
 
@@ -23,6 +24,7 @@ public partial class CompressOptionDialog : UserControl
     private VideoBrowser videoBrowser;
     
     private GeneralSettingsData generalSettings;
+    private PathRuleCollection pathRuleCollection;
     
     public CompressOptionDialog()
     {
@@ -40,6 +42,7 @@ public partial class CompressOptionDialog : UserControl
     private void CompressOptionDialog_OnLoaded(object sender, RoutedEventArgs e)
     {
         generalSettings = SettingsFolder.Load<GeneralSettingsData>();
+        pathRuleCollection = SettingsFolder.Load<PathRuleCollection>();
     }
 
     public void InitCompressDialog(CompressPreset preset, VideoFileMetaData file, VideoBrowser videoBrowser)
@@ -58,6 +61,12 @@ public partial class CompressOptionDialog : UserControl
             currentlySelectedPreset.AskLater ? Visibility.Visible : Visibility.Collapsed;
         
         string folderWithoutFile = Path.GetDirectoryName(currentlySelectedVideoFile.File);
+
+        if (pathRuleCollection.ContainsDirectory(folderWithoutFile, out string mappedPath))
+        {
+            folderWithoutFile = mappedPath;
+        }
+        
         folderPathTextBox.Text = folderWithoutFile;
 
         validFileNameValidationRule.FolderWithoutFile = folderWithoutFile;
