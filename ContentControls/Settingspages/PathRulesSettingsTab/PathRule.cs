@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using VideoCompressorGUI.Settings;
 
-namespace VideoCompressorGUI.ContentControls.Settingspages
+namespace VideoCompressorGUI.ContentControls.Settingspages.PathRulesSettingsTab
 {
     [System.Serializable]
     public class PathRule

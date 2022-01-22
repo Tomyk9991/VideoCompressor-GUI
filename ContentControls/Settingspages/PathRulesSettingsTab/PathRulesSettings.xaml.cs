@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using MaterialDesignThemes.Wpf;
 using Ookii.Dialogs.Wpf;
+using VideoCompressorGUI.ContentControls.Settingspages.PathRulesSettingsTab;
 using VideoCompressorGUI.Settings;
 
 namespace VideoCompressorGUI.ContentControls.Settingspages

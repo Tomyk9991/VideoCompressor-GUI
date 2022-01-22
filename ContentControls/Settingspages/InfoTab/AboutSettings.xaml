@@ -1,0 +1,60 @@
+<UserControl x:Class="VideoCompressorGUI.ContentControls.Settingspages.InfoTab.AboutSettings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource MaterialDesignFont}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+        <materialDesign:Card Grid.Row="0" Background="{StaticResource PrimaryHueDarkBrush}">
+            <TextBlock FontSize="16" HorizontalAlignment="Center"
+                       Text="Über Compri" />
+        </materialDesign:Card>
+        <Grid Grid.Row="1" Margin="30, 30, 30, 0">
+            <StackPanel>
+                <TextBlock FontSize="60" FontWeight="Bold"  Text="About Compri" />
+                <TextBlock TextWrapping="WrapWithOverflow" FontStyle="Italic" FontSize="24" Text="Compri ist eine visuelle Schnittstelle zwischen FFmpeg und einer einfachen Nutzbarkeit. Unser Ziel ist es, das Bearbeiten von Medien zu vereinfachen." />
+                <components:HeaderedSeperator Margin="0, 30, 0, 5" Header="Updates" />
+                <StackPanel Orientation="Horizontal">
+                    <Button Click="OnCheckUpdate_Click" Content="Auf Updates überprüfen" Margin="0, 0, 10, 0" Width="200" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="newUpdateAvailableTextBlock" VerticalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        
+        <Grid Grid.Row="2">
+            <Border Margin="0, 0, 0, 15" HorizontalAlignment="Center" CornerRadius="5"  BorderBrush="#9f9f9f" BorderThickness="1">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontSize="16" Margin="10, 0, 10, 0" VerticalAlignment="Center" Text="Referenzen"/>
+                    <StackPanel Margin="0, 0, 10, 0" Orientation="Horizontal">
+                        <Button Width="24" Height="24" Click="SourceCode_Click" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignIconForegroundButton}">
+                            <materialDesign:PackIcon Width="24" Height="24" Kind="SourceBranch" />
+                        </Button>
+                        
+                        <Button Width="24" Height="24" Click="Github_Click" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignIconForegroundButton}">
+                            <materialDesign:PackIcon Width="24" Height="24" Kind="Github" />
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            
+            <TextBlock x:Name="versionTextBlock" Margin="0, 0, 5, 5" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+        </Grid>
+    </Grid>
+</UserControl>
