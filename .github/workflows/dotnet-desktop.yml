@@ -124,7 +124,7 @@ jobs:
         # Identify the release as a prerelease. Defaults to false
         prerelease: false # optional
         # Newline-delimited list of path globs for asset files to upload
-        files: VideoCompressor-GUI\obj\Release\net6.0-windows\ # optional
+        files: VideoCompressor-GUI\obj\Release\net6.0-windows\* # optional
         # Fails if any of the `files` globs match nothing. Defaults to false
         fail_on_unmatched_files: true # optional
         # Repository to make releases against, in <owner>/<repo> format
