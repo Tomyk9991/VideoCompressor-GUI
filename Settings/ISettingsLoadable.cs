@@ -1,6 +1,7 @@
-namespace VideoCompressorGUI.Settings;
-
-public interface ISettingsLoadable<T>
+namespace VideoCompressorGUI.Settings
 {
-    T CreateDefault();
+    public interface ISettingsLoadable<T>
+    {
+        T CreateDefault();
+    }
 }

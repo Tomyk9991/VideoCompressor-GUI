@@ -1,11 +1,13 @@
-namespace ffmpegCompressor;
 
-public class CompressOptions
+namespace VideoCompressorGUI.ffmpeg
 {
-    public string OutputPath { get; set; }
-
-    public CompressOptions(string outputPath)
+    public class CompressOptions
     {
-        OutputPath = outputPath;
+        public string OutputPath { get; set; }
+
+        public CompressOptions(string outputPath)
+        {
+            OutputPath = outputPath;
+        }
     }
 }

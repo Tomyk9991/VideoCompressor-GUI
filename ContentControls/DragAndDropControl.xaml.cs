@@ -9,88 +9,89 @@ using Ookii.Dialogs.Wpf;
 using VideoCompressorGUI.Settings;
 using VideoCompressorGUI.Utils;
 
-namespace VideoCompressorGUI.ContentControls;
-
-public partial class DragAndDropControl : UserControl
+namespace VideoCompressorGUI.ContentControls
 {
-    private Mp4FileValidator validator = new();
+    public partial class DragAndDropControl : UserControl
+    {
+        private Mp4FileValidator validator = new();
     
-    public DragAndDropControl()
-    {
-        InitializeComponent();
-
-        Dispatcher.DelayInvoke(() =>
+        public DragAndDropControl()
         {
-            var loadedGeneralSettings = SettingsFolder.Load<GeneralSettingsData>();
-            
-            if (loadedGeneralSettings.AutomaticallyUseNewestVideos)
+            InitializeComponent();
+
+            Dispatcher.DelayInvoke(() =>
             {
-                List<string> files = loadedGeneralSettings.FetchNewFiles();
+                var loadedGeneralSettings = SettingsFolder.Load<GeneralSettingsData>();
+            
+                if (loadedGeneralSettings.AutomaticallyUseNewestVideos)
+                {
+                    List<string> files = loadedGeneralSettings.FetchNewFiles();
                 
-                if (files.Count != 0)
-                    HandleFiles(files);
-            }
+                    if (files.Count != 0)
+                        HandleFiles(files);
+                }
             
-            // HandleFiles(new List<string>
-            // {
-            //     "F:/Videos/Valorant/smart teleport.mp4",
-            //     "F:/Videos/Valorant/absolute clean C hold.mp4",
-            //     "F:/Videos/Valorant/buggy flash.mp4",
-            //     "F:/Videos/Valorant/juicy.mp4"
-            // });
-            //
-            // HandleFiles(new List<string>
-            // {
-            //     "F:/Videos/Testing/test.mp4",
-            // });
-        }, TimeSpan.FromMilliseconds(1));
-    }
+                // HandleFiles(new List<string>
+                // {
+                //     "F:/Videos/Valorant/smart teleport.mp4",
+                //     "F:/Videos/Valorant/absolute clean C hold.mp4",
+                //     "F:/Videos/Valorant/buggy flash.mp4",
+                //     "F:/Videos/Valorant/juicy.mp4"
+                // });
+                //
+                // HandleFiles(new List<string>
+                // {
+                //     "F:/Videos/Testing/test.mp4",
+                // });
+            }, TimeSpan.FromMilliseconds(1));
+        }
 
-    private void HandleFiles(List<string> files)
-    {
-        bool wasInvalid = false;
-        for (int i = 0; i < files.Count; i++)
+        private void HandleFiles(List<string> files)
         {
-            if (!this.validator.Validate(files[i]))
+            bool wasInvalid = false;
+            for (int i = 0; i < files.Count; i++)
             {
-                this.snackbar.IsActive = true;
-                var extension = Path.GetExtension(files[i]);
-                this.snackbar.MessageQueue.DiscardDuplicates = true;
+                if (!this.validator.Validate(files[i]))
+                {
+                    this.snackbar.IsActive = true;
+                    var extension = Path.GetExtension(files[i]);
+                    this.snackbar.MessageQueue.DiscardDuplicates = true;
 
-                this.snackbar.MessageQueue.Enqueue(extension + " not supported", null, null, null, false, false,
-                    TimeSpan.FromSeconds(1.5));
-                wasInvalid = true;
-                break;
+                    this.snackbar.MessageQueue.Enqueue(extension + " not supported", null, null, null, false, false,
+                        TimeSpan.FromSeconds(1.5));
+                    wasInvalid = true;
+                    break;
+                }
+            }
+
+            if (!wasInvalid)
+            {
+                ((MainWindow)Application.Current.MainWindow).PushContentControl(new VideoEditorControl(files));
             }
         }
 
-        if (!wasInvalid)
+        private void UIElement_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            ((MainWindow)Application.Current.MainWindow).PushContentControl(new VideoEditorControl(files));
+            var dialog = new VistaOpenFileDialog
+            {
+                Multiselect = true,
+                Filter = "Supported video formats (*.mp4)|*.mp4",
+            };
+
+            if ((bool)dialog.ShowDialog(Window.GetWindow(this)))
+            {
+                var selectedFiles = dialog.FileNames;
+                HandleFiles(selectedFiles.ToList());
+            }
         }
-    }
 
-    private void UIElement_OnMouseUp(object sender, MouseButtonEventArgs e)
-    {
-        var dialog = new VistaOpenFileDialog
+        private void UIElement_OnDrop(object sender, DragEventArgs e)
         {
-            Multiselect = true,
-            Filter = "Supported video formats (*.mp4)|*.mp4",
-        };
-
-        if ((bool)dialog.ShowDialog(Window.GetWindow(this)))
-        {
-            var selectedFiles = dialog.FileNames;
-            HandleFiles(selectedFiles.ToList());
-        }
-    }
-
-    private void UIElement_OnDrop(object sender, DragEventArgs e)
-    {
-        if (e.Data.GetDataPresent(DataFormats.FileDrop))
-        {
-            string[] droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            HandleFiles(droppedFiles.ToList());
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+                HandleFiles(droppedFiles.ToList());
+            }
         }
     }
 }

@@ -11,247 +11,250 @@ using System.Windows.Data;
 using System.Windows.Input;
 using FFmpeg.NET;
 using ffmpegCompressor;
+using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.Utils;
 
-namespace VideoCompressorGUI.ContentControls.Components;
-
-public partial class VideoBrowser : UserControl
+namespace VideoCompressorGUI.ContentControls.Components
 {
-    private HashSet<string> files = new();
-    private ObservableCollection<VideoFileMetaData> videoFileMetaData = new();
-
-    private object syncLock = new();
-
-    private VideoFileMetaData currentlyContextMenuOpen = null;
-
-    private readonly Mp4FileValidator validator = new();
-    private readonly Compressor compressor = new();
-    private List<FileSystemWatcherReferenceCounter> fileSystemWatchers = new();
-    
-    public event Action<VideoFileMetaData> OnSelectionChanged;
-
-    public VideoBrowser()
+    public partial class VideoBrowser : UserControl
     {
-        InitializeComponent();
+        private HashSet<string> files = new();
+        private ObservableCollection<VideoFileMetaData> videoFileMetaData = new();
+
+        private object syncLock = new();
+
+        private VideoFileMetaData currentlyContextMenuOpen = null;
+
+        private readonly Mp4FileValidator validator = new();
+        private readonly Compressor compressor = new();
+        private List<FileSystemWatcherReferenceCounter> fileSystemWatchers = new();
         
-        BindingOperations.EnableCollectionSynchronization(videoFileMetaData, syncLock);
-        TempFolder.ClearOnTimeExpired();
-    }
-    
-    private void ListboxFiles_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        VideoFileMetaData association = (sender as ListBox).SelectedItem as VideoFileMetaData;
-        
-        currentlyContextMenuOpen = association;
+        public event Action<VideoFileMetaData> OnSelectionChanged;
 
-        if (Mouse.LeftButton == MouseButtonState.Pressed)
-            this.OnSelectionChanged?.Invoke(association);
-    }
-    
-    private void ListboxFiles_OnDrop(object sender, DragEventArgs e)
-    {
-        if (e.Data.GetDataPresent(DataFormats.FileDrop))
+        public VideoBrowser()
         {
-            string[] droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            HandleFiles(droppedFiles);
+            InitializeComponent();
+            
+            BindingOperations.EnableCollectionSynchronization(videoFileMetaData, syncLock);
+            TempFolder.ClearOnTimeExpired();
         }
-    }
-
-    private void MenuItem_OnClick(object sender, RoutedEventArgs e)
-    {
-        RemoveItem(this.currentlyContextMenuOpen);
-    }
-    
-    private void FolderListItem_OnClick(object sender, RoutedEventArgs e)
-    {
-        UtilMethods.OpenExplorerAndSelectFile((string)((Button)sender).Tag);
-        e.Handled = true;
-    }
-
-    public void UpdateSource(List<string> newFiles)
-    {
-        loadingProgressBar.Visibility = Visibility.Visible;
-
-        BackgroundWorker worker = new BackgroundWorker();
-        worker.DoWork += (s, e) =>
-        {
-            ExtractMetaData(newFiles).GetAwaiter().GetResult();
-        };
-
-        worker.RunWorkerCompleted += (_, _) =>
-        {
-            loadingProgressBar.Visibility = Visibility.Collapsed;
-            this.listboxFiles.ItemsSource = Array.Empty<Object>();
-
-            videoFileMetaData = new ObservableCollection<VideoFileMetaData>(videoFileMetaData.OrderByDescending(t1 => t1.CreatedOn));
-            this.listboxFiles.ItemsSource = videoFileMetaData;
-
-            CreateSystemFileWatchers(newFiles);
-        };
         
-        worker.RunWorkerAsync();
-    }
-
-    private void CreateSystemFileWatchers(List<string> newFiles)
-    {
-        foreach (string newFile in newFiles)
+        private void ListboxFiles_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            bool needAdd = true;
+            VideoFileMetaData association = (sender as ListBox).SelectedItem as VideoFileMetaData;
+            
+            currentlyContextMenuOpen = association;
 
-            for (int i = 0; i < fileSystemWatchers.Count; i++)
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+                this.OnSelectionChanged?.Invoke(association);
+        }
+        
+        private void ListboxFiles_OnDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                if (fileSystemWatchers[i].Watcher.Path == Path.GetDirectoryName(newFile))
+                string[] droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+                HandleFiles(droppedFiles);
+            }
+        }
+
+        private void MenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            RemoveItem(this.currentlyContextMenuOpen);
+        }
+        
+        private void FolderListItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            UtilMethods.OpenExplorerAndSelectFile((string)((Button)sender).Tag);
+            e.Handled = true;
+        }
+
+        public void UpdateSource(List<string> newFiles)
+        {
+            loadingProgressBar.Visibility = Visibility.Visible;
+
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += (s, e) =>
+            {
+                ExtractMetaData(newFiles).GetAwaiter().GetResult();
+            };
+
+            worker.RunWorkerCompleted += (_, _) =>
+            {
+                loadingProgressBar.Visibility = Visibility.Collapsed;
+                this.listboxFiles.ItemsSource = Array.Empty<Object>();
+
+                videoFileMetaData = new ObservableCollection<VideoFileMetaData>(videoFileMetaData.OrderByDescending(t1 => t1.CreatedOn));
+                this.listboxFiles.ItemsSource = videoFileMetaData;
+
+                CreateSystemFileWatchers(newFiles);
+            };
+            
+            worker.RunWorkerAsync();
+        }
+
+        private void CreateSystemFileWatchers(List<string> newFiles)
+        {
+            foreach (string newFile in newFiles)
+            {
+                bool needAdd = true;
+
+                for (int i = 0; i < fileSystemWatchers.Count; i++)
                 {
-                    needAdd = false;
-                    fileSystemWatchers[i].Increase();
+                    if (fileSystemWatchers[i].Watcher.Path == Path.GetDirectoryName(newFile))
+                    {
+                        needAdd = false;
+                        fileSystemWatchers[i].Increase();
+                        break;
+                    }
+                }
+
+                if (needAdd)
+                {
+                    var path = Path.GetDirectoryName(newFile);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("Adding Watcher to: " + path);
+                    Console.ResetColor();
+                    FileSystemWatcher watcher = new FileSystemWatcher(path);
+
+                    watcher.Filter = "*.mp4";
+                    watcher.EnableRaisingEvents = true;
+
+                    fileSystemWatchers.Add(new FileSystemWatcherReferenceCounter(watcher));
+
+                    watcher.Deleted += (sender, args) =>
+                    {
+                        var watcherToRemove =
+                            fileSystemWatchers.First(t => t.Watcher.Path == Path.GetDirectoryName(args.FullPath));
+                        uint refCount = watcherToRemove.Decrease();
+
+                        Dispatcher.Invoke(() =>
+                        {
+                            VideoFileMetaData metaData = videoFileMetaData.FirstOrDefault(t => t.File == args.FullPath);
+                            RemoveItem(metaData, false);
+                        });
+                        
+                        if (refCount == 0)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("Remove watcher: " + watcherToRemove.Watcher.Path);
+                            Console.ResetColor();
+
+                            fileSystemWatchers.Remove(watcherToRemove);
+                        }
+                    };
+                }
+            }
+        }
+
+        private async Task ExtractMetaData(List<string> newFiles)
+        {
+            if (newFiles == null) return;
+            
+            List<Task> tasks = new List<Task>();
+            foreach (string file in newFiles)
+            {
+                this.files.Add(file);
+                tasks.Add(Task.Run(async () =>
+                {
+                    var thumbnail = new List<Task<string>> { compressor.GetThumbnail(file) };
+                    var metaData = new List<Task<MetaData>> { compressor.GetMetaData(file) };
+                    DateTime now = DateTime.Now;
+                
+                    var nonGenericTasks = thumbnail.Concat(metaData.Cast<Task>());
+                    await Task.WhenAll(nonGenericTasks);
+
+                    lock (syncLock)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            bool needAdd = videoFileMetaData.All(data => data.File != file);
+
+                            if (needAdd)
+                                videoFileMetaData.Add(new VideoFileMetaData(file, thumbnail[0].Result, metaData[0].Result, now));
+                        });
+                    }
+                }));
+            }
+            
+            await Task.WhenAll(tasks);
+        }
+
+        private void HandleFiles(string[] newFiles)
+        {
+            bool wasInvalid = false;
+            for (int i = 0; i < newFiles.Length; i++)
+            {
+                if (!this.validator.Validate(newFiles[i]))
+                {
+                    this.snackbar.IsActive = true;
+                    string extension = Path.GetExtension(newFiles[i]);
+                    this.snackbar.MessageQueue.DiscardDuplicates = true;
+
+                    this.snackbar.MessageQueue.Enqueue(extension + " not supported", null, null, null, false, false,
+                        TimeSpan.FromSeconds(1.5));
+                    wasInvalid = true;
                     break;
                 }
             }
 
-            if (needAdd)
+            if (!wasInvalid)
             {
-                var path = Path.GetDirectoryName(newFile);
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Adding Watcher to: " + path);
-                Console.ResetColor();
-                FileSystemWatcher watcher = new FileSystemWatcher(path);
-
-                watcher.Filter = "*.mp4";
-                watcher.EnableRaisingEvents = true;
-
-                fileSystemWatchers.Add(new FileSystemWatcherReferenceCounter(watcher));
-
-                watcher.Deleted += (sender, args) =>
+                List<string> filteredStrings = new List<string>();
+                
+                foreach (var file in newFiles)
                 {
-                    var watcherToRemove =
-                        fileSystemWatchers.First(t => t.Watcher.Path == Path.GetDirectoryName(args.FullPath));
-                    uint refCount = watcherToRemove.Decrease();
-
-                    Dispatcher.Invoke(() =>
+                    if (!this.files.Contains(file))
                     {
-                        VideoFileMetaData metaData = videoFileMetaData.FirstOrDefault(t => t.File == args.FullPath);
-                        RemoveItem(metaData, false);
-                    });
-                    
-                    if (refCount == 0)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine("Remove watcher: " + watcherToRemove.Watcher.Path);
-                        Console.ResetColor();
-
-                        fileSystemWatchers.Remove(watcherToRemove);
+                        filteredStrings.Add(file);
+                        this.files.Add(file);
                     }
-                };
-            }
-        }
-    }
-
-    private async Task ExtractMetaData(List<string> newFiles)
-    {
-        if (newFiles == null) return;
-        
-        List<Task> tasks = new List<Task>();
-        foreach (string file in newFiles)
-        {
-            this.files.Add(file);
-            tasks.Add(Task.Run(async () =>
-            {
-                var thumbnail = new List<Task<string>> { compressor.GetThumbnail(file) };
-                var metaData = new List<Task<MetaData>> { compressor.GetMetaData(file) };
-                DateTime now = DateTime.Now;
-            
-                var nonGenericTasks = thumbnail.Concat(metaData.Cast<Task>());
-                await Task.WhenAll(nonGenericTasks);
-
-                lock (syncLock)
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        bool needAdd = videoFileMetaData.All(data => data.File != file);
-
-                        if (needAdd)
-                            videoFileMetaData.Add(new VideoFileMetaData(file, thumbnail[0].Result, metaData[0].Result, now));
-                    });
                 }
-            }));
-        }
-        
-        await Task.WhenAll(tasks);
-    }
 
-    private void HandleFiles(string[] newFiles)
-    {
-        bool wasInvalid = false;
-        for (int i = 0; i < newFiles.Length; i++)
-        {
-            if (!this.validator.Validate(newFiles[i]))
-            {
-                this.snackbar.IsActive = true;
-                string extension = Path.GetExtension(newFiles[i]);
-                this.snackbar.MessageQueue.DiscardDuplicates = true;
-
-                this.snackbar.MessageQueue.Enqueue(extension + " not supported", null, null, null, false, false,
-                    TimeSpan.FromSeconds(1.5));
-                wasInvalid = true;
-                break;
+                this.UpdateSource(filteredStrings);
             }
         }
 
-        if (!wasInvalid)
+        /// <summary>Removes the item from the list</summary>
+        /// <returns>The amount of items in the list after the remove</returns>
+        public int RemoveItem(VideoFileMetaData target, bool checkWatchers = true)
         {
-            List<string> filteredStrings = new List<string>();
-            
-            foreach (var file in newFiles)
+            if (target == null)
             {
-                if (!this.files.Contains(file))
+                Console.WriteLine("Removing item was null");
+                return this.videoFileMetaData.Count;
+            }
+
+            if (checkWatchers)
+            {
+                var watcherToRemove = fileSystemWatchers.FirstOrDefault(t => t.Watcher.Path == Path.GetDirectoryName(target.File));
+                uint? refCount = watcherToRemove?.Decrease();
+                
+                if (refCount is 0)
                 {
-                    filteredStrings.Add(file);
-                    this.files.Add(file);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("Remove watcher: " + watcherToRemove.Watcher.Path);
+                    Console.ResetColor();
+                    
+                    fileSystemWatchers.Remove(watcherToRemove);
                 }
             }
+            
+            this.currentlyContextMenuOpen = target;
 
-            this.UpdateSource(filteredStrings);
-        }
-    }
+            this.files.Remove(this.currentlyContextMenuOpen.File);
+            this.videoFileMetaData.Remove(this.currentlyContextMenuOpen);
 
-    /// <summary>Removes the item from the list</summary>
-    /// <returns>The amount of items in the list after the remove</returns>
-    public int RemoveItem(VideoFileMetaData target, bool checkWatchers = true)
-    {
-        if (target == null)
-        {
-            Console.WriteLine("Removing item was null");
+            this.currentlyContextMenuOpen = null;
+
+            videoFileMetaData = new ObservableCollection<VideoFileMetaData>(videoFileMetaData.OrderByDescending(t1 => t1.CreatedOn));
+
+            this.listboxFiles.ItemsSource = Array.Empty<Object>();
+            this.listboxFiles.ItemsSource = videoFileMetaData;
+            
+            this.OnSelectionChanged?.Invoke(null);
             return this.videoFileMetaData.Count;
         }
-
-        if (checkWatchers)
-        {
-            var watcherToRemove = fileSystemWatchers.FirstOrDefault(t => t.Watcher.Path == Path.GetDirectoryName(target.File));
-            uint? refCount = watcherToRemove?.Decrease();
-            
-            if (refCount is 0)
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Remove watcher: " + watcherToRemove.Watcher.Path);
-                Console.ResetColor();
-                
-                fileSystemWatchers.Remove(watcherToRemove);
-            }
-        }
-        
-        this.currentlyContextMenuOpen = target;
-
-        this.files.Remove(this.currentlyContextMenuOpen.File);
-        this.videoFileMetaData.Remove(this.currentlyContextMenuOpen);
-
-        this.currentlyContextMenuOpen = null;
-
-        videoFileMetaData = new ObservableCollection<VideoFileMetaData>(videoFileMetaData.OrderByDescending(t1 => t1.CreatedOn));
-
-        this.listboxFiles.ItemsSource = Array.Empty<Object>();
-        this.listboxFiles.ItemsSource = videoFileMetaData;
-        
-        this.OnSelectionChanged?.Invoke(null);
-        return this.videoFileMetaData.Count;
     }
 }
+

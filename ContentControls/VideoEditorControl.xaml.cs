@@ -8,91 +8,92 @@ using VideoCompressorGUI.CompressPresets;
 using VideoCompressorGUI.Settings;
 using VideoCompressorGUI.Utils;
 
-namespace VideoCompressorGUI.ContentControls;
-
-public partial class VideoEditorControl : UserControl
+namespace VideoCompressorGUI.ContentControls
 {
-    private CompressPreset currentlySelectedPreset;
-    private CompressPresetCollection presets;
-    private VideoFileMetaData currentlySelectedVideoFile;
-
-    public VideoEditorControl(List<string> files)
+    public partial class VideoEditorControl : UserControl
     {
-        InitializeComponent();
-        
-        this.videoBrowser.UpdateSource(files);
-        
-        this.videoBrowser.OnSelectionChanged += (a) =>
+        private CompressPreset currentlySelectedPreset;
+        private CompressPresetCollection presets;
+        private VideoFileMetaData currentlySelectedVideoFile;
+
+        public VideoEditorControl(List<string> files)
         {
-            this.currentlySelectedVideoFile = a;
-            compressButton.IsEnabled = a != null;
-            
-            this.videoPlayer.UpdateSource(a);
-        };
-    }
-    
-    private void VideoEditorControl_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        presets = SettingsFolder.Load<CompressPresetCollection>();
-        this.currentlySelectedPreset = presets.CompressPresets[0];
+            InitializeComponent();
 
-        FillContextMenu(presets);
-    }
+            this.videoBrowser.UpdateSource(files);
 
-    private void FillContextMenu(CompressPresetCollection collection)
-    {
-        buttonCompressContextMenu.Items.Clear();
-        
-        for (int i = 0; i < collection.CompressPresets.Count; i++)
-        {
-            var menuItem = new MenuItem
+            this.videoBrowser.OnSelectionChanged += (a) =>
             {
-                Header = collection.CompressPresets[i].PresetName,
-                Icon = new PackIcon
-                {
-                    Kind = collection.CompressPresets[i].PresetName == currentlySelectedPreset.PresetName
-                        ? PackIconKind.Check
-                        : PackIconKind.None
-                }
-            };
-            
-            menuItem.Click += (sender, args) =>
-            {
-                var menuItem = (MenuItem)sender;
-                var newPreset = collection.CompressPresets.First(p => p.PresetName == (string) menuItem.Header);
-                OnPresetChanged(newPreset);
+                this.currentlySelectedVideoFile = a;
+                compressButton.IsEnabled = a != null;
 
-                foreach (MenuItem item in buttonCompressContextMenu.Items)
-                {
-                    ((PackIcon)item.Icon).Kind =
-                        (string) item.Header == newPreset.PresetName ? PackIconKind.Check : PackIconKind.None;
-                }
+                this.videoPlayer.UpdateSource(a);
             };
-
-            buttonCompressContextMenu.Items.Add(menuItem);
         }
-    }
 
-    private void OnPresetChanged(CompressPreset newPreset)
-    {
-        this.currentlySelectedPreset = newPreset;
-    }
+        private void VideoEditorControl_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            presets = SettingsFolder.Load<CompressPresetCollection>();
+            this.currentlySelectedPreset = presets.CompressPresets[0];
 
-    private void ContextMenu_OnClick(object sender, RoutedEventArgs e)
-    {
-        Button b = (Button)sender;
-        ContextMenu contextMenu = b.ContextMenu;
+            FillContextMenu(presets);
+        }
+
+        private void FillContextMenu(CompressPresetCollection collection)
+        {
+            buttonCompressContextMenu.Items.Clear();
+
+            for (int i = 0; i < collection.CompressPresets.Count; i++)
+            {
+                var menuItem = new MenuItem
+                {
+                    Header = collection.CompressPresets[i].PresetName,
+                    Icon = new PackIcon
+                    {
+                        Kind = collection.CompressPresets[i].PresetName == currentlySelectedPreset.PresetName
+                            ? PackIconKind.Check
+                            : PackIconKind.None
+                    }
+                };
+
+                menuItem.Click += (sender, args) =>
+                {
+                    var menuItem = (MenuItem)sender;
+                    var newPreset = collection.CompressPresets.First(p => p.PresetName == (string)menuItem.Header);
+                    OnPresetChanged(newPreset);
+
+                    foreach (MenuItem item in buttonCompressContextMenu.Items)
+                    {
+                        ((PackIcon)item.Icon).Kind =
+                            (string)item.Header == newPreset.PresetName ? PackIconKind.Check : PackIconKind.None;
+                    }
+                };
+
+                buttonCompressContextMenu.Items.Add(menuItem);
+            }
+        }
+
+        private void OnPresetChanged(CompressPreset newPreset)
+        {
+            this.currentlySelectedPreset = newPreset;
+        }
+
+        private void ContextMenu_OnClick(object sender, RoutedEventArgs e)
+        {
+            Button b = (Button)sender;
+            ContextMenu contextMenu = b.ContextMenu;
 
 
-        contextMenu.PlacementTarget = b;
-        contextMenu.IsOpen = true;
+            contextMenu.PlacementTarget = b;
+            contextMenu.IsOpen = true;
 
-        e.Handled = true;
-    }
+            e.Handled = true;
+        }
 
-    private void InitCompressDialog_OnClick(object sender, RoutedEventArgs e)
-    {
-        compressOptionsDialog.Visibility = Visibility.Visible;
-        compressOptionsDialog.InitCompressDialog(currentlySelectedPreset, currentlySelectedVideoFile, videoBrowser);
+        private void InitCompressDialog_OnClick(object sender, RoutedEventArgs e)
+        {
+            compressOptionsDialog.Visibility = Visibility.Visible;
+            compressOptionsDialog.InitCompressDialog(currentlySelectedPreset, currentlySelectedVideoFile, videoBrowser);
+        }
     }
 }

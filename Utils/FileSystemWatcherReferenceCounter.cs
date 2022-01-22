@@ -1,28 +1,28 @@
-using System;
 using System.IO;
 
-namespace VideoCompressorGUI.Utils;
-
-public class FileSystemWatcherReferenceCounter
+namespace VideoCompressorGUI.Utils
 {
-    public FileSystemWatcher Watcher { get; set; }
-    public uint ReferenceCount { get; set; }
-
-    public FileSystemWatcherReferenceCounter(FileSystemWatcher watcher)
+    public class FileSystemWatcherReferenceCounter
     {
-        Watcher = watcher;
-        ReferenceCount = 1;
-    }
+        public FileSystemWatcher Watcher { get; set; }
+        public uint ReferenceCount { get; set; }
 
-    public uint Decrease()
-    {
-        this.ReferenceCount--;
-        return ReferenceCount;
-    }
+        public FileSystemWatcherReferenceCounter(FileSystemWatcher watcher)
+        {
+            Watcher = watcher;
+            ReferenceCount = 1;
+        }
 
-    public uint Increase()
-    {
-        ReferenceCount++;
-        return ReferenceCount;
+        public uint Decrease()
+        {
+            this.ReferenceCount--;
+            return ReferenceCount;
+        }
+
+        public uint Increase()
+        {
+            ReferenceCount++;
+            return ReferenceCount;
+        }
     }
 }

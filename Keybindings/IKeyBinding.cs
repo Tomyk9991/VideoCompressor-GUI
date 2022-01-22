@@ -1,9 +1,10 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace VideoCompressorGUI.Keybindings;
-
-public interface IKeyBinding
+namespace VideoCompressorGUI.Keybindings
 {
-    void OnKeybinding(KeyEventArgs e, IInputElement inputElement);
+    public interface IKeyBinding
+    {
+        void OnKeybinding(KeyEventArgs e, IInputElement inputElement);
+    }
 }

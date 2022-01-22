@@ -12,204 +12,205 @@ using FFmpeg.NET;
 using MaterialDesignThemes.Wpf;
 using VideoCompressorGUI.CompressPresets;
 
-namespace VideoCompressorGUI.Utils;
-
-public static class ClassExtensions
+namespace VideoCompressorGUI.Utils
 {
-    private static int clickedTimes = 0;
-    
-    /// <summary>
-    /// Returns <paramref name="str"/> with the minimal concatenation of <paramref name="ending"/> (starting from end) that
-    /// results in satisfying .EndsWith(ending).
-    /// </summary>
-    /// <example>"hel".WithEnding("llo") returns "hello", which is the result of "hel" + "lo".</example>
-    public static string WithEnding(this string str, string ending)
+    public static class ClassExtensions
     {
-        if (str == null)
-            return ending;
-
-        string result = str;
-
-        // Right() is 1-indexed, so include these cases
-        // * Append no characters
-        // * Append up to N characters, where N is ending length
-        for (int i = 0; i <= ending.Length; i++)
-        {
-            string tmp = result + ending.Right(i);
-            if (tmp.EndsWith(ending))
-                return tmp;
-        }
-
-        return result;
-    }
+        private static int clickedTimes = 0;
     
-    /// <summary>Gets the rightmost <paramref name="length" /> characters from a string.</summary>
-    /// <param name="value">The string to retrieve the substring from.</param>
-    /// <param name="length">The number of characters to retrieve.</param>
-    /// <returns>The substring.</returns>
-    public static string Right(this string value, int length)
-    {
-        if (value == null)
+        /// <summary>
+        /// Returns <paramref name="str"/> with the minimal concatenation of <paramref name="ending"/> (starting from end) that
+        /// results in satisfying .EndsWith(ending).
+        /// </summary>
+        /// <example>"hel".WithEnding("llo") returns "hello", which is the result of "hel" + "lo".</example>
+        public static string WithEnding(this string str, string ending)
         {
-            throw new ArgumentNullException("value");
-        }
-        if (length < 0)
-        {
-            throw new ArgumentOutOfRangeException("length", length, "Length is less than zero");
-        }
+            if (str == null)
+                return ending;
 
-        return (length < value.Length) ? value.Substring(value.Length - length) : value;
-    }
-    
-    public static string BuildNameFromString(this string name)
-    {
-        if (name.EndsWith(")"))
-        {
-            int index = name.Length - 2;
-            string number = "";
-			
-            while (char.IsDigit(name[index]))
+            string result = str;
+
+            // Right() is 1-indexed, so include these cases
+            // * Append no characters
+            // * Append up to N characters, where N is ending length
+            for (int i = 0; i <= ending.Length; i++)
             {
-                number += name[index];
-                index--;
+                string tmp = result + ending.Right(i);
+                if (tmp.EndsWith(ending))
+                    return tmp;
             }
+
+            return result;
+        }
+    
+        /// <summary>Gets the rightmost <paramref name="length" /> characters from a string.</summary>
+        /// <param name="value">The string to retrieve the substring from.</param>
+        /// <param name="length">The number of characters to retrieve.</param>
+        /// <returns>The substring.</returns>
+        public static string Right(this string value, int length)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+            if (length < 0)
+            {
+                throw new ArgumentOutOfRangeException("length", length, "Length is less than zero");
+            }
+
+            return (length < value.Length) ? value.Substring(value.Length - length) : value;
+        }
+    
+        public static string BuildNameFromString(this string name)
+        {
+            if (name.EndsWith(")"))
+            {
+                int index = name.Length - 2;
+                string number = "";
 			
-		
-            if(name[index] == '(' || (name[index] == '-' && (index - 1) >= 0 && name[index -1] == '(')) {
-                if (name[index] == '-') {
-                    number += '-';
+                while (char.IsDigit(name[index]))
+                {
+                    number += name[index];
+                    index--;
                 }
-                number = new string(number.Reverse().ToArray());
-                int pos = int.Parse(number);
-                return name.ReplaceLastOccurrence(number, (pos + 1).ToString());
-            }
-        }
+			
 		
-        return name + "(1)";
-    }
-    
-    public static string ReplaceLastOccurrence(this string source, string find, string replace)
-    {
-        int place = source.LastIndexOf(find);
-
-        if(place == -1)
-            return source;
-
-        string result = source.Remove(place, find.Length).Insert(place, replace);
-        return result;
-    }
-    
-    public static void PlayAnimated(this MediaElement videoPlayer, Dispatcher dispatcher, PackIcon playPauseIcon)
-    {
-        playPauseIcon.Width = 100;
-        playPauseIcon.Height = 100;
-        playPauseIcon.Kind = PackIconKind.Play;
-        ToggleHelper(videoPlayer, dispatcher, playPauseIcon, true);
-    }
-
-    public static Color LerpTo(this Color from, Color to, double value)
-    {
-        from.R = (byte)MathHelper.Lerp(from.R, to.R, value);
-        from.G = (byte)MathHelper.Lerp(from.G, to.G, value);
-        from.B = (byte)MathHelper.Lerp(from.B, to.B, value);
-
-        return from;
-    }
-
-    public static ConversionOptions BuildConversionOptions(this Engine ffmpeg, VideoFileMetaData file, CompressPreset preset)
-    {
-        ConversionOptions options = new ConversionOptions
-        {
-            VideoBitRate = preset.UseTargetSizeCalculation ? preset.CalculateBitrateWithFixedTargetSize(file.MetaData.Duration.TotalSeconds) : preset.Bitrate,
-            VideoFps = (int) file.MetaData.VideoData.Fps,
-        };
-        
-        // options.CutMedia();
-
-        return options;
-    }
-
-    public static void PauseAnimated(this MediaElement videoPlayer, Dispatcher dispatcher, PackIcon playPauseIcon)
-    {
-        playPauseIcon.Width = 100;
-        playPauseIcon.Height = 100;
-        playPauseIcon.Kind = PackIconKind.Pause;
-        ToggleHelper(videoPlayer, dispatcher, playPauseIcon, false);
-    }
-
-    private static void ToggleHelper(MediaElement videoPlayer, Dispatcher dispatcher, PackIcon playPauseIcon, bool play)
-    {
-        if (play)
-            videoPlayer.Play();
-        else
-            videoPlayer.Pause();
-
-        Interlocked.Increment(ref clickedTimes);
-
-        if (playPauseIcon.Visibility != Visibility.Visible)
-        {
-            playPauseIcon.Visibility = Visibility.Visible;
-            var animation = new DoubleAnimation
-            {
-                From = 0.0d,
-                To = 1.0d,
-                BeginTime = TimeSpan.FromSeconds(0),
-                Duration = TimeSpan.FromSeconds(0.1),
-                FillBehavior = FillBehavior.Stop
-            };
-            animation.Completed += (s, e) => playPauseIcon.Opacity = 1.0d;
-
-            playPauseIcon.BeginAnimation(UIElement.OpacityProperty, animation);
+                if(name[index] == '(' || (name[index] == '-' && (index - 1) >= 0 && name[index -1] == '(')) {
+                    if (name[index] == '-') {
+                        number += '-';
+                    }
+                    number = new string(number.Reverse().ToArray());
+                    int pos = int.Parse(number);
+                    return name.ReplaceLastOccurrence(number, (pos + 1).ToString());
+                }
+            }
+		
+            return name + "(1)";
         }
-        
-        dispatcher.DelayInvoke(() =>
+    
+        public static string ReplaceLastOccurrence(this string source, string find, string replace)
         {
-            if (clickedTimes == 1)
+            int place = source.LastIndexOf(find);
+
+            if(place == -1)
+                return source;
+
+            string result = source.Remove(place, find.Length).Insert(place, replace);
+            return result;
+        }
+    
+        public static void PlayAnimated(this MediaElement videoPlayer, Dispatcher dispatcher, PackIcon playPauseIcon)
+        {
+            playPauseIcon.Width = 100;
+            playPauseIcon.Height = 100;
+            playPauseIcon.Kind = PackIconKind.Play;
+            ToggleHelper(videoPlayer, dispatcher, playPauseIcon, true);
+        }
+
+        public static Color LerpTo(this Color from, Color to, double value)
+        {
+            from.R = (byte)MathHelper.Lerp(from.R, to.R, value);
+            from.G = (byte)MathHelper.Lerp(from.G, to.G, value);
+            from.B = (byte)MathHelper.Lerp(from.B, to.B, value);
+
+            return from;
+        }
+
+        public static ConversionOptions BuildConversionOptions(this Engine ffmpeg, VideoFileMetaData file, CompressPreset preset)
+        {
+            ConversionOptions options = new ConversionOptions
             {
-                playPauseIcon.Visibility = Visibility.Hidden;
+                VideoBitRate = preset.UseTargetSizeCalculation ? preset.CalculateBitrateWithFixedTargetSize(file.MetaData.Duration.TotalSeconds) : preset.Bitrate,
+                VideoFps = (int) file.MetaData.VideoData.Fps,
+            };
+        
+            // options.CutMedia();
+
+            return options;
+        }
+
+        public static void PauseAnimated(this MediaElement videoPlayer, Dispatcher dispatcher, PackIcon playPauseIcon)
+        {
+            playPauseIcon.Width = 100;
+            playPauseIcon.Height = 100;
+            playPauseIcon.Kind = PackIconKind.Pause;
+            ToggleHelper(videoPlayer, dispatcher, playPauseIcon, false);
+        }
+
+        private static void ToggleHelper(MediaElement videoPlayer, Dispatcher dispatcher, PackIcon playPauseIcon, bool play)
+        {
+            if (play)
+                videoPlayer.Play();
+            else
+                videoPlayer.Pause();
+
+            Interlocked.Increment(ref clickedTimes);
+
+            if (playPauseIcon.Visibility != Visibility.Visible)
+            {
+                playPauseIcon.Visibility = Visibility.Visible;
+                var animation = new DoubleAnimation
+                {
+                    From = 0.0d,
+                    To = 1.0d,
+                    BeginTime = TimeSpan.FromSeconds(0),
+                    Duration = TimeSpan.FromSeconds(0.1),
+                    FillBehavior = FillBehavior.Stop
+                };
+                animation.Completed += (s, e) => playPauseIcon.Opacity = 1.0d;
+
+                playPauseIcon.BeginAnimation(UIElement.OpacityProperty, animation);
+            }
+        
+            dispatcher.DelayInvoke(() =>
+            {
+                if (clickedTimes == 1)
+                {
+                    playPauseIcon.Visibility = Visibility.Hidden;
+                }
+
+                Interlocked.Decrement(ref clickedTimes);
+            }, TimeSpan.FromMilliseconds(300));
+        }
+
+        public static string ToMilliSecondsFromSeconds(this double value)
+        {
+            if (value is > 0 and < 1.0d)
+            {
+                return  (value * 1000.0d).ToString("000") + "ms";
             }
 
-            Interlocked.Decrement(ref clickedTimes);
-        }, TimeSpan.FromMilliseconds(300));
-    }
-
-    public static string ToMilliSecondsFromSeconds(this double value)
-    {
-        if (value is > 0 and < 1.0d)
+            return "INVALID";
+        }
+    
+        public static string ToMinutesAndSecondsFromSeconds(this double value)
         {
-            return  (value * 1000.0d).ToString("000") + "ms";
+            TimeSpan span = TimeSpan.FromSeconds((int) value);
+            return $"{PrefixIfNeeded(span.Minutes)}:{PrefixIfNeeded(span.Seconds)}";
+        }
+    
+        private static string PrefixIfNeeded(int value)
+            => value <= 9 ? "0" + value : value.ToString();
+    
+    
+        public static void PrintArray<T>(this T[] a)
+        {
+            Console.WriteLine("[{0}]", string.Join("\n", a));
+        }
+    
+        public static void PrintArray<T>(this IEnumerable<T> a)
+        {
+            Console.WriteLine("[{0}]", string.Join("\n", a));
         }
 
-        return "INVALID";
-    }
-    
-    public static string ToMinutesAndSecondsFromSeconds(this double value)
-    {
-        TimeSpan span = TimeSpan.FromSeconds((int) value);
-        return $"{PrefixIfNeeded(span.Minutes)}:{PrefixIfNeeded(span.Seconds)}";
-    }
-    
-    private static string PrefixIfNeeded(int value)
-        => value <= 9 ? "0" + value : value.ToString();
-    
-    
-    public static void PrintArray<T>(this T[] a)
-    {
-        Console.WriteLine("[{0}]", string.Join("\n", a));
-    }
-    
-    public static void PrintArray<T>(this IEnumerable<T> a)
-    {
-        Console.WriteLine("[{0}]", string.Join("\n", a));
-    }
-
-    public static void DelayInvoke(this Dispatcher dispatcher, Action action, TimeSpan timeout)
-    {
-        Task.Run(() =>
+        public static void DelayInvoke(this Dispatcher dispatcher, Action action, TimeSpan timeout)
         {
-            Thread.Sleep(timeout);
-            dispatcher.Invoke(action);
-        });
+            Task.Run(() =>
+            {
+                Thread.Sleep(timeout);
+                dispatcher.Invoke(action);
+            });
+        }
     }
 }
 

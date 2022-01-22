@@ -1,23 +1,24 @@
-namespace VideoCompressorGUI.Settings;
-
-public class VideoPlayerCache : ISettingsLoadable<VideoPlayerCache>
+namespace VideoCompressorGUI.Settings
 {
-    public double Volume { get; set; }
-
-    public VideoPlayerCache(double volume)
+    public class VideoPlayerCache : ISettingsLoadable<VideoPlayerCache>
     {
-        Volume = volume;
-    }
+        public double Volume { get; set; }
 
-    public VideoPlayerCache()
-    {
-    }
-
-    public VideoPlayerCache CreateDefault()
-    {
-        return new VideoPlayerCache
+        public VideoPlayerCache(double volume)
         {
-            Volume = 50.0d
-        };
+            Volume = volume;
+        }
+
+        public VideoPlayerCache()
+        {
+        }
+
+        public VideoPlayerCache CreateDefault()
+        {
+            return new VideoPlayerCache
+            {
+                Volume = 50.0d
+            };
+        }
     }
 }

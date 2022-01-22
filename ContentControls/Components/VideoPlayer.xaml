@@ -5,8 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:decorators="clr-namespace:VideoCompressorGUI.Decorators"
              xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
+             xmlns:decorators1="clr-namespace:VideoCompressorGUI.WPFCustomBehaviours.Decorators"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
@@ -55,7 +55,7 @@
                     <components:VideoRangeSlider Height="30" Grid.Column="2" x:Name="videoPlaybackSlider"/>
                     <TextBlock Grid.Column="3" Text="00:23" x:Name="textblockTotalTime" HorizontalAlignment="Center" />
                     
-                    <decorators:NoSizeDecorator Grid.Column="2">
+                    <decorators1:NoSizeDecorator Grid.Column="2">
                         <materialDesign:Snackbar x:Name="snackbarNotifier"
                                                  Margin="0, -30, 0, -20"
                                                  Height="50"
@@ -64,7 +64,7 @@
                                                  HorizontalContentAlignment="Center"
                                                  IsActive="False"
                                                  MessageQueue="{materialDesign:MessageQueue}" />
-                    </decorators:NoSizeDecorator>
+                    </decorators1:NoSizeDecorator>
                 </Grid>
             </Grid>
         </Grid>
