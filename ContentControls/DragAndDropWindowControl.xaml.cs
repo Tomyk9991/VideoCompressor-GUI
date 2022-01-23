@@ -11,11 +11,11 @@ using VideoCompressorGUI.Utils;
 
 namespace VideoCompressorGUI.ContentControls
 {
-    public partial class DragAndDropControl : UserControl
+    public partial class DragAndDropWindowControl : UserControl
     {
         private Mp4FileValidator validator = new();
     
-        public DragAndDropControl()
+        public DragAndDropWindowControl()
         {
             InitializeComponent();
 

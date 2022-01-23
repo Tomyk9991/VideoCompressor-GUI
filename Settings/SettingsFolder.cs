@@ -4,6 +4,7 @@ using System.IO;
 using Newtonsoft.Json;
 using VideoCompressorGUI.CompressPresets;
 using VideoCompressorGUI.ContentControls.Settingspages;
+using VideoCompressorGUI.ContentControls.Settingspages.PathRulesSettingsTab;
 
 namespace VideoCompressorGUI.Settings
 {

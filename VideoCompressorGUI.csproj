@@ -7,6 +7,8 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <TargetFramework>net6.0-windows</TargetFramework>
     <LangVersion>9</LangVersion>
+    <AssemblyVersion>0.0.0.2</AssemblyVersion>
+    <Product>Compri</Product>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,7 +5,7 @@ using System.Windows.Input;
 using Ookii.Dialogs.Wpf;
 using VideoCompressorGUI.Settings;
 
-namespace VideoCompressorGUI.ContentControls.Settingspages
+namespace VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab
 {
     public partial class GeneralSettings : UserControl
     {

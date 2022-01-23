@@ -1,4 +1,4 @@
-<UserControl x:Class="VideoCompressorGUI.ContentControls.Settingspages.GeneralSettings"
+<UserControl x:Class="VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab.GeneralSettings"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,6 +6,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
              xmlns:settingspages="clr-namespace:VideoCompressorGUI.ContentControls.Settingspages"
+             xmlns:generalSettingsTab="clr-namespace:VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab"
              mc:Ignorable="d"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
@@ -63,7 +64,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBox Text="{Binding SelectedPath, RelativeSource={RelativeSource AncestorType={x:Type settingspages:GeneralSettings}}}" 
+                        <TextBox Text="{Binding SelectedPath, RelativeSource={RelativeSource AncestorType={x:Type generalSettingsTab:GeneralSettings}}}" 
                             PreviewMouseUp="SelectedPath_OnClick" Grid.Column="0" IsReadOnly="True" Margin="0, 0, 5, 0"
                                  materialDesign:HintAssist.Hint="Oberster Pfad für die Videos"></TextBox>
                         <Grid Grid.Column="1">

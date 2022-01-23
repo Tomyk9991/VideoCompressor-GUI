@@ -12,6 +12,7 @@ using Ookii.Dialogs.Wpf;
 using VideoCompressorGUI.CompressPresets;
 using VideoCompressorGUI.ContentControls.Components;
 using VideoCompressorGUI.ContentControls.Settingspages;
+using VideoCompressorGUI.ContentControls.Settingspages.PathRulesSettingsTab;
 using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.Settings;
 using VideoCompressorGUI.Utils;
