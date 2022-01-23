@@ -105,7 +105,7 @@ jobs:
       uses: TheDoctor0/zip-release@0.6.1
       with:
         filename: Release.zip
-        path: .\bin\Release\net6.0-windows\
+        path: .\bin\Release\net6.0-windows\*
 
 
 
