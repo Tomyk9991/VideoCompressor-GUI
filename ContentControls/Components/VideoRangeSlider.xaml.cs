@@ -65,6 +65,23 @@ namespace VideoCompressorGUI.ContentControls.Components
             MainWindow instance = (MainWindow)Application.Current.MainWindow;
             instance.OnWindowSizeChanged += (e) => { CalculateMinimalMaximalPixelValues(); };
         }
+        
+        public void ResetThumbs()
+        {
+            Point lowerThumbPoint =
+                lowerThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
+            Point upperThumbPoint =
+                upperThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
+            
+            sliderParent.Margin = new Thickness(0, 0, 0, 0);
+            lineParent.Margin = new Thickness(0, 0, 0, 0);
+            
+            ValidateDistanceForTextSpan(upperThumbPoint.X - lowerThumbPoint.X);
+            CalculatePercentages();
+            
+            this.OnLowerThumbChanged?.Invoke(this.LowerThumb);
+            this.OnUpperThumbChanged?.Invoke(this.UpperThumb);
+        }
 
         private void VideoRangeSlider_OnLoaded(object sender, RoutedEventArgs e)
         {

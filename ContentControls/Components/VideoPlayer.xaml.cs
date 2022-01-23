@@ -113,6 +113,7 @@ namespace VideoCompressorGUI.ContentControls.Components
             }
 
             this.currentlySelectedVideo = association;
+            this.videoPlaybackSlider.ResetThumbs();
             this.videoPlayer.Source = new Uri(association.File);
 
             isPlayingVideo = false;
@@ -130,7 +131,7 @@ namespace VideoCompressorGUI.ContentControls.Components
 
             videoPlayerParent.Visibility = Visibility.Visible;
         }
-
+        
         #region Video playback
 
         private void UpdateDistanceForTextSpan(double _)
