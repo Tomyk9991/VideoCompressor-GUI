@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using VideoCompressorGUI.ContentControls;
 using VideoCompressorGUI.ContentControls.Settingspages;
+using VideoCompressorGUI.ContentControls.Settingspages.InfoTab;
 using VideoCompressorGUI.Settings;
 
 namespace VideoCompressorGUI
@@ -26,7 +27,8 @@ namespace VideoCompressorGUI
         {
             
             InitializeComponent();
-            PushContentControl(new DragAndDropControl());
+            // PushContentControl(new DragAndDropWindowControl());
+            PushContentControl(new AboutSettings());
         }
 
         public void PushContentControl(ContentControl content)
