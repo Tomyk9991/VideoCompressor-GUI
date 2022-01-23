@@ -27,8 +27,8 @@ namespace VideoCompressorGUI
         {
             
             InitializeComponent();
-            // PushContentControl(new DragAndDropWindowControl());
-            PushContentControl(new AboutSettings());
+            AboutSettings.DeleteOldFiles();
+            PushContentControl(new DragAndDropWindowControl());
         }
 
         public void PushContentControl(ContentControl content)

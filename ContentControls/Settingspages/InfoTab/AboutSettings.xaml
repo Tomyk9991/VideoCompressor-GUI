@@ -39,7 +39,11 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" x:Name="updateButton" VerticalAlignment="Top" Click="OnCheckUpdate_Click" Content="Auf Updates überprüfen" Margin="0, 0, 10, 0" HorizontalAlignment="Left"/>
+                    <Button
+                        materialDesign:ButtonProgressAssist.Value="-1"
+                        materialDesign:ButtonProgressAssist.IsIndicatorVisible="False"
+                        materialDesign:ButtonProgressAssist.IsIndeterminate="True"
+                        Grid.Column="0" x:Name="updateButton" VerticalAlignment="Top" Click="OnCheckUpdate_Click" Content="Auf Updates überprüfen" Margin="0, 0, 10, 0" HorizontalAlignment="Left"/>
                     <ScrollViewer Height="500" Grid.Column="1" HorizontalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                         <TextBlock TextWrapping="Wrap" x:Name="newUpdateAvailableTextBlock" VerticalAlignment="Top" />
                     </ScrollViewer>

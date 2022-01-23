@@ -1,12 +1,10 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows;
 using Newtonsoft.Json.Linq;
 using VideoCompressorGUI.ContentControls.Settingspages.InfoTab;
 
@@ -68,15 +66,16 @@ namespace VideoCompressorGUI.Utils.Github
             if (this.Response == null || this.Response.DownloadZipURL == "") return;
             
             Assembly currentAssembly = typeof(AboutSettings).Assembly;
-            string downloadPath = Path.GetDirectoryName(currentAssembly.Location).ToString() + "\\update\\";
+            string downloadPath = Path.GetDirectoryName(currentAssembly.Location) + "\\update\\";
 
             Directory.CreateDirectory(downloadPath);
 
-            Console.WriteLine(downloadPath);
+            if (!File.Exists(downloadPath + Response.Name + ".zip"))
+            {
+                using var client = new WebClient();
+                await client.DownloadFileTaskAsync(this.Response.DownloadZipURL, downloadPath + Response.Name + ".zip");
+            }
             
-            using var client = new WebClient();
-            await client.DownloadFileTaskAsync(this.Response.DownloadZipURL,  downloadPath + "Release.zip");
-
             this.OnDownloadFinished?.Invoke();
         }
     }
