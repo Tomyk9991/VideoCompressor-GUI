@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 using System.Windows.Controls;
-using VideoCompressorGUI.CompressPresets;
+using VideoCompressorGUI.SettingsLoadables;
 
 namespace VideoCompressorGUI.WPFCustomBehaviours.ValidationRules
 {

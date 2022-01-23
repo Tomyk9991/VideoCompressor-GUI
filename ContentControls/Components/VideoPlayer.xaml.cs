@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using VideoCompressorGUI.Keybindings;
-using VideoCompressorGUI.Settings;
+using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
 
 namespace VideoCompressorGUI.ContentControls.Components

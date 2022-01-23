@@ -125,7 +125,10 @@ namespace VideoCompressorGUI.ContentControls.Components
                     watcher.Deleted += (sender, args) =>
                     {
                         var watcherToRemove =
-                            fileSystemWatchers.First(t => t.Watcher.Path == Path.GetDirectoryName(args.FullPath));
+                            fileSystemWatchers.FirstOrDefault(t => t.Watcher.Path == Path.GetDirectoryName(args.FullPath));
+
+                        if (watcherToRemove == null) return;
+                        
                         uint refCount = watcherToRemove.Decrease();
 
                         Dispatcher.Invoke(() =>

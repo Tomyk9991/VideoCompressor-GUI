@@ -4,9 +4,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using MaterialDesignThemes.Wpf;
-using VideoCompressorGUI.CompressPresets;
 using VideoCompressorGUI.ContentControls.Components;
-using VideoCompressorGUI.Settings;
+using VideoCompressorGUI.SettingsLoadables;
 
 namespace VideoCompressorGUI.ContentControls.Settingspages
 {
@@ -109,6 +108,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
 
             savingButton.IsEnabled = true;
             deleteButton.Visibility = Visibility.Visible;
+            deleteButton.IsEnabled = this.compressPresetCollection.CompressPresets.Count > 1;
 
             buttonNewPresetItem.Background = Brushes.White;
             buttonNewPresetItem.BorderBrush = Brushes.White;

@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
-using VideoCompressorGUI.CompressPresets;
 using VideoCompressorGUI.ContentControls.Settingspages.PathRulesSettingsTab;
 using VideoCompressorGUI.Utils.Logger;
 
-namespace VideoCompressorGUI.Settings
+namespace VideoCompressorGUI.SettingsLoadables
 {
     public class SettingsFolder
     {
@@ -42,6 +41,12 @@ namespace VideoCompressorGUI.Settings
                     typeof(PathRuleCollection), new Dictionary<string, string>
                     {
                         { "", nameof(PathRuleCollection) + ".json" }
+                    }
+                },
+                {
+                    typeof(VideoEditorCache), new Dictionary<string, string>
+                    {
+                        { "", nameof(VideoEditorCache) + ".json" }
                     }
                 },
             };

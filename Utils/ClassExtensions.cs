@@ -10,7 +10,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using FFmpeg.NET;
 using MaterialDesignThemes.Wpf;
-using VideoCompressorGUI.CompressPresets;
+using VideoCompressorGUI.SettingsLoadables;
 
 namespace VideoCompressorGUI.Utils
 {
@@ -116,15 +116,13 @@ namespace VideoCompressorGUI.Utils
             return from;
         }
 
-        public static ConversionOptions BuildConversionOptions(this Engine ffmpeg, VideoFileMetaData file, CompressPreset preset)
+        public static ConversionOptions BuildConversionOptions(this Engine ffmpeg, VideoFileMetaData file, CompressPreset preset, TimeSpan snippetLength)
         {
             ConversionOptions options = new ConversionOptions
             {
-                VideoBitRate = preset.UseTargetSizeCalculation ? preset.CalculateBitrateWithFixedTargetSize(file.MetaData.Duration.TotalSeconds) : preset.Bitrate,
+                VideoBitRate = preset.UseTargetSizeCalculation ? preset.CalculateBitrateWithFixedTargetSize(snippetLength.TotalSeconds) : preset.Bitrate,
                 VideoFps = (int) file.MetaData.VideoData.Fps,
             };
-        
-            // options.CutMedia();
 
             return options;
         }

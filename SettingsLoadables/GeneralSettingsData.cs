@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace VideoCompressorGUI.Settings
+namespace VideoCompressorGUI.SettingsLoadables
 {
     [System.Serializable]
     public class GeneralSettingsData : ISettingsLoadable<GeneralSettingsData>
