@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using VideoCompressorGUI.Utils.Logger;
 
 namespace VideoCompressorGUI.Utils
 {
@@ -25,7 +26,7 @@ namespace VideoCompressorGUI.Utils
                 if (DateTime.Now - file.CreationTime > TimeSpan.FromDays(7))
                 {
                     cleanup = true;
-                    Console.WriteLine("Clean up temp folder");
+                    Log.Info("Clean up temp folder");
                     break;
                 }
             }

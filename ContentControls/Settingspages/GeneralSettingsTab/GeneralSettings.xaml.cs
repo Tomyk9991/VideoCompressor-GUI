@@ -24,6 +24,8 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab
             var settingsLoad = SettingsFolder.Load<GeneralSettingsData>();
 
             ApplySettingsLoad(settingsLoad);
+
+            throw new Exception("ROFL");
         }
 
         private void ApplySettingsLoad(GeneralSettingsData settings)

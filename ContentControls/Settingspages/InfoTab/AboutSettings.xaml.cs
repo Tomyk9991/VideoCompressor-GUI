@@ -1,5 +1,3 @@
-using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -47,35 +45,35 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
             if (!updateNext)
             {
                 GithubReleaseCheck checker = new GithubReleaseCheck();
-                GithubResponse response = await checker.FetchData();
-
                 SetButtonLoadingAnimation(true);
+
+                GithubResponse response = await checker.FetchData();
                 
                 if (checker.Check())
                 {
+                    this.newUpdateAvailableTextBlock.Text = response.ChangeLogs;
+                    
                     checker.OnDownloadFinished += () =>
                     {
-                        this.newUpdateAvailableTextBlock.Text = response.ChangeLogs;
                         SetButtonLoadingAnimation(false);
+                        updateButton.Content = "Update durchführen (Neustart erforderlich)";
+                        updateNext = true;
                     };
                     
                     await checker.DownloadNewest();
-                
-                    updateButton.Content = "Update durchführen (Neustart erforderlich)";
-                    updateNext = true;
+                }
+                else
+                {
+                    
+                    SetButtonLoadingAnimation(false);
                 }
             }
             else
             {
-                // Code, für den Fall, dass das Update durchgeführt werden soll
                 // https://stackoverflow.com/questions/22891580/update-c-sharp-application-replace-exe-file
-                // 1) File.Delete any previous .bak files
                 DeleteOldFiles();
-                // 2) Move files by renaming them to "*_OLD.*"
                 MoveFiles();
-                // 3)
                 CopyUpdateFiles();
-                // 4)
                 RestartApplication();
             }
         }

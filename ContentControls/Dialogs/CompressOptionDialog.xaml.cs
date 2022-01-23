@@ -16,6 +16,7 @@ using VideoCompressorGUI.ContentControls.Settingspages.PathRulesSettingsTab;
 using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.Settings;
 using VideoCompressorGUI.Utils;
+using VideoCompressorGUI.Utils.Logger;
 
 namespace VideoCompressorGUI.ContentControls.Dialogs
 {
@@ -133,7 +134,7 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
 
                 if (generalSettings.DeleteOriginalFileAfterCompress)
                 {
-                    Console.WriteLine("Move file to Bin: " + file.File);
+                    Log.Info("Move file to Bin: " + file.File);
                     FileSystem.DeleteFile(file.File, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
                         UICancelOption.DoNothing);
                 }
