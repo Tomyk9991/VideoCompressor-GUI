@@ -11,7 +11,6 @@ using Microsoft.VisualBasic.FileIO;
 using Ookii.Dialogs.Wpf;
 using VideoCompressorGUI.CompressPresets;
 using VideoCompressorGUI.ContentControls.Components;
-using VideoCompressorGUI.ContentControls.Settingspages;
 using VideoCompressorGUI.ContentControls.Settingspages.PathRulesSettingsTab;
 using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.Settings;
@@ -195,13 +194,25 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
             filenameTextBox.Text = "";
             targetSizeTextbox.Text = "";
 
+            this.mappingSuggestion.Visibility = Visibility.Collapsed;
             this.Visibility = Visibility.Collapsed;
         }
 
         private void OnSelectFolderPath(object sender, MouseButtonEventArgs e)
         {
             string newPath = SelectPath();
+            string folderPath = Path.GetDirectoryName(currentlySelectedVideoFile.File);
             folderPathTextBox.Text = newPath == "" && folderPathTextBox.Text != "" ? folderPathTextBox.Text : newPath;
+            
+            
+            if (!pathRuleCollection.ContainsDirectory(folderPath, out string s))
+            {
+                // Mapping not in use. make suggestion
+                mappingSuggestion.Visibility = Visibility.Visible;
+                
+                directorySuggestionTextBox.Text = folderPath;
+                mappedDirectorySuggestionTextBox.Text = folderPathTextBox.Text;
+            }
         }
 
         private bool ValidateCanCompress()
@@ -233,6 +244,22 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
             }
 
             return "";
+        }
+
+        private void MappingConfirm_OnClick(object sender, RoutedEventArgs e)
+        {
+            string dir = directorySuggestionTextBox.Text;
+            string mappedDir = mappedDirectorySuggestionTextBox.Text;
+            
+            pathRuleCollection.Add(new PathRule(dir, mappedDir));
+            SettingsFolder.Save(pathRuleCollection);
+            
+            mappingSuggestion.Visibility = Visibility.Collapsed;
+        }
+
+        private void MappingCancel_OnClick(object sender, RoutedEventArgs e)
+        {
+            mappingSuggestion.Visibility = Visibility.Collapsed;
         }
     }
 }

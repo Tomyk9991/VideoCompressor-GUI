@@ -14,6 +14,9 @@ namespace VideoCompressorGUI
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+#if DEBUG
+            logger.LogToFile = false;
+#endif
             SetupExceptionHandling();
         }
 
