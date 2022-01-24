@@ -10,6 +10,7 @@
              TextElement.FontSize="13"
              TextOptions.TextFormattingMode="Ideal"
              TextOptions.TextRenderingMode="Auto"
+             Loaded="VideoBrowser_OnLoaded"
              d:DesignHeight="450" d:DesignWidth="300"
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
@@ -65,10 +66,20 @@
                                         </TextBlock>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1" Margin="0, 0, 5, 0">
-                                    <TextBlock HorizontalAlignment="Right" Text="{Binding CompressData.Progress, StringFormat={}{0:#0.00'%'}, Converter={StaticResource MathConverter}}"/>
+                                        <TextBlock HorizontalAlignment="Right" Text="{Binding CompressData.Progress, StringFormat={}{0:#0.00'%'}, Converter={StaticResource MathConverter}}"/>
+                                        
+                                        <Button Width="20" Height="20"
+                                                Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                                Visibility="{Binding ShowButtonField[1], Converter={StaticResource BoolToVis}}"
+                                                Tag="{Binding .}"
+                                                ToolTip="Lösche das Element aus der Liste"
+                                                Click="DeleteListItem_OnClick">
+                                            <materialDesign:PackIcon Width="15" Height="15" Kind="Delete" />
+                                        </Button>
                                         
                                         <Button Width="20" Height="20"
                                             Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                            Visibility="{Binding ShowButtonField[0], Converter={StaticResource BoolToVis}}"
                                             Tag="{Binding File}"
                                             ToolTip="Öffne den Explorer zur Datei"
                                             Click="FolderListItem_OnClick">

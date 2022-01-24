@@ -11,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using FFmpeg.NET;
 using VideoCompressorGUI.ffmpeg;
+using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
 using VideoCompressorGUI.Utils.Logger;
 
@@ -28,17 +29,35 @@ namespace VideoCompressorGUI.ContentControls.Components
         private readonly Mp4FileValidator validator = new();
         private readonly Compressor compressor = new();
         private List<FileSystemWatcherReferenceCounter> fileSystemWatchers = new();
+
+        private VideoBrowserItemTemplate template;
         
         public event Action<VideoFileMetaData> OnSelectionChanged;
 
         public VideoBrowser()
         {
             InitializeComponent();
+
+            LoadTemplate();
             
             BindingOperations.EnableCollectionSynchronization(videoFileMetaData, syncLock);
             TempFolder.ClearOnTimeExpired();
         }
         
+        private void VideoBrowser_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            this.LoadTemplate();
+        }
+
+        private void LoadTemplate()
+        {
+            template = SettingsFolder.Load<VideoBrowserItemTemplate>();
+            foreach (var vid in videoFileMetaData)
+            {
+                vid.ShowButtonField = template.BitField;
+            }
+        }
+
         private void ListboxFiles_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             VideoFileMetaData association = (sender as ListBox).SelectedItem as VideoFileMetaData;
@@ -61,6 +80,12 @@ namespace VideoCompressorGUI.ContentControls.Components
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             RemoveItem(this.currentlyContextMenuOpen);
+        }
+        
+        private void DeleteListItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            VideoFileMetaData tag = (VideoFileMetaData)((Button)sender).Tag;
+            RemoveItem(tag);
         }
         
         private void FolderListItem_OnClick(object sender, RoutedEventArgs e)
@@ -174,7 +199,7 @@ namespace VideoCompressorGUI.ContentControls.Components
                             bool needAdd = videoFileMetaData.All(data => data.File != file);
 
                             if (needAdd)
-                                videoFileMetaData.Add(new VideoFileMetaData(file, thumbnail[0].Result, metaData[0].Result, now));
+                                videoFileMetaData.Add(new VideoFileMetaData(file, thumbnail[0].Result, metaData[0].Result, now, template.BitField));
                         });
                     }
                 }));
