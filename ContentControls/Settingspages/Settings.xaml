@@ -47,7 +47,7 @@
                     </TabItem.Header>
                     <settingspages:PathRulesSettings />
                 </TabItem>
-                <TabItem IsSelected="True" Margin="5, 0, 5, 0">
+                <TabItem Margin="5, 0, 5, 0">
                     <TabItem.Header>
                         <StackPanel Width="auto" Height="auto">
                             <materialDesign:PackIcon Width="24" Height="24"

@@ -21,10 +21,13 @@ In the release tab, you can download the application. Currently the FFmpeg.exe i
 ## General settings
 <img src="https://i.imgur.com/FdERyya.png" width="600">
 
-### Path rules
+## Path rules
 <img src="https://i.imgur.com/4AX4YLR.png" width="600">
 
-### About page
+## Browser item template
+<img src="https://i.imgur.com/vmp69RE.png" width="600">
+
+## About page
 <img src="https://i.imgur.com/aT71xHC.png" width="600">
 
 ---
