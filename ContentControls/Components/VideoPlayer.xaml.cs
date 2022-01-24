@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.Keybindings;
 using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
@@ -36,14 +37,18 @@ namespace VideoCompressorGUI.ContentControls.Components
             this.videoPlaybackSlider.OnUpperThumbChanged += (d) =>
             {
                 this.currentlySelectedVideo.CutSeek.End = d * currentlySelectedVideo.MetaData.Duration;
-                UpdateDistanceForTextSpan(d);
+                this.videoPlaybackSlider.upperThumbText.Text = (d * currentlySelectedVideo.MetaData.Duration).TotalSeconds.ToMinutesAndSecondsFromSeconds();
+
+                ValidateLowerUpperThumbDistance(this.currentlySelectedVideo.CutSeek);
             };
 
             this.videoPlaybackSlider.OnLowerThumbChanged += (d) =>
             {
                 this.currentlySelectedVideo.CutSeek.Start = d * currentlySelectedVideo.MetaData.Duration;
-                UpdateDistanceForTextSpan(d);
+                this.videoPlaybackSlider.lowerThumbText.Text = (d * currentlySelectedVideo.MetaData.Duration).TotalSeconds.ToMinutesAndSecondsFromSeconds();
 
+                ValidateLowerUpperThumbDistance(this.currentlySelectedVideo.CutSeek);
+                
                 if (isPlayingVideo)
                 {
                     TogglePlayPause();
@@ -55,6 +60,17 @@ namespace VideoCompressorGUI.ContentControls.Components
             this.videoPlayerParent.Visibility = Visibility.Hidden;
 
             ((MainWindow)Application.Current.MainWindow).OnWindowClosing += _ => SavePersistentStates();
+        }
+
+        private void ValidateLowerUpperThumbDistance(CutStartEndParameter cutStartEndParameter)
+        {
+            double distance = cutStartEndParameter.End.TotalSeconds - cutStartEndParameter.Start.TotalSeconds;
+            bool result = distance >= 1;
+            
+            this.videoPlaybackSlider.upperThumbText.Visibility = result ? Visibility.Visible : Visibility.Collapsed;
+
+            if (!result)
+                this.videoPlaybackSlider.lowerThumbText.Text = distance.ToMilliSecondsFromSeconds();
         }
 
 
@@ -123,7 +139,6 @@ namespace VideoCompressorGUI.ContentControls.Components
             Dispatcher.DelayInvoke(() => { videoPlayer.Focus(); }, TimeSpan.FromMilliseconds(100));
 
             textblockTotalTime.Text = association.MetaData.Duration.TotalSeconds.ToMinutesAndSecondsFromSeconds();
-            UpdateDistanceForTextSpan(0.0d);
 
             timerVideoTime.Tick -= (o, args) => { };
             timerVideoTime.Tick += OnTimerTick;
@@ -133,21 +148,7 @@ namespace VideoCompressorGUI.ContentControls.Components
         }
         
         #region Video playback
-
-        private void UpdateDistanceForTextSpan(double _)
-        {
-            // calculate percentage value to duration
-            double lowerTime = this.videoPlaybackSlider.LowerThumb *
-                               currentlySelectedVideo.MetaData.Duration.TotalSeconds;
-            double upperTime = this.videoPlaybackSlider.UpperThumb *
-                               currentlySelectedVideo.MetaData.Duration.TotalSeconds;
-
-            double distance = (upperTime - lowerTime);
-            this.videoPlaybackSlider.spanTextBlock.Text = distance >= 1
-                ? distance.ToMinutesAndSecondsFromSeconds()
-                : distance.ToMilliSecondsFromSeconds();
-        }
-
+        
         //gets called from videorangeslider, when user drags the main value
         private void OnPlaybackMainValueChanged(double percentage, bool shouldToggle = true)
         {
