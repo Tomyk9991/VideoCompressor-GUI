@@ -29,13 +29,14 @@
                 <materialDesign:PackIcon Opacity="0.0" Kind="Play" x:Name="playPauseIcon" HorizontalAlignment="Center" Width="370" Height="370" VerticalAlignment="Center"></materialDesign:PackIcon>
                 <Grid VerticalAlignment="Bottom" Margin="0, 0, 0, 5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="15*"/>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition x:Name="playDef" Width="Auto" />
+                        <ColumnDefinition x:Name="timeDef" Width="Auto" />
+                        <ColumnDefinition x:Name="vlmDef" Width="80" />
+                        <ColumnDefinition x:Name="backDef" Width="Auto" />
+                        <ColumnDefinition x:Name="sldrDef" Width="*"/>
+                        <ColumnDefinition x:Name="ttlDef" Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Rectangle IsHitTestVisible="False" Margin="0, 0, 0, -6" Grid.ColumnSpan="5">
+                    <Rectangle IsHitTestVisible="False" Margin="0, 0, 0, -6" Grid.ColumnSpan="6">
                         <Rectangle.Fill>
                             <LinearGradientBrush StartPoint="1, 1" EndPoint="1, 0">
                                 <GradientStop Color="#313131" Offset="0.0" />
@@ -44,10 +45,10 @@
                         </Rectangle.Fill>
                     </Rectangle>
                     
-                    <materialDesign:PackIcon x:Name="resumeStopIcon" MouseUp="ResumeStopIcon_OnMouseUp" Margin="5, 0, 0, 0" Kind="Play" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <materialDesign:PackIcon x:Name="resumeStopIcon" MouseUp="ResumeStopIcon_OnMouseUp" Margin="5, 0, 5, 0" Kind="Play" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     
-                    <TextBlock Grid.Column="1" Text="00:00" x:Name="textblockPlayedTime" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
-                    <Grid Margin="0, 0, 10, 0" Grid.Column="2">
+                    <TextBlock Grid.Column="1" Text="00:00" x:Name="textblockPlayedTime" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Grid VerticalAlignment="Center" Margin="5, 0, 5, 0" Grid.Column="2">
                         <Slider x:Name="soundVolumeSlider"
                                 ValueChanged="SoundVolumeSlider_OnValueChanged"
                                 Minimum="0"
@@ -55,8 +56,12 @@
                                 Value="100" />
                         <TextBlock IsHitTestVisible="False" Margin="25, 0, 0, 0" x:Name="volumeTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" Text="50%"></TextBlock>
                     </Grid>
-                    <components:VideoRangeSlider Height="30" Grid.Column="3" x:Name="videoPlaybackSlider"/>
-                    <TextBlock Grid.Column="4" Text="00:23" x:Name="textblockTotalTime" HorizontalAlignment="Center" />
+                    <Grid Grid.Column="3" MouseUp="ToLowerThumbIcon_OnMouseUp">
+                        <materialDesign:PackIcon x:Name="toLowerThumbIcon" Kind="StepBackward" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Grid>
+                    
+                    <components:VideoRangeSlider Margin="5, 0, 10, 0" Height="30" Grid.Column="4" x:Name="videoPlaybackSlider"/>
+                    <TextBlock Margin="0, 0, 5, 0" Grid.Column="5" Text="00:23" VerticalAlignment="Center" x:Name="textblockTotalTime" HorizontalAlignment="Center" />
                     
                     <decorators1:NoSizeDecorator Grid.Column="2">
                         <materialDesign:Snackbar x:Name="snackbarNotifier"

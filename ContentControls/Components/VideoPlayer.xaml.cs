@@ -170,6 +170,11 @@ namespace VideoCompressorGUI.ContentControls.Components
 
             this.videoPlayer.Position = TimeSpan.FromMilliseconds(startInMilliseconds);
         }
+        
+        private void ToLowerThumbIcon_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            UpperVideoThumbLimitReached();
+        }
 
         private void OnTimerTick(object sender, EventArgs e)
         {
