@@ -2,7 +2,9 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using MahApps.Metro.Controls;
 using MaterialDesignThemes.Wpf;
 using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.Keybindings;
@@ -38,7 +40,8 @@ namespace VideoCompressorGUI.ContentControls.Components
             this.videoPlaybackSlider.OnUpperThumbChanged += (d) =>
             {
                 this.currentlySelectedVideo.CutSeek.End = d * currentlySelectedVideo.MetaData.Duration;
-                this.videoPlaybackSlider.upperThumbText.Text = (d * currentlySelectedVideo.MetaData.Duration).TotalSeconds.ToMinutesAndSecondsFromSeconds();
+                this.videoPlaybackSlider.upperThumbText.Text = (d * currentlySelectedVideo.MetaData.Duration)
+                    .TotalSeconds.ToMinutesAndSecondsFromSeconds();
 
                 ValidateLowerUpperThumbDistance(this.currentlySelectedVideo.CutSeek);
             };
@@ -46,10 +49,11 @@ namespace VideoCompressorGUI.ContentControls.Components
             this.videoPlaybackSlider.OnLowerThumbChanged += (d) =>
             {
                 this.currentlySelectedVideo.CutSeek.Start = d * currentlySelectedVideo.MetaData.Duration;
-                this.videoPlaybackSlider.lowerThumbText.Text = (d * currentlySelectedVideo.MetaData.Duration).TotalSeconds.ToMinutesAndSecondsFromSeconds();
+                this.videoPlaybackSlider.lowerThumbText.Text = (d * currentlySelectedVideo.MetaData.Duration)
+                    .TotalSeconds.ToMinutesAndSecondsFromSeconds();
 
                 ValidateLowerUpperThumbDistance(this.currentlySelectedVideo.CutSeek);
-                
+
                 if (isPlayingVideo)
                 {
                     TogglePlayPause();
@@ -67,7 +71,7 @@ namespace VideoCompressorGUI.ContentControls.Components
         {
             double distance = cutStartEndParameter.End.TotalSeconds - cutStartEndParameter.Start.TotalSeconds;
             bool result = distance >= 1;
-            
+
             this.videoPlaybackSlider.upperThumbText.Visibility = result ? Visibility.Visible : Visibility.Collapsed;
 
             if (!result)
@@ -149,9 +153,9 @@ namespace VideoCompressorGUI.ContentControls.Components
 
             videoPlayerParent.Visibility = Visibility.Visible;
         }
-        
+
         #region Video playback
-        
+
         //gets called from videorangeslider, when user drags the main value
         private void OnPlaybackMainValueChanged(double percentage, bool shouldToggle = true)
         {
@@ -170,7 +174,7 @@ namespace VideoCompressorGUI.ContentControls.Components
 
             this.videoPlayer.Position = TimeSpan.FromMilliseconds(startInMilliseconds);
         }
-        
+
         private void ToLowerThumbIcon_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
             UpperVideoThumbLimitReached();
@@ -232,6 +236,49 @@ namespace VideoCompressorGUI.ContentControls.Components
         private void ResumeStopIcon_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
             TogglePlayPause();
+        }
+
+        private void VolumeMouseLeave(object sender, MouseEventArgs e)
+        {
+            AnimateGridDefinitionColumnWidth(vlmDef, 20, 5, () =>
+            {
+                volumeTextBlock.Visibility = Visibility.Collapsed;
+                soundVolumeSlider.Visibility = Visibility.Collapsed;
+                volumeIcon.Visibility = Visibility.Visible;
+                
+                vlmDef.Width = new GridLength(5, GridUnitType.Star);
+            });
+        }
+
+        private void AnimateGridDefinitionColumnWidth(ColumnDefinition def, double from, double to, Action complete)
+        {
+            var animation = new GridLengthAnimation()
+            {
+                From = new GridLength(from, GridUnitType.Star),
+                To = new GridLength(to, GridUnitType.Star),
+                BeginTime = TimeSpan.FromSeconds(0),
+                Duration = TimeSpan.FromSeconds(0.1),
+                FillBehavior = FillBehavior.Stop
+            };
+            
+            animation.Completed += (s, e) =>
+            {
+                complete();
+            };
+            
+            def.BeginAnimation(ColumnDefinition.WidthProperty, animation);
+        }
+
+        private void VolumeCollapsedMouseOver(object sender, MouseEventArgs e)
+        {
+            AnimateGridDefinitionColumnWidth(vlmDef, 5, 20, () =>
+            {
+                volumeTextBlock.Visibility = Visibility.Visible;
+                soundVolumeSlider.Visibility = Visibility.Visible;
+                volumeIcon.Visibility = Visibility.Collapsed;
+                
+                vlmDef.Width = new GridLength(20, GridUnitType.Star);
+            });
         }
     }
 }

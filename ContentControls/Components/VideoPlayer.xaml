@@ -31,9 +31,9 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition x:Name="playDef" Width="Auto" />
                         <ColumnDefinition x:Name="timeDef" Width="Auto" />
-                        <ColumnDefinition x:Name="vlmDef" Width="80" />
+                        <ColumnDefinition x:Name="vlmDef" Width="5*" />
                         <ColumnDefinition x:Name="backDef" Width="Auto" />
-                        <ColumnDefinition x:Name="sldrDef" Width="*"/>
+                        <ColumnDefinition x:Name="sldrDef" Width="170*"/>
                         <ColumnDefinition x:Name="ttlDef" Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Rectangle IsHitTestVisible="False" Margin="0, 0, 0, -6" Grid.ColumnSpan="6">
@@ -49,12 +49,17 @@
                     
                     <TextBlock Grid.Column="1" Text="00:00" x:Name="textblockPlayedTime" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     <Grid VerticalAlignment="Center" Margin="5, 0, 5, 0" Grid.Column="2">
-                        <Slider x:Name="soundVolumeSlider"
+                        <Slider Visibility="Collapsed" x:Name="soundVolumeSlider"
                                 ValueChanged="SoundVolumeSlider_OnValueChanged"
+                                MouseLeave="VolumeMouseLeave"
                                 Minimum="0"
                                 Maximum="100"
                                 Value="100" />
-                        <TextBlock IsHitTestVisible="False" Margin="25, 0, 0, 0" x:Name="volumeTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" Text="50%"></TextBlock>
+                        <TextBlock Visibility="Collapsed" MouseLeave="VolumeMouseLeave" IsHitTestVisible="False" Margin="25, 0, 0, 0" x:Name="volumeTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" Text="50%"/>
+                        
+                        <Grid MouseEnter="VolumeCollapsedMouseOver" x:Name="volumeIcon">
+                            <materialDesign:PackIcon Visibility="Visible" Kind="VolumeHigh" />
+                        </Grid>
                     </Grid>
                     <Grid Grid.Column="3" MouseUp="ToLowerThumbIcon_OnMouseUp">
                         <materialDesign:PackIcon x:Name="toLowerThumbIcon" Kind="StepBackward" VerticalAlignment="Center" HorizontalAlignment="Center"/>
