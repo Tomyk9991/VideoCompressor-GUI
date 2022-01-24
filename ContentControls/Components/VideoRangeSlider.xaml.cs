@@ -16,7 +16,7 @@ namespace VideoCompressorGUI.ContentControls.Components
         public event Action<double> OnEndedMainDrag;
 
 
-        public int MinimalThumbDistance => 20;
+        public int MinimalThumbDistance => 10;
         public int MinimalTextDistance => 44;
 
         // Determines, if the value can be changed, when the value drag is active 

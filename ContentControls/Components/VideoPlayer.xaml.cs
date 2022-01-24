@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using MaterialDesignThemes.Wpf;
 using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.Keybindings;
 using VideoCompressorGUI.SettingsLoadables;
@@ -113,6 +114,8 @@ namespace VideoCompressorGUI.ContentControls.Components
 
             videoPlayer.Focus();
             isPlayingVideo = !isPlayingVideo;
+
+            resumeStopIcon.Kind = isPlayingVideo ? PackIconKind.Pause : PackIconKind.Play;
         }
 
         #endregion
@@ -220,5 +223,10 @@ namespace VideoCompressorGUI.ContentControls.Components
         }
 
         #endregion
+
+        private void ResumeStopIcon_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            TogglePlayPause();
+        }
     }
 }
