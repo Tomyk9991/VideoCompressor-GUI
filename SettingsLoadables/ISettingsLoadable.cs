@@ -1,4 +1,4 @@
-namespace VideoCompressorGUI.Settings
+namespace VideoCompressorGUI.SettingsLoadables
 {
     public interface ISettingsLoadable<T>
     {

@@ -4,8 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using MaterialDesignThemes.Wpf;
-using VideoCompressorGUI.CompressPresets;
-using VideoCompressorGUI.Settings;
+using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
 
 namespace VideoCompressorGUI.ContentControls
@@ -13,13 +12,17 @@ namespace VideoCompressorGUI.ContentControls
     public partial class VideoEditorControl : UserControl
     {
         private CompressPreset currentlySelectedPreset;
-        private CompressPresetCollection presets;
         private VideoFileMetaData currentlySelectedVideoFile;
 
+        private CompressPresetCollection presets;
+        private VideoEditorCache cache;
+        
         public VideoEditorControl(List<string> files)
         {
             InitializeComponent();
 
+            ((MainWindow)Application.Current.MainWindow).OnWindowClosing += args => SaveCache();
+            
             this.videoBrowser.UpdateSource(files);
 
             this.videoBrowser.OnSelectionChanged += (a) =>
@@ -34,10 +37,16 @@ namespace VideoCompressorGUI.ContentControls
         private void VideoEditorControl_OnLoaded(object sender, RoutedEventArgs e)
         {
             presets = SettingsFolder.Load<CompressPresetCollection>();
-            this.currentlySelectedPreset = presets.CompressPresets[0];
+            cache = SettingsFolder.Load<VideoEditorCache>();
+
+            this.currentlySelectedPreset = presets.GetByName(cache.LatestSelectedPresetName);
 
             FillContextMenu(presets);
         }
+        
+        private void VideoEditorControl_OnUnloaded(object sender, RoutedEventArgs e) => SaveCache();
+
+        private void SaveCache() => SettingsFolder.Save(this.cache);
 
         private void FillContextMenu(CompressPresetCollection collection)
         {
@@ -75,6 +84,7 @@ namespace VideoCompressorGUI.ContentControls
 
         private void OnPresetChanged(CompressPreset newPreset)
         {
+            this.cache.LatestSelectedPresetName = newPreset.PresetName;
             this.currentlySelectedPreset = newPreset;
         }
 

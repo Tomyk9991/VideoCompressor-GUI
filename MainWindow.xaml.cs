@@ -8,7 +8,7 @@ using System.Windows.Input;
 using VideoCompressorGUI.ContentControls;
 using VideoCompressorGUI.ContentControls.Settingspages;
 using VideoCompressorGUI.ContentControls.Settingspages.InfoTab;
-using VideoCompressorGUI.Settings;
+using VideoCompressorGUI.SettingsLoadables;
 
 namespace VideoCompressorGUI
 {

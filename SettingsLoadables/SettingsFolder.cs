@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
-using VideoCompressorGUI.CompressPresets;
-using VideoCompressorGUI.ContentControls.Settingspages;
 using VideoCompressorGUI.ContentControls.Settingspages.PathRulesSettingsTab;
+using VideoCompressorGUI.Utils.Logger;
 
-namespace VideoCompressorGUI.Settings
+namespace VideoCompressorGUI.SettingsLoadables
 {
     public class SettingsFolder
     {
@@ -44,6 +43,12 @@ namespace VideoCompressorGUI.Settings
                         { "", nameof(PathRuleCollection) + ".json" }
                     }
                 },
+                {
+                    typeof(VideoEditorCache), new Dictionary<string, string>
+                    {
+                        { "", nameof(VideoEditorCache) + ".json" }
+                    }
+                },
             };
 
             CheckFoldersAndFiles();
@@ -77,7 +82,7 @@ namespace VideoCompressorGUI.Settings
 
             if (string.IsNullOrWhiteSpace(content))
             {
-                Console.WriteLine($"No configuration loaded for: {typeof(T)}. Load standard config");
+                Log.Info($"No configuration loaded for: {typeof(T)}. Load standard config");
                 return value.CreateDefault();
             }
 
@@ -90,8 +95,8 @@ namespace VideoCompressorGUI.Settings
             string json = JsonConvert.SerializeObject(value, Formatting.Indented);
 
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Saving to: {path}");
-            Console.WriteLine(json);
+            Log.Info($"Saving to: {path}");
+            Log.Info(json);
             Console.ResetColor();
 
             File.WriteAllText(path, json);

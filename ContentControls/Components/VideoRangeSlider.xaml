@@ -5,16 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              Background="Transparent"
-             d:DesignHeight="30" d:DesignWidth="500" Loaded="VideoRangeSlider_OnLoaded">
+             d:DesignHeight="90" d:DesignWidth="500" Loaded="VideoRangeSlider_OnLoaded">
     <Grid x:Name="parent">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        
-        <Thumb PreviewMouseUp="UIElement_OnPreviewMouseUp"  DragStarted="MainThumb_OnDragStarted"
+
+        <!-- BACKGROUND -->
+        <Thumb PreviewMouseUp="UIElement_OnPreviewMouseUp" DragStarted="MainThumb_OnDragStarted"
                DragCompleted="MainThumb_OnDragCompleted"
-               Grid.Row="0" Grid.RowSpan="2">
+               Grid.Row="0">
             <Thumb.OpacityMask>
                 <LinearGradientBrush StartPoint="1, 1" EndPoint="1, 0">
                     <GradientStop Color="#313131" Offset="1.0" />
@@ -22,51 +24,105 @@
                 </LinearGradientBrush>
             </Thumb.OpacityMask>
             <Thumb.Background>
-                <ImageBrush Opacity="0.1" ViewportUnits="Absolute" Viewport="0, 0, 42, 42" ImageSource="https://thumbs.dreamstime.com/b/diagonal-lines-pattern-grey-stripe-texture-background-repeat-straight-line-vector-illustration-154721512.jpg" TileMode="Tile" />
+                <ImageBrush Opacity="0.1" ViewportUnits="Absolute" Viewport="0, 0, 42, 42"
+                            ImageSource="https://thumbs.dreamstime.com/b/diagonal-lines-pattern-grey-stripe-texture-background-repeat-straight-line-vector-illustration-154721512.jpg"
+                            TileMode="Tile" />
             </Thumb.Background>
         </Thumb>
-        
-        <Grid x:Name="lineParent" Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="8" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition x:Name="textColumnDefinition" Width="30" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="8" />
-            </Grid.ColumnDefinitions>
-            <Rectangle Grid.Column="0" Margin="3, 0, 0, 0" Width="2" Height="7" VerticalAlignment="Bottom" Fill="{DynamicResource PrimaryHueDarkBrush}" />
-            <Rectangle Grid.Column="1" Margin="-3, 0, -3, 0" Height="2" Fill="{DynamicResource PrimaryHueMidBrush}"></Rectangle>
-            <Rectangle Grid.Column="3" Margin="-3, 0, -3, 0" Height="2" Fill="{DynamicResource PrimaryHueMidBrush}"></Rectangle>
-            <Rectangle Grid.Column="4" Margin="0, 0, 3, 0" Width="2" Height="7" VerticalAlignment="Bottom" Fill="{DynamicResource PrimaryHueMidBrush}" />
-            
-            <TextBlock Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="9" Text="00:23" x:Name="spanTextBlock" Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" />
-        </Grid>
-        
-        <Border Grid.Row="2" x:Name="sliderParent" HorizontalAlignment="Stretch" BorderBrush="{DynamicResource PrimaryHueMidBrush}" BorderThickness="10, 2, 10, 2">
+
+        <!-- LEFT RIGHT AND MIDDLE DRAG -->
+        <Border ClipToBounds="False" Grid.Row="0" x:Name="sliderParent" HorizontalAlignment="Stretch"
+                BorderBrush="{DynamicResource PrimaryHueMidBrush}" BorderThickness="2, 2, 2, 2">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="4" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="4" />
                 </Grid.ColumnDefinitions>
-                <Thumb Grid.Column="0" x:Name="lowerThumb" DragDelta="Thumb_LowerDragDelta" Margin="-7, 0, 7, 0" Background="{DynamicResource PrimaryHueLightBrush}"></Thumb>
-                <Thumb DragStarted="MidThumb0_OnDragStarted" DragCompleted="MidThumb0_OnDragCompleted" Grid.Column="1" x:Name="midThumb0" DragDelta="Thumb_MidDragDelta" Margin="-4, 0, -4, 0" Background="{DynamicResource PrimaryHueLightBrush}"></Thumb>
-                <Thumb Grid.Column="2" x:Name="upperThumb" DragDelta="Thumb_UpperDragDelta" Margin="7, 0, -7, 0" Background="{DynamicResource PrimaryHueLightBrush}"/>
+                <Thumb Grid.Column="0" x:Name="lowerThumb" DragDelta="Thumb_LowerDragDelta">
+                    <Thumb.Template>
+                        <ControlTemplate>
+                            <Grid>
+                                <Rectangle HorizontalAlignment="Left" Fill="#e7d250" Width="4" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Thumb.Template>
+                </Thumb>
+                <Thumb DragStarted="MidThumb0_OnDragStarted" DragCompleted="MidThumb0_OnDragCompleted" Grid.Column="1"
+                       x:Name="midThumb0" DragDelta="Thumb_MidDragDelta" Margin="0, 0, 0, 0"
+                       Background="{DynamicResource PrimaryHueLightBrush}">
+                </Thumb>
+                <Thumb Grid.Column="2" x:Name="upperThumb" DragDelta="Thumb_UpperDragDelta">
+                    <Thumb.Template>
+                        <ControlTemplate>
+                            <Grid>
+                                <Rectangle HorizontalAlignment="Right" Fill="#e7d250" Width="4" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Thumb.Template>
+                </Thumb>
             </Grid>
         </Border>
-        
-        <Thumb Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="mainThumb"
+
+        <Grid x:Name="lineParent" Grid.Row="1" Margin="0, 0, 0, 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="8" />
+            </Grid.ColumnDefinitions>
+            <Thumb Grid.Column="0" DragDelta="Thumb_LowerDragDelta">
+                <Thumb.Template>
+                    <ControlTemplate>
+                        <Grid>
+                            <Rectangle Fill="#e7d250" Width="4" Height="3" VerticalAlignment="Top" />
+                            <Ellipse Width="8" Height="8" Fill="#e7d250" Margin="0, 2, 0, 0" VerticalAlignment="Top" />
+                        </Grid>
+                    </ControlTemplate>
+                </Thumb.Template>
+            </Thumb>
+            <Thumb Grid.Column="2" DragDelta="Thumb_UpperDragDelta">
+                <Thumb.Template>
+                    <ControlTemplate>
+                        <Grid>
+                            <Rectangle Fill="#e7d250" Width="4" Height="3" VerticalAlignment="Top" />
+                            <Ellipse Width="8" Height="8" Fill="#e7d250" Margin="0, 2, 0, 0"
+                                     VerticalAlignment="Top" />
+                        </Grid>
+                    </ControlTemplate>
+                </Thumb.Template>
+            </Thumb>
+        </Grid>
+
+        <!-- MAIN VALUE -->
+        <Thumb Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="mainThumb"
                DragDelta="MainThumb_DragDelta"
                DragStarted="MainThumb_OnDragStarted"
                DragCompleted="MainThumb_OnDragCompleted">
             <Thumb.Template>
                 <ControlTemplate>
-                    <Ellipse HorizontalAlignment="Center" VerticalAlignment="Center" Width="10" Height="10" Fill="{DynamicResource PrimaryHueDarkBrush}" />
+                    <Rectangle Fill="#e7d250" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" Height="25" />
                 </ControlTemplate>
             </Thumb.Template>
         </Thumb>
-        
-        <Rectangle Margin="0, 0, 0, 0" x:Name="anchorLeft" HorizontalAlignment="Left" IsHitTestVisible="False" Width="2"></Rectangle>
-        <Rectangle Margin="0, 0, 0, 0" x:Name="anchorRight" HorizontalAlignment="Right" IsHitTestVisible="False" Width="2"></Rectangle>
+
+        <Grid Grid.Row="3" x:Name="textParent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="22" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="22" />
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock x:Name="lowerThumbText" Grid.Column="0" FontSize="9" Text="99:99"
+                       Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" />
+            <TextBlock x:Name="upperThumbText" Grid.Column="2" FontSize="9" TextAlignment="Right" Text="99:99"
+                       Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" />
+        </Grid>
+
+        <Rectangle Margin="0, 0, 0, 0" x:Name="anchorLeft" HorizontalAlignment="Left" IsHitTestVisible="False"
+                   Width="2">
+        </Rectangle>
+        <Rectangle Margin="0, 0, 0, 0" x:Name="anchorRight" HorizontalAlignment="Right" IsHitTestVisible="False"
+                   Width="2">
+        </Rectangle>
     </Grid>
 </UserControl>

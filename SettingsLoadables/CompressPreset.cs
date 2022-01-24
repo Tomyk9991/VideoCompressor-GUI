@@ -1,4 +1,4 @@
-namespace VideoCompressorGUI.CompressPresets
+namespace VideoCompressorGUI.SettingsLoadables
 {
     [System.Serializable]
     public class CompressPreset

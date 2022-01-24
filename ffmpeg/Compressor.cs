@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using FFmpeg.NET;
-using VideoCompressorGUI.CompressPresets;
+using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
 
 namespace VideoCompressorGUI.ffmpeg
@@ -66,12 +66,13 @@ namespace VideoCompressorGUI.ffmpeg
         {
             InputFile inputFile = new InputFile(videoFile.File);
             OutputFile outputFile = new OutputFile(compressOptions.OutputPath);
-        
-            ConversionOptions options = this.ffmpeg.BuildConversionOptions(videoFile, preset);
+            TimeSpan snippetLength = (videoFile.CutSeek.End - videoFile.CutSeek.Start);
+            
+            ConversionOptions options = this.ffmpeg.BuildConversionOptions(videoFile, preset, snippetLength);
 
             if (videoFile.CutSeek != null)
             {
-                options.CutMedia(videoFile.CutSeek.Start, (videoFile.CutSeek.End - videoFile.CutSeek.Start));
+                options.CutMedia(videoFile.CutSeek.Start, snippetLength);
             }
         
             this.ffmpeg.Progress += (_, args) =>

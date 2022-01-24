@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Ookii.Dialogs.Wpf;
-using VideoCompressorGUI.Settings;
+using VideoCompressorGUI.SettingsLoadables;
 
 namespace VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab
 {

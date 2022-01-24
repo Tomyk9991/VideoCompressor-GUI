@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using VideoCompressorGUI.Settings;
+using VideoCompressorGUI.SettingsLoadables;
 
 namespace VideoCompressorGUI.ContentControls.Settingspages.PathRulesSettingsTab
 {

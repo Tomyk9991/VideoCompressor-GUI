@@ -10,9 +10,9 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using FFmpeg.NET;
-using ffmpegCompressor;
 using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.Utils;
+using VideoCompressorGUI.Utils.Logger;
 
 namespace VideoCompressorGUI.ContentControls.Components
 {
@@ -113,7 +113,7 @@ namespace VideoCompressorGUI.ContentControls.Components
                 {
                     var path = Path.GetDirectoryName(newFile);
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Adding Watcher to: " + path);
+                    Log.Info("Adding watcher to: " + path);
                     Console.ResetColor();
                     FileSystemWatcher watcher = new FileSystemWatcher(path);
 
@@ -125,7 +125,10 @@ namespace VideoCompressorGUI.ContentControls.Components
                     watcher.Deleted += (sender, args) =>
                     {
                         var watcherToRemove =
-                            fileSystemWatchers.First(t => t.Watcher.Path == Path.GetDirectoryName(args.FullPath));
+                            fileSystemWatchers.FirstOrDefault(t => t.Watcher.Path == Path.GetDirectoryName(args.FullPath));
+
+                        if (watcherToRemove == null) return;
+                        
                         uint refCount = watcherToRemove.Decrease();
 
                         Dispatcher.Invoke(() =>
@@ -137,7 +140,7 @@ namespace VideoCompressorGUI.ContentControls.Components
                         if (refCount == 0)
                         {
                             Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.WriteLine("Remove watcher: " + watcherToRemove.Watcher.Path);
+                            Log.Info("Remove watcher: " + watcherToRemove.Watcher.Path);
                             Console.ResetColor();
 
                             fileSystemWatchers.Remove(watcherToRemove);
@@ -221,7 +224,6 @@ namespace VideoCompressorGUI.ContentControls.Components
         {
             if (target == null)
             {
-                Console.WriteLine("Removing item was null");
                 return this.videoFileMetaData.Count;
             }
 
@@ -233,7 +235,7 @@ namespace VideoCompressorGUI.ContentControls.Components
                 if (refCount is 0)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Remove watcher: " + watcherToRemove.Watcher.Path);
+                    Log.Info("Remove watcher: " + watcherToRemove.Watcher.Path);
                     Console.ResetColor();
                     
                     fileSystemWatchers.Remove(watcherToRemove);

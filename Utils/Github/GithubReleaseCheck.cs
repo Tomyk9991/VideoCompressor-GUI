@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using VideoCompressorGUI.ContentControls.Settingspages.InfoTab;
+using VideoCompressorGUI.Utils.Logger;
 
 namespace VideoCompressorGUI.Utils.Github
 {
@@ -56,7 +57,7 @@ namespace VideoCompressorGUI.Utils.Github
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Log.Warn(e.Message);
                 return null;
             }
         }

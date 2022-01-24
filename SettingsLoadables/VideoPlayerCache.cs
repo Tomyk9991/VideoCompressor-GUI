@@ -1,4 +1,4 @@
-namespace VideoCompressorGUI.Settings
+namespace VideoCompressorGUI.SettingsLoadables
 {
     public class VideoPlayerCache : ISettingsLoadable<VideoPlayerCache>
     {

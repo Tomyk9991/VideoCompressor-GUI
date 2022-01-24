@@ -14,6 +14,7 @@
              TextOptions.TextRenderingMode="Auto"
              d:DesignHeight="900" d:DesignWidth="1600"
              Loaded="VideoEditorControl_OnLoaded"
+             Unloaded="VideoEditorControl_OnUnloaded"
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>

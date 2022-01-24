@@ -17,6 +17,7 @@ namespace VideoCompressorGUI.ContentControls.Components
 
 
         public int MinimalThumbDistance => 20;
+        public int MinimalTextDistance => 44;
 
         // Determines, if the value can be changed, when the value drag is active 
         public bool BlockValueOverrideOnDrag { get; set; }
@@ -64,6 +65,22 @@ namespace VideoCompressorGUI.ContentControls.Components
             InitializeComponent();
             MainWindow instance = (MainWindow)Application.Current.MainWindow;
             instance.OnWindowSizeChanged += (e) => { CalculateMinimalMaximalPixelValues(); };
+        }
+        
+        public void ResetThumbs()
+        {
+            Point lowerThumbPoint =
+                lowerThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
+            Point upperThumbPoint =
+                upperThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
+            
+            sliderParent.Margin = new Thickness(0, 0, 0, 0);
+            lineParent.Margin = new Thickness(0, 0, 0, 0);
+            textParent.Margin = new Thickness(0, 0, 0, 0);
+            CalculatePercentages();
+            
+            this.OnLowerThumbChanged?.Invoke(this.LowerThumb);
+            this.OnUpperThumbChanged?.Invoke(this.UpperThumb);
         }
 
         private void VideoRangeSlider_OnLoaded(object sender, RoutedEventArgs e)
@@ -130,12 +147,13 @@ namespace VideoCompressorGUI.ContentControls.Components
             {
                 sliderParent.Margin = new Thickness(sliderParent.Margin.Left, 0, value, 0);
                 lineParent.Margin = new Thickness(lineParent.Margin.Left, 0, value, 0);
+
+                if (value < maximalPixelValue - lowerThumbPoint.X - MinimalTextDistance)
+                    textParent.Margin = new Thickness(textParent.Margin.Left, 0, value, 0);
             }
 
 
             this.ClampingRight = value == 0.0d;
-
-            ValidateDistanceForTextSpan(upperThumbPoint.X - lowerThumbPoint.X);
             CalculatePercentages();
 
             this.OnUpperThumbChanged?.Invoke(this.UpperThumb);
@@ -156,31 +174,19 @@ namespace VideoCompressorGUI.ContentControls.Components
             {
                 sliderParent.Margin = new Thickness(value, 0, sliderParent.Margin.Right, 0);
                 lineParent.Margin = new Thickness(value, 0, lineParent.Margin.Right, 0);
+
+                if (value < upperThumbPoint.X - MinimalTextDistance)
+                    textParent.Margin = new Thickness(value, 0, textParent.Margin.Right, 0);
             }
 
 
             this.ClampingLeft = value == 0.0d;
 
-            ValidateDistanceForTextSpan(upperThumbPoint.X - lowerThumbPoint.X);
             CalculatePercentages();
 
             this.OnLowerThumbChanged?.Invoke(this.LowerThumb);
 
             return this.ClampingLeft;
-        }
-
-        private void ValidateDistanceForTextSpan(double distance)
-        {
-            if (distance < this.minimalDistance)
-            {
-                this.spanTextBlock.Visibility = Visibility.Collapsed;
-                this.textColumnDefinition.Width = new GridLength(0);
-            }
-            else
-            {
-                this.spanTextBlock.Visibility = Visibility.Visible;
-                this.textColumnDefinition.Width = new GridLength(30);
-            }
         }
 
         private void SetValueThumb(double v)
