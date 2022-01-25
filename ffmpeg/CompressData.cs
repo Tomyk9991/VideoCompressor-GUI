@@ -14,6 +14,8 @@ namespace ffmpegCompressor
         private double _progress;
         private Color _progressColor;
         
+        public bool IsCompressing { get; set; }
+        
         public double Progress
         {
             get => _progress;

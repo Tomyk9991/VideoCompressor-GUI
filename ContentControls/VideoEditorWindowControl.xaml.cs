@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using MaterialDesignThemes.Wpf;
+using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
 
@@ -27,14 +28,40 @@ namespace VideoCompressorGUI.ContentControls
             ((MainWindow)Application.Current.MainWindow).OnWindowClosing += args => SaveCache();
 
             this.videoBrowser.UpdateSource(files);
+            
+            
+            Compressor.OnAnyCompressionStarted += file =>
+            {
+                if (file == this.currentlySelectedVideoFile)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        compressButton.IsEnabled = false;
+                    });
+                }
+            };
+
+            Compressor.OnAnyCompressionFinished += file =>
+            {
+                if (file == this.currentlySelectedVideoFile)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        compressButton.IsEnabled = true;
+                    });
+                }
+            };
+            
 
             this.videoBrowser.OnSelectionChanged += (a) =>
             {
                 this.currentlySelectedVideoFile = a;
                 compressButton.IsEnabled = a != null;
 
-                ShowVideoFileInformation(this.currentlySelectedVideoFile);
+                if (this.currentlySelectedVideoFile != null)
+                    compressButton.IsEnabled = !this.currentlySelectedVideoFile.CompressData.IsCompressing;
 
+                ShowVideoFileInformation(this.currentlySelectedVideoFile);
                 this.videoPlayer.UpdateSource(a);
             };
         }

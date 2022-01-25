@@ -25,6 +25,10 @@ namespace VideoCompressorGUI.ffmpeg
         private Engine ffmpeg;
         private Mp4FileValidator validator = new();
 
+        public static event Action<VideoFileMetaData> OnAnyCompressionStarted;
+        public static event Action<VideoFileMetaData> OnAnyCompressionFinished;
+        
+
         public event Action<VideoFileMetaData, double> OnCompressProgress;
         public event Action<VideoFileMetaData> OnCompressFinished;
     
@@ -84,8 +88,14 @@ namespace VideoCompressorGUI.ffmpeg
             this.ffmpeg.Complete += (_, _) =>
             {
                 OnCompressFinished?.Invoke(videoFile);
+                
+                videoFile.CompressData.IsCompressing = false;
+                OnAnyCompressionFinished?.Invoke(videoFile);
             };
 
+            videoFile.CompressData.IsCompressing = true;
+            OnAnyCompressionStarted?.Invoke(videoFile);
+            
             return await this.ffmpeg.ConvertAsync(inputFile, outputFile, options, CancellationToken.None);
         }
     }

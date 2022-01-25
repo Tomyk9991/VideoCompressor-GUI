@@ -121,7 +121,6 @@ namespace VideoCompressorGUI.Utils
         public static ConversionOptions BuildConversionOptions(this Engine ffmpeg, VideoFileMetaData file, CompressOptions compressOption, CompressPreset preset, TimeSpan snippetLength)
         {
             string extraArguments = compressOption.ExtensionOption.BuildExtraArguments();
-            Console.WriteLine("Extra arguments: \"" + extraArguments + "\"");
             
             ConversionOptions options = new ConversionOptions
             {
