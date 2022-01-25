@@ -129,7 +129,7 @@ namespace VideoCompressorGUI.ContentControls.Components
                     if (fileSystemWatchers[i].Watcher.Path == Path.GetDirectoryName(newFile))
                     {
                         needAdd = false;
-                        fileSystemWatchers[i].Increase();
+                        fileSystemWatchers[i].Increase(newFile);
                         break;
                     }
                 }
@@ -145,7 +145,7 @@ namespace VideoCompressorGUI.ContentControls.Components
                     watcher.Filter = "*.mp4";
                     watcher.EnableRaisingEvents = true;
 
-                    fileSystemWatchers.Add(new FileSystemWatcherReferenceCounter(watcher));
+                    fileSystemWatchers.Add(new FileSystemWatcherReferenceCounter(watcher, newFile));
 
                     watcher.Deleted += (sender, args) =>
                     {
@@ -154,7 +154,7 @@ namespace VideoCompressorGUI.ContentControls.Components
 
                         if (watcherToRemove == null) return;
                         
-                        uint refCount = watcherToRemove.Decrease();
+                        int refCount = watcherToRemove.Decrease(args.FullPath);
 
                         Dispatcher.Invoke(() =>
                         {
@@ -255,7 +255,7 @@ namespace VideoCompressorGUI.ContentControls.Components
             if (checkWatchers)
             {
                 var watcherToRemove = fileSystemWatchers.FirstOrDefault(t => t.Watcher.Path == Path.GetDirectoryName(target.File));
-                uint? refCount = watcherToRemove?.Decrease();
+                int? refCount = watcherToRemove?.Decrease(target.File);
                 
                 if (refCount is 0)
                 {

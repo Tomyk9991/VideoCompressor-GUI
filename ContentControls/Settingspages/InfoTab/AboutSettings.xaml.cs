@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using MaterialDesignThemes.Wpf;
+using VideoCompressorGUI.Utils;
 using VideoCompressorGUI.Utils.Github;
 
 namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
@@ -16,6 +17,12 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
         public AboutSettings()
         {
             InitializeComponent();
+            System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
+            ni.Icon = System.Drawing.Icon.ExtractAssociatedIcon(
+                System.Reflection.Assembly.GetEntryAssembly().ManifestModule.Name);
+            ni.Visible = true;
+
+            iconImage.Source = ni.Icon.ToImageSource();
             versionTextBlock.Text = "Version: " + typeof(AboutSettings).Assembly.GetName().Version;
         }
         

@@ -62,8 +62,9 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
                 filenameTextBox.CaretIndex = filenameTextBox.Text.Length;
             }, TimeSpan.FromMilliseconds(1));
 
+            
             targetSizeQuestionParent.Visibility =
-                currentlySelectedPreset.AskLater && gifQuestionsParent.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+                currentlySelectedPreset.AskLater &&  IsTargetSizeRelatedFormat() ? Visibility.Visible : Visibility.Collapsed;
 
             string folderWithoutFile = Path.GetDirectoryName(currentlySelectedVideoFile.File);
 
@@ -83,6 +84,15 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
                 builtName = builtName.BuildNameFromString();
 
             filenameTextBox.Text = builtName;
+        }
+
+        private bool IsTargetSizeRelatedFormat()
+        {
+            return (string) ((ComboBoxItem) fileEndingComboBox.SelectedItem).Content switch
+            {
+                ".mp4" => true,
+                _ => false
+            };
         }
 
         private void OutsideDialog_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)

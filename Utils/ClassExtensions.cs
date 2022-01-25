@@ -1,18 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using FFmpeg.NET;
 using MaterialDesignThemes.Wpf;
 using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.SettingsLoadables;
+using Color = System.Windows.Media.Color;
 
 namespace VideoCompressorGUI.Utils
 {
@@ -116,6 +120,16 @@ namespace VideoCompressorGUI.Utils
             from.B = (byte)MathHelper.Lerp(from.B, to.B, value);
 
             return from;
+        }
+        
+        public static ImageSource ToImageSource(this Icon icon)
+        {
+            ImageSource imageSource = Imaging.CreateBitmapSourceFromHIcon(
+                icon.Handle,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
+
+            return imageSource;
         }
 
         public static ConversionOptions BuildConversionOptions(this Engine ffmpeg, VideoFileMetaData file, CompressOptions compressOption, CompressPreset preset, TimeSpan snippetLength)
