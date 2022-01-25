@@ -17,6 +17,12 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
         public AboutSettings()
         {
             InitializeComponent();
+            System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
+            ni.Icon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetEntryAssembly()?.ManifestModule.Name);
+            ni.Visible = true;
+
+            iconImage.Source = ni.Icon.ToImageSource();
+            
             versionTextBlock.Text = "Version: " + typeof(AboutSettings).Assembly.GetName().Version;
         }
         

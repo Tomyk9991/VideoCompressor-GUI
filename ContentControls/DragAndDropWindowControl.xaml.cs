@@ -18,7 +18,6 @@ namespace VideoCompressorGUI.ContentControls
         public DragAndDropWindowControl()
         {
             InitializeComponent();
-
             Dispatcher.DelayInvoke(() =>
             {
                 var loadedGeneralSettings = SettingsFolder.Load<GeneralSettingsData>();
