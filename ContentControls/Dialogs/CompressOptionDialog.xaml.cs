@@ -12,6 +12,7 @@ using Ookii.Dialogs.Wpf;
 using VideoCompressorGUI.ContentControls.Components;
 using VideoCompressorGUI.ContentControls.Settingspages.PathRulesSettingsTab;
 using VideoCompressorGUI.ffmpeg;
+using VideoCompressorGUI.ffmpeg.ExtensionOptions;
 using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
 using VideoCompressorGUI.Utils.Logger;
@@ -30,7 +31,7 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
         public CompressOptionDialog()
         {
             InitializeComponent();
-
+            
             ((MainWindow)Application.Current.MainWindow).OnKeyPressed += async (e, _) =>
             {
                 if (ValidateCanCompress() && e.Key == Key.Enter)
@@ -44,6 +45,9 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
         {
             generalSettings = SettingsFolder.Load<GeneralSettingsData>();
             pathRuleCollection = SettingsFolder.Load<PathRuleCollection>();
+            
+            gifQuestionsParent.Visibility = Visibility.Collapsed;
+            fileEndingComboBox.SelectedIndex = 0;
         }
 
         public void InitCompressDialog(CompressPreset preset, VideoFileMetaData file, VideoBrowser videoBrowser)
@@ -59,7 +63,7 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
             }, TimeSpan.FromMilliseconds(1));
 
             targetSizeQuestionParent.Visibility =
-                currentlySelectedPreset.AskLater ? Visibility.Visible : Visibility.Collapsed;
+                currentlySelectedPreset.AskLater && gifQuestionsParent.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
 
             string folderWithoutFile = Path.GetDirectoryName(currentlySelectedVideoFile.File);
 
@@ -71,7 +75,7 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
             folderPathTextBox.Text = folderWithoutFile;
 
             validFileNameValidationRule.FolderWithoutFile = folderWithoutFile;
-            validFileNameValidationRule.FileEnding = fileEndingTextBox.Text;
+            validFileNameValidationRule.FileEnding = fileEndingComboBox.Text;
 
             string builtName = Path.GetFileNameWithoutExtension(currentlySelectedVideoFile.File).BuildNameFromString();
 
@@ -114,14 +118,20 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
             compressor.OnCompressFinished += OnCompressFinished;
 
             string folderWithoutFile = folderPathTextBox.Text;
-            string fileEnding = fileEndingTextBox.Text;
+            string fileEnding = fileEndingComboBox.Text;
             string builtName = filenameTextBox.Text;
 
             if (this.currentlySelectedPreset.AskLater)
-                this.currentlySelectedPreset.TargetSize = int.Parse(this.targetSizeTextbox.Text);
+            {
+                this.currentlySelectedPreset.TargetSize = 
+                    this.targetSizeQuestionParent.Visibility == Visibility.Visible ? 
+                        int.Parse(this.targetSizeTextbox.Text) : 
+                        0;
+            }
 
 
-            CompressOptions options = new CompressOptions(folderWithoutFile + "/" + builtName + fileEnding);
+            string outputPath = folderWithoutFile + "/" + builtName + fileEnding;
+            CompressOptions options = new CompressOptions(outputPath, ExtensionOption.FromFileEnding(fileEnding));
 
             this.Visibility = Visibility.Collapsed;
 
@@ -219,11 +229,15 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
             var r1 = validFileNameValidationRule.Validate(filenameTextBox.Text, CultureInfo.CurrentCulture);
             var r2 = folderPathTextBox.Text != "";
             var r3 = isDigitValidationRule.Validate(targetSizeTextbox.Text, CultureInfo.CurrentCulture);
+            
+            var r4 = isDigitValidationRule.Validate(targetFPSTextBox.Text, CultureInfo.CurrentCulture);
+            var r5 = isDigitValidationRule.Validate(scaleTextBox.Text, CultureInfo.CurrentCulture);
 
             bool result = r1.IsValid &&
                           r2 &&
-                          (r3.IsValid && targetSizeQuestionParent.Visibility == Visibility.Visible ||
-                           targetSizeQuestionParent.Visibility == Visibility.Collapsed);
+                          (r3.IsValid && targetSizeQuestionParent.Visibility == Visibility.Visible || targetSizeQuestionParent.Visibility == Visibility.Collapsed) &&
+                          (r4.IsValid && gifQuestionsParent.Visibility == Visibility.Visible || gifQuestionsParent.Visibility == Visibility.Collapsed) &&
+                          (r5.IsValid && gifQuestionsParent.Visibility == Visibility.Visible || gifQuestionsParent.Visibility == Visibility.Collapsed);
 
             dialogCompressButton.IsEnabled = result;
 
@@ -259,6 +273,21 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
         private void MappingCancel_OnClick(object sender, RoutedEventArgs e)
         {
             mappingSuggestion.Visibility = Visibility.Collapsed;
+        }
+
+        private void FileEndingComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (gifQuestionsParent != null)
+            {
+                string s = (string) ((ComboBoxItem) fileEndingComboBox.SelectedItem).Content;
+
+                gifQuestionsParent.Visibility = s == ".gif" ? Visibility.Visible : Visibility.Collapsed;
+                targetFPSTextBox.Text = "30";
+                scaleTextBox.Text = "400";
+
+                InitCompressDialog(this.currentlySelectedPreset, this.currentlySelectedVideoFile, this.videoBrowser);
+                ValidateCanCompress();
+            }
         }
     }
 }

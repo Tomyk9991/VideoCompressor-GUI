@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using MaterialDesignThemes.Wpf;
+using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
 
@@ -16,22 +18,69 @@ namespace VideoCompressorGUI.ContentControls
 
         private CompressPresetCollection presets;
         private VideoEditorCache cache;
-        
+
         public VideoEditorControl(List<string> files)
         {
             InitializeComponent();
 
-            ((MainWindow)Application.Current.MainWindow).OnWindowClosing += args => SaveCache();
+            informationParent.Visibility = Visibility.Collapsed;
             
+            ((MainWindow)Application.Current.MainWindow).OnWindowClosing += args => SaveCache();
+
             this.videoBrowser.UpdateSource(files);
+            
+            
+            Compressor.OnAnyCompressionStarted += file =>
+            {
+                if (file == this.currentlySelectedVideoFile)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        compressButton.IsEnabled = false;
+                    });
+                }
+            };
+
+            Compressor.OnAnyCompressionFinished += file =>
+            {
+                if (file == this.currentlySelectedVideoFile)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        compressButton.IsEnabled = true;
+                    });
+                }
+            };
+            
 
             this.videoBrowser.OnSelectionChanged += (a) =>
             {
                 this.currentlySelectedVideoFile = a;
                 compressButton.IsEnabled = a != null;
 
+                if (this.currentlySelectedVideoFile != null)
+                    compressButton.IsEnabled = !this.currentlySelectedVideoFile.CompressData.IsCompressing;
+
+                ShowVideoFileInformation(this.currentlySelectedVideoFile);
                 this.videoPlayer.UpdateSource(a);
             };
+        }
+
+        private void ShowVideoFileInformation(VideoFileMetaData file)
+        {
+            if (file == null)
+            {
+                informationParent.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            informationParent.Visibility = Visibility.Visible;
+
+            fileNameTextBox.Text = Path.GetFileName(file.File);
+            fileDurationTextBox.Text = file.MetaData.Duration.TotalSeconds.ToMinutesAndSecondsFromSeconds() 
+                                       + (file.MetaData.Duration.TotalMinutes < 1 ? " Sekunden" :  " Minuten");
+            fileSizeTextBox.Text = MathHelper.BytesToString(file.MetaData.FileInfo.Length);
+            fileFPSTextBox.Text = (int)file.MetaData.VideoData.Fps + "FPS";
         }
 
         private void VideoEditorControl_OnLoaded(object sender, RoutedEventArgs e)
@@ -43,7 +92,7 @@ namespace VideoCompressorGUI.ContentControls
 
             FillContextMenu(presets);
         }
-        
+
         private void VideoEditorControl_OnUnloaded(object sender, RoutedEventArgs e) => SaveCache();
 
         private void SaveCache() => SettingsFolder.Save(this.cache);

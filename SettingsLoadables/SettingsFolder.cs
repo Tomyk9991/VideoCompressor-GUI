@@ -17,39 +17,27 @@ namespace VideoCompressorGUI.SettingsLoadables
         {
             ROOT = AppDomain.CurrentDomain.BaseDirectory + "/settings";
 
-            filenameDictionary = new Dictionary<Type, Dictionary<string, string>>
+            Type[] types =
             {
-                {
-                    typeof(CompressPresetCollection), new Dictionary<string, string>
-                    {
-                        { "", nameof(CompressPresetCollection) + ".json" }
-                    }
-                },
-                {
-                    typeof(GeneralSettingsData), new Dictionary<string, string>
-                    {
-                        { "", nameof(GeneralSettingsData) + ".json" }
-                    }
-                },
-                {
-                    typeof(VideoPlayerCache), new Dictionary<string, string>
-                    {
-                        { "", nameof(VideoPlayerCache) + ".json" }
-                    }
-                },
-                {
-                    typeof(PathRuleCollection), new Dictionary<string, string>
-                    {
-                        { "", nameof(PathRuleCollection) + ".json" }
-                    }
-                },
-                {
-                    typeof(VideoEditorCache), new Dictionary<string, string>
-                    {
-                        { "", nameof(VideoEditorCache) + ".json" }
-                    }
-                },
+                typeof(CompressPresetCollection),
+                typeof(GeneralSettingsData),
+                typeof(VideoPlayerCache),
+                typeof(PathRuleCollection),
+                typeof(VideoEditorCache),
+                typeof(VideoBrowserItemTemplate)
             };
+
+            filenameDictionary = new Dictionary<Type, Dictionary<string, string>>();
+            
+            foreach (Type type in types)
+            {
+                var value = new Dictionary<string, string>()
+                {
+                    { "", type.Name + ".json" }
+                };
+                
+                filenameDictionary.Add(type, value);
+            }
 
             CheckFoldersAndFiles();
         }

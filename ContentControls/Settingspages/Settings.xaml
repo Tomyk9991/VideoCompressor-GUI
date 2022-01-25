@@ -8,6 +8,7 @@
              xmlns:settingspages="clr-namespace:VideoCompressorGUI.ContentControls.Settingspages"
              xmlns:generalSettingsTab="clr-namespace:VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab"
              xmlns:infoTab="clr-namespace:VideoCompressorGUI.ContentControls.Settingspages.InfoTab"
+             xmlns:videoBrowserTab="clr-namespace:VideoCompressorGUI.ContentControls.Settingspages.VideoBrowserTab"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
@@ -46,6 +47,20 @@
                     </TabItem.Header>
                     <settingspages:PathRulesSettings />
                 </TabItem>
+                <TabItem Margin="5, 0, 5, 0">
+                    <TabItem.Header>
+                        <StackPanel Width="auto" Height="auto">
+                            <materialDesign:PackIcon Width="24" Height="24"
+                                                     HorizontalAlignment="Center" Kind="ListStatus" />
+                            <TextBlock
+                                HorizontalAlignment="Center" TextAlignment="Center">
+                                Video <LineBreak /> Browser
+                            </TextBlock>
+                        </StackPanel>
+                    </TabItem.Header>
+                    <videoBrowserTab:VideoBrowserTab />
+                </TabItem>
+                
                 <TabItem Margin="5, 0, 5, 0">
                     <TabItem.Header>
                         <StackPanel Width="auto" Height="auto">

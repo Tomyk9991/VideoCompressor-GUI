@@ -6,6 +6,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:validationRules="clr-namespace:VideoCompressorGUI.WPFCustomBehaviours.ValidationRules"
              mc:Ignorable="d"
+             Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
              d:DesignHeight="200" d:DesignWidth="800"
              Loaded="CompressOptionDialog_OnLoaded">
     <materialDesign:Card MouseDown="OutsideDialog_OnPreviewMouseDown"
@@ -72,12 +73,74 @@
                                         </Binding>
                                     </TextBox.Text>
                                 </TextBox>
-
-                                <TextBox Grid.Column="2" Text=".mp4" x:Name="fileEndingTextBox" IsEnabled="false"
-                                         IsReadOnly="True" materialDesign:HintAssist.Hint="Format" />
+                                
+                                <ComboBox Grid.Column="2" x:Name="fileEndingComboBox" SelectionChanged="FileEndingComboBox_OnSelectionChanged">
+                                    <ComboBoxItem IsSelected="True" Content=".mp4" />
+                                    <ComboBoxItem Content=".gif" />
+                                </ComboBox>
                             </Grid>
                         </Grid>
+                        
                         <!-- Ask later questions -->
+                        <Grid x:Name="gifQuestionsParent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon Margin="0, 0, 5, 20" Grid.Column="0"
+                                                         Kind="ImageFilterFrames" HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center" />
+
+                                <TextBox x:Name="targetFPSTextBox" Grid.Column="1" Margin="0, 0, 10, 20"
+                                         materialDesign:HintAssist.Hint="FPS"
+                                         TextChanged="TargetSizeTextbox_OnTextChanged">
+                                    <TextBox.Text>
+                                        <Binding
+                                            RelativeSource="{RelativeSource Self}" Path="Text"
+                                            UpdateSourceTrigger="LostFocus">
+                                            <Binding.ValidationRules>
+                                                <validationRules:IsDigitValidationRule
+                                                    ValidatesOnTargetUpdated="True" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <materialDesign:PackIcon Margin="0, 0, 5, 20" Grid.Column="0"
+                                                         Kind="Resize" HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center" />
+
+                                <TextBox x:Name="scaleTextBox" Grid.Column="1" Margin="0, 0, 10, 20"
+                                         materialDesign:HintAssist.Hint="Skalierung"
+                                         TextChanged="TargetSizeTextbox_OnTextChanged">
+                                    <TextBox.Text>
+                                        <Binding
+                                            RelativeSource="{RelativeSource Self}" Path="Text"
+                                            UpdateSourceTrigger="LostFocus">
+                                            <Binding.ValidationRules>
+                                                <validationRules:IsDigitValidationRule
+                                                    ValidatesOnTargetUpdated="True" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                            </Grid>
+                        </Grid>
+                        
+                        
+                        
                         <Grid x:Name="targetSizeQuestionParent">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="30" />

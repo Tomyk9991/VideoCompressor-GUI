@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using FFmpeg.NET;
 using MaterialDesignThemes.Wpf;
+using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.SettingsLoadables;
 
 namespace VideoCompressorGUI.Utils
@@ -116,10 +118,13 @@ namespace VideoCompressorGUI.Utils
             return from;
         }
 
-        public static ConversionOptions BuildConversionOptions(this Engine ffmpeg, VideoFileMetaData file, CompressPreset preset, TimeSpan snippetLength)
+        public static ConversionOptions BuildConversionOptions(this Engine ffmpeg, VideoFileMetaData file, CompressOptions compressOption, CompressPreset preset, TimeSpan snippetLength)
         {
+            string extraArguments = compressOption.ExtensionOption.BuildExtraArguments();
+            
             ConversionOptions options = new ConversionOptions
             {
+                ExtraArguments = extraArguments,
                 VideoBitRate = preset.UseTargetSizeCalculation ? preset.CalculateBitrateWithFixedTargetSize(snippetLength.TotalSeconds) : preset.Bitrate,
                 VideoFps = (int) file.MetaData.VideoData.Fps,
             };

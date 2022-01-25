@@ -25,6 +25,10 @@ namespace VideoCompressorGUI.ffmpeg
         private Engine ffmpeg;
         private Mp4FileValidator validator = new();
 
+        public static event Action<VideoFileMetaData> OnAnyCompressionStarted;
+        public static event Action<VideoFileMetaData> OnAnyCompressionFinished;
+        
+
         public event Action<VideoFileMetaData, double> OnCompressProgress;
         public event Action<VideoFileMetaData> OnCompressFinished;
     
@@ -68,13 +72,14 @@ namespace VideoCompressorGUI.ffmpeg
             OutputFile outputFile = new OutputFile(compressOptions.OutputPath);
             TimeSpan snippetLength = (videoFile.CutSeek.End - videoFile.CutSeek.Start);
             
-            ConversionOptions options = this.ffmpeg.BuildConversionOptions(videoFile, preset, snippetLength);
+            ConversionOptions options = this.ffmpeg.BuildConversionOptions(videoFile, compressOptions, preset, snippetLength);
 
             if (videoFile.CutSeek != null)
             {
                 options.CutMedia(videoFile.CutSeek.Start, snippetLength);
             }
-        
+            
+            
             this.ffmpeg.Progress += (_, args) =>
             {
                 OnCompressProgress?.Invoke(videoFile, args.ProcessedDuration.TotalSeconds / (videoFile.CutSeek.End - videoFile.CutSeek.Start).TotalSeconds);
@@ -83,8 +88,14 @@ namespace VideoCompressorGUI.ffmpeg
             this.ffmpeg.Complete += (_, _) =>
             {
                 OnCompressFinished?.Invoke(videoFile);
+                
+                videoFile.CompressData.IsCompressing = false;
+                OnAnyCompressionFinished?.Invoke(videoFile);
             };
 
+            videoFile.CompressData.IsCompressing = true;
+            OnAnyCompressionStarted?.Invoke(videoFile);
+            
             return await this.ffmpeg.ConvertAsync(inputFile, outputFile, options, CancellationToken.None);
         }
     }

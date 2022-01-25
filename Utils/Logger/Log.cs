@@ -95,7 +95,7 @@ namespace VideoCompressorGUI.Utils.Logger
         private void WriteFile(string message)
         {
             string logPath = fullPath + ApplicationStarted.ToFileTime()  + ".log";
-            using StreamWriter sw = File.AppendText(logPath);
+            using StreamWriter sw = File.AppendText(logPath.EndsWith("\n") ? logPath : logPath + "\n");
             sw.Write(message);
         }
     }
