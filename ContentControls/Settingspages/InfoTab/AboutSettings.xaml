@@ -27,11 +27,21 @@
         <Grid Grid.Row="1" Margin="30, 30, 30, 0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="5*" />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" FontSize="60" FontWeight="Bold"  Text="About Compri" />
-            <TextBlock Grid.Row="1" TextWrapping="WrapWithOverflow" FontStyle="Italic" FontSize="24" Text="Compri ist eine visuelle Schnittstelle zwischen FFmpeg und einer einfachen Nutzbarkeit. Unser Ziel ist es, das Bearbeiten von Medien zu vereinfachen." />
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="15*"/>
+                </Grid.ColumnDefinitions>
+                <Image x:Name="iconImage" Stretch="Uniform" Grid.RowSpan="2" Grid.Column="0"/>
+                <TextBlock Grid.Column="1" Margin="15, 0, 0, 0" Grid.Row="0" FontSize="60" FontWeight="Bold"  Text="About Compri" />
+                <TextBlock Grid.Column="1" Margin="15, 0, 0, 0" Grid.Row="1" TextWrapping="WrapWithOverflow" FontStyle="Italic" FontSize="24" Text="Compri ist eine visuelle Schnittstelle zwischen FFmpeg und einer einfachen Nutzbarkeit. Unser Ziel ist es, das Bearbeiten von Medien zu vereinfachen." />
+            </Grid>
             <StackPanel Grid.Row="2">
                 <components:HeaderedSeperator Margin="0, 30, 0, 5" Header="Updates" />
                 <Grid>

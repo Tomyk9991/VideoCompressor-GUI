@@ -1,27 +1,32 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Windows.Documents;
 
 namespace VideoCompressorGUI.Utils
 {
     public class FileSystemWatcherReferenceCounter
     {
         public FileSystemWatcher Watcher { get; set; }
-        public uint ReferenceCount { get; set; }
+        public int ReferenceCount => files.Count;
 
-        public FileSystemWatcherReferenceCounter(FileSystemWatcher watcher)
+        private List<string> files = new(); 
+
+        public FileSystemWatcherReferenceCounter(FileSystemWatcher watcher, string file)
         {
             Watcher = watcher;
-            ReferenceCount = 1;
+            this.files.Add(file);
         }
 
-        public uint Decrease()
+        public int Decrease(string file)
         {
-            this.ReferenceCount--;
+            this.files.Remove(file);
             return ReferenceCount;
         }
 
-        public uint Increase()
+        public int Increase(string file)
         {
-            ReferenceCount++;
+            this.files.Add(file);
             return ReferenceCount;
         }
     }
