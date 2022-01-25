@@ -42,7 +42,10 @@ namespace VideoCompressorGUI.ContentControls
         private void ShowVideoFileInformation(VideoFileMetaData file)
         {
             if (file == null)
+            {
                 informationParent.Visibility = Visibility.Collapsed;
+                return;
+            }
 
             informationParent.Visibility = Visibility.Visible;
 

@@ -68,13 +68,14 @@ namespace VideoCompressorGUI.ffmpeg
             OutputFile outputFile = new OutputFile(compressOptions.OutputPath);
             TimeSpan snippetLength = (videoFile.CutSeek.End - videoFile.CutSeek.Start);
             
-            ConversionOptions options = this.ffmpeg.BuildConversionOptions(videoFile, preset, snippetLength);
+            ConversionOptions options = this.ffmpeg.BuildConversionOptions(videoFile, compressOptions, preset, snippetLength);
 
             if (videoFile.CutSeek != null)
             {
                 options.CutMedia(videoFile.CutSeek.Start, snippetLength);
             }
-        
+            
+            
             this.ffmpeg.Progress += (_, args) =>
             {
                 OnCompressProgress?.Invoke(videoFile, args.ProcessedDuration.TotalSeconds / (videoFile.CutSeek.End - videoFile.CutSeek.Start).TotalSeconds);
