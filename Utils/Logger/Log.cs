@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -42,13 +41,17 @@ namespace VideoCompressorGUI.Utils.Logger
 
         public void WarnPrint(string message)
         {
+            StringBuilder builder = new StringBuilder();
+            builder.Append("======= WARN: ==").Append(DateTime.Now.ToShortTimeString()).Append("==============\n")
+                .AppendLine(message);
+            
             lock (mutex)
             {
                 if (LogToConsole)
                     Console.WriteLine(message);
                 
                 if (LogToFile && fullPath != "")
-                    WriteFile(message);
+                    WriteFile(builder.ToString());
             }
         }
 
@@ -60,13 +63,17 @@ namespace VideoCompressorGUI.Utils.Logger
         
         public void InfoPrint(string message)
         {
+            StringBuilder builder = new StringBuilder();
+            builder.Append("======= INFO: ==").Append(DateTime.Now.ToShortTimeString()).Append("==============\n")
+                .AppendLine(message);
+            
             lock (mutex)
             {
                 if (LogToConsole)
                     Console.WriteLine(message);
                 
                 if (LogToFile && fullPath != "")
-                    WriteFile(message);
+                    WriteFile(builder.ToString());
             }
         }
 
@@ -95,8 +102,9 @@ namespace VideoCompressorGUI.Utils.Logger
         private void WriteFile(string message)
         {
             string logPath = fullPath + ApplicationStarted.ToFileTime()  + ".log";
-            using StreamWriter sw = File.AppendText(logPath.EndsWith("\n") ? logPath : logPath + "\n");
-            sw.Write(message);
+            using StreamWriter sw = File.AppendText(logPath);
+            sw.WriteLine(message);
+            sw.Close();
         }
     }
 }

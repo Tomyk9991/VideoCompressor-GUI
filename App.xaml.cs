@@ -26,7 +26,11 @@ namespace VideoCompressorGUI
                 logger.Error((Exception)e.ExceptionObject);
 
             DispatcherUnhandledException += (s, e) =>
+            {
                 logger.Error(e.Exception);
+                e.Handled = true;
+                Application.Current.Shutdown();
+            };
 
             TaskScheduler.UnobservedTaskException += (s, e) =>
                 logger.Error(e.Exception);
