@@ -34,9 +34,10 @@
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="5*" />
             </Grid.ColumnDefinitions>
-            <components:VideoBrowser x:Name="videoBrowser" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></components:VideoBrowser>
+            <components:VideoBrowser x:Name="videoBrowser" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"/>
+            
             <StackPanel Grid.Row="0" Grid.Column="1">
-                <components:VideoPlayer Margin="15, 15, 15, 15" x:Name="videoPlayer" />
+                <components:VideoPlayer Margin="15, 0, 15, 15" x:Name="videoPlayer" />
                 <Grid x:Name="informationParent" HorizontalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition />
