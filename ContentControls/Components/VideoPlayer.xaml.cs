@@ -40,6 +40,7 @@ namespace VideoCompressorGUI.ContentControls.Components
             instance.OnMousePressed += lmKB.OnMouseClick;
 
             this.videoPlaybackSlider.BlockValueOverrideOnDrag = true;
+            this.videoPlaybackSlider.OnEndedMainDrag += (d) => OnPlaybackMainValueChanged(d, true);
             this.videoPlaybackSlider.OnUpperThumbChanged += (d) =>
             {
                 this.currentlySelectedVideo.CutSeek.End = d * currentlySelectedVideo.MetaData.Duration;
@@ -205,26 +206,6 @@ namespace VideoCompressorGUI.ContentControls.Components
         {
             UpperVideoThumbLimitReached();
         }
-
-        private void OnTimerTick(object sender, EventArgs e)
-        {
-            if (videoPlayer.NaturalDuration is { TotalSeconds: > 0 })
-            {
-                videoPlaybackSlider.Value = videoPlayer.ActualPosition.Value /
-                                            currentlySelectedVideo.MetaData.Duration;
-
-                textblockPlayedTime.Text = videoPlayer.ActualPosition.Value.TotalSeconds.ToMinutesAndSecondsFromSeconds();
-
-                var end = videoPlaybackSlider.UpperThumb *
-                                           currentlySelectedVideo.MetaData.Duration;
-
-                var timeSpanInterval = TimeSpan.FromSeconds(updateTimeInterval);
-                
-                if (videoPlayer.ActualPosition.Value + timeSpanInterval >= end)
-                    UpperVideoThumbLimitReached();
-            }
-        }
-
         #endregion
 
         #region Sound
