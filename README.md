@@ -1,7 +1,8 @@
 #Video compressor tool made with WPF and ffmpeg
 
-You can download the application in the release tab. Currently the FFmpeg.exe is missing. Downlaod the .exe and drag it in the root folder.
-
+##  Requirements
+ - You can download the application in the release tab. Currently the FFmpeg.exe is missing. Downlaod the .exe and drag it in the root folder.
+ - Windows Media Player 10 or above must be installed
 ---
 
 ## Main editor window
