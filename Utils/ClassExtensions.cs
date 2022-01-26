@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -14,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using FFmpeg.NET;
 using MaterialDesignThemes.Wpf;
+using Unosquare.FFME;
 using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.SettingsLoadables;
 using Color = System.Windows.Media.Color;
@@ -66,6 +66,8 @@ namespace VideoCompressorGUI.Utils
 
             return (length < value.Length) ? value.Substring(value.Length - length) : value;
         }
+        
+        // public static void 
     
         public static string BuildNameFromString(this string name)
         {

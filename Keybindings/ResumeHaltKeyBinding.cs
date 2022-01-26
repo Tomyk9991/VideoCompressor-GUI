@@ -1,7 +1,7 @@
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
+using Unosquare.FFME;
 
 namespace VideoCompressorGUI.Keybindings
 {
@@ -20,9 +20,8 @@ namespace VideoCompressorGUI.Keybindings
             if (input is MediaElement)
             {
                 //space
-                if (e.Key == Key.Space /*&& DateTime.Now - lastModified > TimeSpan.FromSeconds(0.25)*/)
+                if (e.Key == Key.Space)
                 {
-                    // lastModified = DateTime.Now;
                     this.togglePlayPause.Invoke();
                 }
             }

@@ -4,6 +4,8 @@
 /obj
 /.[Vv]scode
 todos.md
-ffmpeg.exe
+
+/libs
+
 Folder*
 *.DS_Store

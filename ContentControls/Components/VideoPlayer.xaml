@@ -7,6 +7,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
              xmlns:decorators1="clr-namespace:VideoCompressorGUI.WPFCustomBehaviours.Decorators"
+             xmlns:ffme="clr-namespace:Unosquare.FFME;assembly=ffme.win"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
@@ -25,7 +26,7 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid>
-                <MediaElement Focusable="True" MediaEnded="Element_MediaEnded" LoadedBehavior="Manual" MouseLeftButtonUp="VideoPlayer_OnMouseUp" x:Name="videoPlayer"/>
+                <ffme:MediaElement Focusable="True" MediaEnded="Element_MediaEnded" LoadedBehavior="Manual" PreviewMouseUp="VideoPlayer_OnMouseUp" x:Name="videoPlayer" />
                 <materialDesign:PackIcon Opacity="0.0" Kind="Play" x:Name="playPauseIcon" HorizontalAlignment="Center" Width="370" Height="370" VerticalAlignment="Center"></materialDesign:PackIcon>
                 <Grid VerticalAlignment="Bottom" Margin="0, 0, 0, 5">
                     <Grid.ColumnDefinitions>
