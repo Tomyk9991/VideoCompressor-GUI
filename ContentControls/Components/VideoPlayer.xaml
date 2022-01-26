@@ -26,7 +26,7 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid>
-                <ffme:MediaElement Focusable="True" MediaEnded="Element_MediaEnded" LoadedBehavior="Manual" PreviewMouseUp="VideoPlayer_OnMouseUp" x:Name="videoPlayer" />
+                <ffme:MediaElement Focusable="True" MediaEnded="Element_MediaEnded" UnloadedBehavior="Play" LoadedBehavior="Manual" x:Name="videoPlayer" />
                 <materialDesign:PackIcon Opacity="0.0" Kind="Play" x:Name="playPauseIcon" HorizontalAlignment="Center" Width="370" Height="370" VerticalAlignment="Center"></materialDesign:PackIcon>
                 <Grid VerticalAlignment="Bottom" Margin="0, 0, 0, 5">
                     <Grid.ColumnDefinitions>

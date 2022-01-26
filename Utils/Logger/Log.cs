@@ -77,7 +77,7 @@ namespace VideoCompressorGUI.Utils.Logger
             }
         }
 
-        public void Error(Exception ex, bool logToConsole = false)
+        public void Error(Exception ex)
         {
             StringBuilder builder = new StringBuilder();
             builder.Append("====== ERROR: ==").Append(DateTime.Now.ToShortTimeString()).Append("==============\n");
@@ -90,7 +90,7 @@ namespace VideoCompressorGUI.Utils.Logger
 
             lock (mutex)
             {
-                if (LogToConsole && logToConsole)
+                if (LogToConsole)
                     Console.WriteLine(bu);
 
 

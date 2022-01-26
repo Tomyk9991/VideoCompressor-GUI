@@ -1,0 +1,35 @@
+<UserControl x:Class="VideoCompressorGUI.ContentControls.Components.FailLoad"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
+             Loaded="FailLoad_OnLoaded"
+             Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource MaterialDesignFont}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <materialDesign:Card FontSize="16" Grid.Row="0"
+                             Background="{DynamicResource PrimaryHueDarkBrush}">
+            <TextBlock TextWrapping="WrapWithOverflow" VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       x:Name="headerTextBlock" />
+        </materialDesign:Card>
+        
+        <Grid Grid.Row="1">
+            <Button Click="Settings_OnClick" Content="Einstellungen" Margin="30"/>
+        </Grid>
+        
+        <Grid Grid.Row="2">
+            <StackPanel>
+                <components:HeaderedSeperator Header="Ein Fehler ist aufgetreten"/>
+                <TextBlock FontSize="22" TextWrapping="WrapWithOverflow" Margin="15, 0, 0, 5" x:Name="failFirstTextBlock"/>
+                <TextBlock FontSize="22" TextWrapping="WrapWithOverflow" Margin="15" x:Name="failMessageTextBlock"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

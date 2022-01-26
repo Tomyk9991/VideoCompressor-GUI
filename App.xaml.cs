@@ -13,12 +13,6 @@ namespace VideoCompressorGUI
     public partial class App : Application
     {
         private Log logger = new();
-
-        public App()
-        {
-            Library.FFmpegDirectory = Path.GetDirectoryName(typeof(App).Assembly.Location) + @"\libs\bin";
-            Task.Run(async () => {await Library.LoadFFmpegAsync();}).GetAwaiter().GetResult();
-        }
         
         protected override void OnStartup(StartupEventArgs e)
         {

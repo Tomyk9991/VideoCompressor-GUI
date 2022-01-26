@@ -18,6 +18,7 @@ namespace VideoCompressorGUI
     public partial class MainWindow : Window
     {
         public event Action<KeyEventArgs, IInputElement> OnKeyPressed;
+        public event Action<MouseButtonEventArgs, IInputElement> OnMousePressed;
         public event Action<SizeChangedEventArgs> OnWindowSizeChanged;
         public event Action<CancelEventArgs> OnWindowClosing;
 
@@ -63,6 +64,12 @@ namespace VideoCompressorGUI
             SettingsFolder.Save(data);
 
             OnWindowClosing?.Invoke(e);
+        }
+
+        private void MainWindow_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            IInputElement focusedControl = FocusManager.GetFocusedElement(this);
+            OnMousePressed?.Invoke(e, focusedControl);
         }
     }
 }

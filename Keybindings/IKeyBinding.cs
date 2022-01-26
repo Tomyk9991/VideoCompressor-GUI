@@ -7,4 +7,9 @@ namespace VideoCompressorGUI.Keybindings
     {
         void OnKeybinding(KeyEventArgs e, IInputElement inputElement);
     }
+
+    public interface IMouseBinding
+    {
+        void OnMouseClick(MouseButtonEventArgs e, IInputElement inputElement);
+    }
 }

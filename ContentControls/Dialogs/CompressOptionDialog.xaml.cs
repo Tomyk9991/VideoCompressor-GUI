@@ -141,7 +141,16 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
 
 
             string outputPath = folderWithoutFile + "/" + builtName + fileEnding;
-            CompressOptions options = new CompressOptions(outputPath, ExtensionOption.FromFileEnding(fileEnding));
+            var extensionOption = ExtensionOption.FromFileEnding(fileEnding);
+            
+            if (extensionOption is GifExtensionOption gifOptions)
+            {
+                gifOptions.Scale = int.Parse(scaleTextBox.Text);
+                gifOptions.FPS = int.Parse(targetFPSTextBox.Text);
+            }
+            
+            CompressOptions options = new CompressOptions(outputPath, extensionOption);
+
 
             this.Visibility = Visibility.Collapsed;
 

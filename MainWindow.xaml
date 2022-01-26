@@ -13,7 +13,9 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
+        
         KeyDown="MainWindow_OnKeyDown"
+        MouseUp="MainWindow_OnMouseUp"
         Closing="MainWindow_OnClosing"
         SizeChanged="MainWindow_OnSizeChanged">
     <ContentControl x:Name="contentControl"></ContentControl>

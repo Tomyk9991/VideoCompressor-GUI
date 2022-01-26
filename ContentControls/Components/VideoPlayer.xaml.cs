@@ -10,6 +10,7 @@ using FFmpeg.AutoGen;
 using MahApps.Metro.Controls;
 using MaterialDesignThemes.Wpf;
 using Unosquare.FFME;
+using Unosquare.FFME.Common;
 using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.Keybindings;
 using VideoCompressorGUI.SettingsLoadables;
@@ -20,27 +21,30 @@ namespace VideoCompressorGUI.ContentControls.Components
     public partial class VideoPlayer : UserControl
     {
         private VideoFileMetaData currentlySelectedVideo;
-
+        private static readonly double updateTimeInterval = 0.1;
+        
         private DispatcherTimer timerVideoTime = new()
         {
-            Interval = TimeSpan.FromSeconds(0.1)
+            Interval = TimeSpan.FromSeconds(updateTimeInterval)
         };
 
         private bool isPlayingVideo = false;
+        private bool canSeek = true;
 
         public VideoPlayer()
         {
             InitializeComponent();
-            
+
             PlaybackSpeedKeyBinding pbsKB = new PlaybackSpeedKeyBinding(this.snackbarNotifier, this.videoPlayer);
             ResumeHaltKeyBinding rhKB = new ResumeHaltKeyBinding(TogglePlayPause);
+            LeftMouseClickMouseBinding lmKB = new LeftMouseClickMouseBinding(TogglePlayPause, this.videoPlayer);
 
             MainWindow instance = (MainWindow)Application.Current.MainWindow;
             instance.OnKeyPressed += pbsKB.OnKeybinding;
             instance.OnKeyPressed += rhKB.OnKeybinding;
+            instance.OnMousePressed += lmKB.OnMouseClick;
 
             this.videoPlaybackSlider.BlockValueOverrideOnDrag = true;
-            this.videoPlaybackSlider.OnEndedMainDrag += d => { OnPlaybackMainValueChanged(d); };
             this.videoPlaybackSlider.OnUpperThumbChanged += (d) =>
             {
                 this.currentlySelectedVideo.CutSeek.End = d * currentlySelectedVideo.MetaData.Duration;
@@ -63,7 +67,7 @@ namespace VideoCompressorGUI.ContentControls.Components
                     TogglePlayPause();
                 }
 
-                OnPlaybackMainValueChanged(d, false);
+                OnPlaybackMainValueChanged(d, true);
             };
 
             videoPlayer.MediaOpened += (s, a) =>
@@ -71,11 +75,21 @@ namespace VideoCompressorGUI.ContentControls.Components
                 isPlayingVideo = false;
                 TogglePlayPause();
             };
+
+            this.videoPlayer.SeekingStarted += (_, _) => { this.canSeek = false; };
+            this.videoPlayer.SeekingEnded += (_, _) => { this.canSeek = true; };
+
+            this.videoPlayer.PositionChanged += OnVideoPlayerPositionChanged;
             
             
             this.videoPlayerParent.Visibility = Visibility.Hidden;
 
             ((MainWindow)Application.Current.MainWindow).OnWindowClosing += _ => SavePersistentStates();
+        }
+
+        private void OnVideoPlayerPositionChanged(object? sender, PositionChangedEventArgs e)
+        {
+            
         }
 
         private void ValidateLowerUpperThumbDistance(CutStartEndParameter cutStartEndParameter)
@@ -110,16 +124,12 @@ namespace VideoCompressorGUI.ContentControls.Components
         private void Element_MediaEnded(object? sender, EventArgs eventArgs)
         {
             // Wird nur ausgeführt, wenn das Element auf natürliche Art fertiggestellt wird
+            Console.WriteLine("Ended");
             UpperVideoThumbLimitReached();
         }
 
         #region Resume / Pause
 
-        private void VideoPlayer_OnMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            Console.WriteLine("mouse up");
-            TogglePlayPause();
-        }
 
         private void TogglePlayPause()
         {
@@ -153,10 +163,7 @@ namespace VideoCompressorGUI.ContentControls.Components
 
             this.videoPlayer.Open(new Uri(association.File));
 
-            Dispatcher.DelayInvoke(() =>
-            {
-                videoPlayer.Focus();
-            }, TimeSpan.FromMilliseconds(1000));
+            Dispatcher.DelayInvoke(() => { videoPlayer.Focus(); }, TimeSpan.FromMilliseconds(1000));
 
             textblockTotalTime.Text = association.MetaData.Duration.TotalSeconds.ToMinutesAndSecondsFromSeconds();
 
@@ -170,22 +177,27 @@ namespace VideoCompressorGUI.ContentControls.Components
         #region Video playback
 
         //gets called from videorangeslider, when user drags the main value
-        private void OnPlaybackMainValueChanged(double percentage, bool shouldToggle = true)
+        private void OnPlaybackMainValueChanged(double percentage, bool ignore)
         {
-            videoPlayer.Position =
-                TimeSpan.FromMilliseconds(percentage * currentlySelectedVideo.MetaData.Duration.TotalMilliseconds);
-
-            if (shouldToggle && !isPlayingVideo)
-                TogglePlayPause();
+            if (canSeek || ignore)
+            {
+                videoPlayer.Seek(
+                    TimeSpan.FromMilliseconds(percentage * currentlySelectedVideo.MetaData.Duration.TotalMilliseconds));
+                
+                if(isPlayingVideo) // due to a bug its needed
+                    videoPlayer.Play();
+            }
         }
 
         //Wird aufgerufen, unabhängig davon, ob das Video zu Ende ist, oder der Thumb erreicht wurde
         private void UpperVideoThumbLimitReached()
         {
-            double startInMilliseconds = videoPlaybackSlider.LowerThumb *
-                                         currentlySelectedVideo.MetaData.Duration.TotalMilliseconds;
-
-            this.videoPlayer.Position = TimeSpan.FromMilliseconds(startInMilliseconds);
+            // if (canSeek)
+            // {
+            //     this.videoPlayer.Seek(TimeSpan.FromMilliseconds(videoPlaybackSlider.LowerThumb *
+            //                                                     currentlySelectedVideo.MetaData.Duration
+            //                                                         .TotalMilliseconds));
+            // }
         }
 
         private void ToLowerThumbIcon_OnMouseUp(object sender, MouseButtonEventArgs e)
@@ -195,21 +207,20 @@ namespace VideoCompressorGUI.ContentControls.Components
 
         private void OnTimerTick(object sender, EventArgs e)
         {
-            
             if (videoPlayer.NaturalDuration is { TotalSeconds: > 0 })
             {
-                videoPlaybackSlider.Value = (videoPlayer.Position /
-                                             currentlySelectedVideo.MetaData.Duration);
+                videoPlaybackSlider.Value = videoPlayer.ActualPosition.Value /
+                                            currentlySelectedVideo.MetaData.Duration;
 
-                textblockPlayedTime.Text = videoPlayer.Position.TotalSeconds.ToMinutesAndSecondsFromSeconds();
+                textblockPlayedTime.Text = videoPlayer.ActualPosition.Value.TotalSeconds.ToMinutesAndSecondsFromSeconds();
 
-                double endInMilliseconds = videoPlaybackSlider.UpperThumb *
-                                           currentlySelectedVideo.MetaData.Duration.TotalMilliseconds;
+                var end = videoPlaybackSlider.UpperThumb *
+                                           currentlySelectedVideo.MetaData.Duration;
 
-                if ((int)videoPlayer.Position.TotalMilliseconds >= (int)endInMilliseconds)
-                {
+                var timeSpanInterval = TimeSpan.FromSeconds(updateTimeInterval);
+                
+                if (videoPlayer.ActualPosition.Value + timeSpanInterval >= end)
                     UpperVideoThumbLimitReached();
-                }
             }
         }
 
@@ -258,7 +269,7 @@ namespace VideoCompressorGUI.ContentControls.Components
                 volumeTextBlock.Visibility = Visibility.Collapsed;
                 soundVolumeSlider.Visibility = Visibility.Collapsed;
                 volumeIcon.Visibility = Visibility.Visible;
-                
+
                 vlmDef.Width = new GridLength(5, GridUnitType.Star);
             });
         }
@@ -273,12 +284,9 @@ namespace VideoCompressorGUI.ContentControls.Components
                 Duration = TimeSpan.FromSeconds(0.1),
                 FillBehavior = FillBehavior.Stop
             };
-            
-            animation.Completed += (s, e) =>
-            {
-                complete();
-            };
-            
+
+            animation.Completed += (s, e) => { complete(); };
+
             def.BeginAnimation(ColumnDefinition.WidthProperty, animation);
         }
 
@@ -289,7 +297,7 @@ namespace VideoCompressorGUI.ContentControls.Components
                 volumeTextBlock.Visibility = Visibility.Visible;
                 soundVolumeSlider.Visibility = Visibility.Visible;
                 volumeIcon.Visibility = Visibility.Collapsed;
-                
+
                 vlmDef.Width = new GridLength(20, GridUnitType.Star);
             });
         }
