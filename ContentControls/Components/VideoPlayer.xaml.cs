@@ -21,13 +21,8 @@ namespace VideoCompressorGUI.ContentControls.Components
     public partial class VideoPlayer : UserControl
     {
         private VideoFileMetaData currentlySelectedVideo;
-        private static readonly double updateTimeInterval = 0.1;
+        private static readonly double updateTimeInterval = 0.05;
         
-        private DispatcherTimer timerVideoTime = new()
-        {
-            Interval = TimeSpan.FromSeconds(updateTimeInterval)
-        };
-
         private bool isPlayingVideo = false;
         private bool canSeek = true;
 
@@ -89,7 +84,21 @@ namespace VideoCompressorGUI.ContentControls.Components
 
         private void OnVideoPlayerPositionChanged(object? sender, PositionChangedEventArgs e)
         {
-            
+            if (videoPlayer.NaturalDuration is { TotalSeconds: > 0 })
+            {
+                videoPlaybackSlider.Value = videoPlayer.ActualPosition.Value /
+                                            currentlySelectedVideo.MetaData.Duration;
+
+                textblockPlayedTime.Text = videoPlayer.ActualPosition.Value.TotalSeconds.ToMinutesAndSecondsFromSeconds();
+
+                var end = videoPlaybackSlider.UpperThumb *
+                          currentlySelectedVideo.MetaData.Duration;
+
+                var timeSpanInterval = TimeSpan.FromSeconds(updateTimeInterval);
+                
+                if (videoPlayer.ActualPosition.Value + timeSpanInterval >= end)
+                    UpperVideoThumbLimitReached();
+            }
         }
 
         private void ValidateLowerUpperThumbDistance(CutStartEndParameter cutStartEndParameter)
@@ -124,7 +133,6 @@ namespace VideoCompressorGUI.ContentControls.Components
         private void Element_MediaEnded(object? sender, EventArgs eventArgs)
         {
             // Wird nur ausgeführt, wenn das Element auf natürliche Art fertiggestellt wird
-            Console.WriteLine("Ended");
             UpperVideoThumbLimitReached();
         }
 
@@ -152,7 +160,6 @@ namespace VideoCompressorGUI.ContentControls.Components
             {
                 this.videoPlayer.Close();
                 videoPlayerParent.Visibility = Visibility.Collapsed;
-                timerVideoTime.Tick -= (o, args) => { };
 
                 return;
             }
@@ -162,15 +169,9 @@ namespace VideoCompressorGUI.ContentControls.Components
 
 
             this.videoPlayer.Open(new Uri(association.File));
-
             Dispatcher.DelayInvoke(() => { videoPlayer.Focus(); }, TimeSpan.FromMilliseconds(1000));
 
             textblockTotalTime.Text = association.MetaData.Duration.TotalSeconds.ToMinutesAndSecondsFromSeconds();
-
-            timerVideoTime.Tick -= (o, args) => { };
-            timerVideoTime.Tick += OnTimerTick;
-            timerVideoTime.Start();
-
             videoPlayerParent.Visibility = Visibility.Visible;
         }
 
@@ -192,12 +193,12 @@ namespace VideoCompressorGUI.ContentControls.Components
         //Wird aufgerufen, unabhängig davon, ob das Video zu Ende ist, oder der Thumb erreicht wurde
         private void UpperVideoThumbLimitReached()
         {
-            // if (canSeek)
-            // {
-            //     this.videoPlayer.Seek(TimeSpan.FromMilliseconds(videoPlaybackSlider.LowerThumb *
-            //                                                     currentlySelectedVideo.MetaData.Duration
-            //                                                         .TotalMilliseconds));
-            // }
+            if (canSeek)
+            {
+                this.videoPlayer.Seek(TimeSpan.FromMilliseconds(videoPlaybackSlider.LowerThumb *
+                                                                currentlySelectedVideo.MetaData.Duration
+                                                                    .TotalMilliseconds));
+            }
         }
 
         private void ToLowerThumbIcon_OnMouseUp(object sender, MouseButtonEventArgs e)
