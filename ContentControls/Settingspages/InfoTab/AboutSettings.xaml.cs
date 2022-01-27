@@ -71,7 +71,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
                 }
                 else
                 {
-                    
+                    this.newUpdateAvailableTextBlock.Text = "Keine neuen Versionen verfügbar";
                     SetButtonLoadingAnimation(false);
                 }
             }

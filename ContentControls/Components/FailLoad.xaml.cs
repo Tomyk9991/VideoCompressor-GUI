@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab;
 using VideoCompressorGUI.SettingsLoadables;
+using VideoCompressorGUI.Utils.Logger;
 
 namespace VideoCompressorGUI.ContentControls.Components
 {
@@ -24,7 +25,7 @@ namespace VideoCompressorGUI.ContentControls.Components
 
         private void FailLoad_OnLoaded(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("Loading FailLoad");
+            Log.Warn("Fail Control loaded");
             headerTextBlock.Text = this.lastHeader;
 
             GeneralSettingsData settings = SettingsFolder.Load<GeneralSettingsData>();

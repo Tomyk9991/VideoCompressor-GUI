@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using MaterialDesignThemes.Wpf;
 using Ookii.Dialogs.Wpf;
 using VideoCompressorGUI.SettingsLoadables;
-using VideoCompressorGUI.Utils;
+using VideoCompressorGUI.Utils.Github;
 
 namespace VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab
 {
@@ -31,10 +34,23 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab
         
         private void GeneralSettings_OnLoaded(object sender, RoutedEventArgs e)
         {
+            HandleOnMissingFiles();
+        }
+
+        private void HandleOnMissingFiles()
+        {
             List<string> missingFiles = ValidateFFmpegPath(ffmpegPathTextBox.Text);
-            missingFilesTextBox.Text = missingFiles.Count == 0 ? "" :
-                missingFiles.Count == 1 ? "Es fehlt folgende Datei: " + Environment.NewLine + missingFiles[0] :
-                "Es fehlen folgende Dateien: " + Environment.NewLine + "    - " + string.Join(Environment.NewLine + "    - ", missingFiles);
+
+            bool missing = missingFiles.Count > 0;
+            
+            missingFilesTextBox.Text = missingFiles.Count switch
+            {
+                0 => "",
+                1 => "Es fehlt folgende Datei: " + Environment.NewLine + missingFiles[0],
+                _ => "Es fehlen folgende Dateien: " + Environment.NewLine + "    - " + string.Join(Environment.NewLine + "    - ", missingFiles)
+            };
+
+            this.downloadFFmpegButton.IsEnabled = missing;
         }
 
         private void ApplySettingsLoad(GeneralSettingsData settings)
@@ -104,13 +120,12 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab
             if ((bool)dialog.ShowDialog(Window.GetWindow(this)))
             {
                 var selectedFolder = dialog.SelectedPath;
-                this.ffmpegPathTextBox.Text = selectedFolder;
+                if (selectedFolder != "")
+                {
+                    this.ffmpegPathTextBox.Text = selectedFolder;
+                    HandleOnMissingFiles();
+                }
                 
-                List<string> missingFiles = ValidateFFmpegPath(ffmpegPathTextBox.Text);
-                
-                missingFilesTextBox.Text = missingFiles.Count == 0 ? "" :
-                    missingFiles.Count == 1 ? "Es fehlt folgende Datei: " + Environment.NewLine + missingFiles[0] :
-                    "Es fehlen folgende Dateien: " + Environment.NewLine + "    - " + string.Join(Environment.NewLine + "    - ", missingFiles);
             }
         }
 
@@ -135,6 +150,47 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab
         private void DeletePathButton_OnClick(object sender, RoutedEventArgs e)
         {
             this.SelectedPath = "";
+        }
+
+        private async void DownloadFFmpegButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            string path = this.ffmpegPathTextBox.Text;
+            string zipFilePath = path + "\\ffmpeg.zip";
+            
+            FFmpegDownloader downloader = new FFmpegDownloader();
+            downloader.OnDownloadProgressChanged += (int percentage) =>
+            {
+                ButtonProgressAssist.SetValue(downloadFFmpegButton, percentage);
+            };
+
+            downloader.OnDownloadStarted += () =>
+            {
+                downloadFFmpegButton.IsEnabled = false;
+            };
+            
+            downloader.OnDownloadFinished += () =>
+            {
+                ButtonProgressAssist.SetValue(downloadFFmpegButton, 0);
+                downloadFFmpegButton.IsEnabled = true;
+            };
+            
+            await downloader.Download(zipFilePath);
+            
+            ZipFile.ExtractToDirectory(zipFilePath, path);
+
+            string firstCreatedFolder = Directory.GetDirectories(path)[0];
+            string binFolderPath  = firstCreatedFolder + "\\bin\\";
+            DirectoryInfo binfolder = new DirectoryInfo(binFolderPath);
+
+            foreach (FileInfo file in binfolder.GetFiles())
+            {
+                File.Move(file.FullName, path + "\\" + file.Name);
+            }
+
+            Directory.Delete(firstCreatedFolder, true);
+            File.Delete(zipFilePath);
+
+            HandleOnMissingFiles();
         }
     }
 }
