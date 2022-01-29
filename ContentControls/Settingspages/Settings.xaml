@@ -22,6 +22,7 @@
             <TabControl
                 materialDesign:ColorZoneAssist.Mode="Standard"
                 materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                x:Name="tabControl"
                 Style="{StaticResource MaterialDesignNavigatilRailTabControl}">
                 <TabItem>
                     <TabItem.Header>
