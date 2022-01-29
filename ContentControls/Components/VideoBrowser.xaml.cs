@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using FFmpeg.NET;
+using Ookii.Dialogs.Wpf;
 using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
@@ -111,6 +112,7 @@ namespace VideoCompressorGUI.ContentControls.Components
 
                 videoFileMetaData = new ObservableCollection<VideoFileMetaData>(videoFileMetaData.OrderByDescending(t1 => t1.CreatedOn));
                 this.listboxFiles.ItemsSource = videoFileMetaData;
+                dragAndDrop.Visibility = this.listboxFiles.Items.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
 
                 CreateSystemFileWatchers(newFiles);
             };
@@ -279,8 +281,25 @@ namespace VideoCompressorGUI.ContentControls.Components
             this.listboxFiles.ItemsSource = Array.Empty<Object>();
             this.listboxFiles.ItemsSource = videoFileMetaData;
             
+            dragAndDrop.Visibility = this.listboxFiles.Items.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
+            
             this.OnSelectionChanged?.Invoke(null);
             return this.videoFileMetaData.Count;
+        }
+
+        private void BrowseFile_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var dialog = new VistaOpenFileDialog
+            {
+                Multiselect = true,
+                Filter = "Supported video formats (*.mp4)|*.mp4",
+            };
+
+            if ((bool)dialog.ShowDialog(Window.GetWindow(this)))
+            {
+                var selectedFiles = dialog.FileNames;
+                HandleFiles(selectedFiles);
+            }
         }
     }
 }

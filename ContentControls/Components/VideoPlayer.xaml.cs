@@ -4,12 +4,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Threading;
-using FFmpeg.AutoGen;
 using MahApps.Metro.Controls;
 using MaterialDesignThemes.Wpf;
-using Unosquare.FFME;
 using Unosquare.FFME.Common;
 using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.Keybindings;
@@ -76,11 +74,41 @@ namespace VideoCompressorGUI.ContentControls.Components
             this.videoPlayer.SeekingEnded += (_, _) => { this.canSeek = true; };
 
             this.videoPlayer.PositionChanged += OnVideoPlayerPositionChanged;
-            
-            
-            this.videoPlayerParent.Visibility = Visibility.Hidden;
+
+            SetCanUseControlUI(false);
 
             ((MainWindow)Application.Current.MainWindow).OnWindowClosing += _ => SavePersistentStates();
+        }
+
+        private void SetCanUseControlUI(bool state)
+        {
+            var white = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            var gray = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
+            
+            this.videoPlaybackSlider.IsEnabled = state;
+            
+            this.playPauseIcon.IsHitTestVisible = state;
+            this.playPauseIcon.Foreground = state ? white : gray;
+
+            resumeStopIcon.IsHitTestVisible = state;
+            resumeStopIcon.Foreground = state ? white : gray;
+            
+            this.textblockPlayedTime.Text = 0.0d.ToMinutesAndSecondsFromSeconds();
+            this.textblockPlayedTime.Foreground = state ? white : gray;
+            
+            this.soundVolumeSlider.IsHitTestVisible = state;
+            this.soundVolumeSlider.Foreground = state ? white : gray;
+            
+            this.volumeIcon.IsHitTestVisible = state;
+            this.volumeIconActually.Foreground = state ? white : gray; 
+            
+            this.toLowerThumbIcon.IsHitTestVisible = state;
+            this.toLowerThumbIcon.Foreground = state ? white : gray;
+            
+            this.textblockTotalTime.Text = 0.0d.ToMinutesAndSecondsFromSeconds();
+            this.textblockTotalTime.Foreground = state ? white : gray;
+
+            this.videoPlaybackSlider.SetEnabledColors(state);
         }
 
         private void OnVideoPlayerPositionChanged(object? sender, PositionChangedEventArgs e)
@@ -160,10 +188,11 @@ namespace VideoCompressorGUI.ContentControls.Components
             if (association == null || this.currentlySelectedVideo == association)
             {
                 this.videoPlayer.Close();
-                videoPlayerParent.Visibility = Visibility.Collapsed;
-
+                SetCanUseControlUI(false);
                 return;
             }
+            
+            SetCanUseControlUI(true);
 
             this.currentlySelectedVideo = association;
             this.videoPlaybackSlider.ResetThumbs();
@@ -204,7 +233,10 @@ namespace VideoCompressorGUI.ContentControls.Components
 
         private void ToLowerThumbIcon_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            UpperVideoThumbLimitReached();
+            if (toLowerThumbIcon.IsHitTestVisible)
+            {
+                UpperVideoThumbLimitReached();
+            }
         }
         #endregion
 
@@ -241,7 +273,8 @@ namespace VideoCompressorGUI.ContentControls.Components
 
         private void ResumeStopIcon_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            TogglePlayPause();
+            if (this.resumeStopIcon.IsHitTestVisible)
+                TogglePlayPause();
         }
 
         private void VolumeMouseLeave(object sender, MouseEventArgs e)

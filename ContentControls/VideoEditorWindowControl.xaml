@@ -38,6 +38,7 @@
             
             <StackPanel Grid.Row="0" Grid.Column="1">
                 <components:VideoPlayer Margin="15, 0, 15, 15" x:Name="videoPlayer" />
+                
                 <Grid x:Name="informationParent" HorizontalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition />

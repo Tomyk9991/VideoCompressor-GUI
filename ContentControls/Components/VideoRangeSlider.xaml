@@ -43,7 +43,7 @@
                     <Thumb.Template>
                         <ControlTemplate>
                             <Grid>
-                                <Rectangle HorizontalAlignment="Left" Fill="#e7d250" Width="4" />
+                                <Rectangle Name="lowerThumbRect" HorizontalAlignment="Left" Fill="#e7d250" Width="4" />
                             </Grid>
                         </ControlTemplate>
                     </Thumb.Template>
@@ -56,7 +56,7 @@
                     <Thumb.Template>
                         <ControlTemplate>
                             <Grid>
-                                <Rectangle HorizontalAlignment="Right" Fill="#e7d250" Width="4" />
+                                <Rectangle Name="upperThumbRect" HorizontalAlignment="Right" Fill="#e7d250" Width="4" />
                             </Grid>
                         </ControlTemplate>
                     </Thumb.Template>
@@ -70,22 +70,22 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="8" />
             </Grid.ColumnDefinitions>
-            <Thumb Grid.Column="0" DragDelta="Thumb_LowerDragDelta">
+            <Thumb Grid.Column="0" DragDelta="Thumb_LowerDragDelta" x:Name="lowerBall">
                 <Thumb.Template>
                     <ControlTemplate>
                         <Grid>
-                            <Rectangle Fill="#e7d250" Width="4" Height="3" VerticalAlignment="Top" />
-                            <Ellipse Width="8" Height="8" Fill="#e7d250" Margin="0, 2, 0, 0" VerticalAlignment="Top" />
+                            <Rectangle Name="rect" Fill="#e7d250" Width="4" Height="3" VerticalAlignment="Top" />
+                            <Ellipse Name="ball" Width="8" Height="8" Fill="#e7d250" Margin="0, 2, 0, 0" VerticalAlignment="Top" />
                         </Grid>
                     </ControlTemplate>
                 </Thumb.Template>
             </Thumb>
-            <Thumb Grid.Column="2" DragDelta="Thumb_UpperDragDelta">
+            <Thumb Grid.Column="2" DragDelta="Thumb_UpperDragDelta" x:Name="upperBall">
                 <Thumb.Template>
                     <ControlTemplate>
                         <Grid>
-                            <Rectangle Fill="#e7d250" Width="4" Height="3" VerticalAlignment="Top" />
-                            <Ellipse Width="8" Height="8" Fill="#e7d250" Margin="0, 2, 0, 0"
+                            <Rectangle Name="rect" Fill="#e7d250" Width="4" Height="3" VerticalAlignment="Top" />
+                            <Ellipse Name="ball" Width="8" Height="8" Fill="#e7d250" Margin="0, 2, 0, 0"
                                      VerticalAlignment="Top" />
                         </Grid>
                     </ControlTemplate>
@@ -100,7 +100,7 @@
                DragCompleted="MainThumb_OnDragCompleted">
             <Thumb.Template>
                 <ControlTemplate>
-                    <Rectangle Fill="#e7d250" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" Height="25" />
+                    <Rectangle Name="rectMainThumb" Fill="#e7d250" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" Height="25" />
                 </ControlTemplate>
             </Thumb.Template>
         </Thumb>
