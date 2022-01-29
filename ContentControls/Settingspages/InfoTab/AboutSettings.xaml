@@ -20,6 +20,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
+        <!-- Header -->
         <materialDesign:Card Grid.Row="0" Background="{StaticResource PrimaryHueDarkBrush}">
             <TextBlock FontSize="16" HorizontalAlignment="Center"
                        Text="Über Compri" />
@@ -27,8 +28,9 @@
         <Grid Grid.Row="1" Margin="30, 30, 30, 0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="5*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
+            <!-- About information -->
             <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -42,7 +44,9 @@
                 <TextBlock Grid.Column="1" Margin="15, 0, 0, 0" Grid.Row="0" FontSize="60" FontWeight="Bold"  Text="About Compri" />
                 <TextBlock Grid.Column="1" Margin="15, 0, 0, 0" Grid.Row="1" TextWrapping="WrapWithOverflow" FontStyle="Italic" FontSize="24" Text="Compri ist eine visuelle Schnittstelle zwischen FFmpeg und einer einfachen Nutzbarkeit. Unser Ziel ist es, das Bearbeiten von Medien zu vereinfachen." />
             </Grid>
-            <StackPanel Grid.Row="2">
+            
+            <!-- Updates panel -->
+            <StackPanel Grid.Row="1">
                 <components:HeaderedSeperator Margin="0, 30, 0, 5" Header="Updates" />
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -54,9 +58,10 @@
                         materialDesign:ButtonProgressAssist.IsIndicatorVisible="False"
                         materialDesign:ButtonProgressAssist.IsIndeterminate="True"
                         Grid.Column="0" x:Name="updateButton" VerticalAlignment="Top" Click="OnCheckUpdate_Click" Content="Auf Updates überprüfen" Margin="0, 0, 10, 0" HorizontalAlignment="Left"/>
-                    <ScrollViewer Height="500" Grid.Column="1" HorizontalContentAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                        <TextBlock TextWrapping="Wrap" x:Name="newUpdateAvailableTextBlock" VerticalAlignment="Top" />
-                    </ScrollViewer>
+                    
+                    <FlowDocumentScrollViewer IsSelectionEnabled="False" x:Name="markdownRenderer" Height="500" Grid.Column="1"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
                 </Grid>
             </StackPanel>
         </Grid>

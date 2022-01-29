@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -5,9 +6,11 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using MaterialDesignThemes.Wpf;
 using VideoCompressorGUI.Utils;
 using VideoCompressorGUI.Utils.Github;
+using VideoCompressorGUI.WPFCustomBehaviours.ValueConverters;
 
 namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
 {
@@ -53,13 +56,12 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
             {
                 GithubReleaseCheck checker = new GithubReleaseCheck();
                 SetButtonLoadingAnimation(true);
-
+            
                 GithubResponse response = await checker.FetchData();
                 
                 if (checker.Check())
                 {
-                    this.newUpdateAvailableTextBlock.Text = response.ChangeLogs;
-                    
+                    RenderMDText(response.ChangeLogs);
                     checker.OnDownloadFinished += () =>
                     {
                         SetButtonLoadingAnimation(false);
@@ -71,7 +73,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
                 }
                 else
                 {
-                    this.newUpdateAvailableTextBlock.Text = "Keine neuen Versionen verfügbar";
+                    RenderMDText("Keine neuen Versionen verfügbar");
                     SetButtonLoadingAnimation(false);
                 }
             }
@@ -83,6 +85,14 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
                 CopyUpdateFiles();
                 RestartApplication();
             }
+        }
+
+        private void RenderMDText(string text)
+        {
+            TextToFlowDocumentConverter converter = (TextToFlowDocumentConverter) this.TryFindResource("TextToFlowDocumentConverter");
+            FlowDocument document = (FlowDocument) converter.Convert(text, typeof(FlowDocument), null, null);
+
+            markdownRenderer.Document = document;
         }
         
         
