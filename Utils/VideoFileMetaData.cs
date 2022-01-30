@@ -11,6 +11,8 @@ namespace VideoCompressorGUI.Utils
 {
     public class VideoFileMetaData : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        
         private Bitfield8 _showButtonField;
         public string File { get; set; }
         public string ThumbnailPath { get; set; }
@@ -39,13 +41,11 @@ namespace VideoCompressorGUI.Utils
             ShowButtonField = showButtonField;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            
         }
     }
 }

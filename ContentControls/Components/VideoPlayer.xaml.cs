@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -105,10 +103,9 @@ namespace VideoCompressorGUI.ContentControls.Components
             this.toLowerThumbIcon.IsHitTestVisible = state;
             this.toLowerThumbIcon.Foreground = state ? white : gray;
             
-            this.textblockTotalTime.Text = 0.0d.ToMinutesAndSecondsFromSeconds();
-            this.textblockTotalTime.Foreground = state ? white : gray;
-
             this.videoPlaybackSlider.SetEnabledColors(state);
+
+            noVideoSelectedTextBlock.Visibility = state ? Visibility.Hidden : Visibility.Visible;
         }
 
         private void OnVideoPlayerPositionChanged(object? sender, PositionChangedEventArgs e)
@@ -201,7 +198,6 @@ namespace VideoCompressorGUI.ContentControls.Components
             this.videoPlayer.Open(new Uri(association.File));
             Dispatcher.DelayInvoke(() => { videoPlayer.Focus(); }, TimeSpan.FromMilliseconds(1000));
 
-            textblockTotalTime.Text = association.MetaData.Duration.TotalSeconds.ToMinutesAndSecondsFromSeconds();
             videoPlayerParent.Visibility = Visibility.Visible;
         }
 

@@ -186,7 +186,6 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
             Dispatcher.Invoke(() =>
             {
                 file.CompressData.Progress = percentage;
-                file.CompressData.ProgressColor = CompressData.FromPercentage(percentage);
             });
         }
 
@@ -195,7 +194,6 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
             Dispatcher.Invoke(() =>
             {
                 file.CompressData.Progress = 1.0d;
-                file.CompressData.ProgressColor = CompressData.FromPercentage(1.0d);
 
                 var animation = new DoubleAnimation
                 {
@@ -209,7 +207,6 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
                 animation.Completed += (s, e) =>
                 {
                     file.CompressData.Progress = 0.0d;
-                    file.CompressData.ProgressColor = CompressData.FromPercentage(0.0d);
                 };
 
                 animation.BeginAnimation(OpacityProperty, animation);

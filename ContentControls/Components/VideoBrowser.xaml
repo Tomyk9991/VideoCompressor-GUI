@@ -51,7 +51,7 @@
         
                                 <materialDesign:Card.Background>
                                     <LinearGradientBrush StartPoint="0, 1" EndPoint="1, 1">
-                                        <GradientStop Color="{Binding CompressData.ProgressColor}"
+                                        <GradientStop Color="#aa009688"
                                                       Offset="{Binding CompressData.Progress}" />
                                         <GradientStop Color="#00000000" Offset="{Binding CompressData.Progress}" />
                                     </LinearGradientBrush>
