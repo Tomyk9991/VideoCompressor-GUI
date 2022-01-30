@@ -25,7 +25,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
             ni.Visible = true;
 
             iconImage.Source = ni.Icon.ToImageSource();
-            
+
             versionTextBlock.Text = "Version: " + typeof(AboutSettings).Assembly.GetName().Version;
         }
         
@@ -89,7 +89,6 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
 
         private void RenderMDText(string text)
         {
-            text = text.Replace("\\r\\n", Environment.NewLine);
             TextToFlowDocumentConverter converter = (TextToFlowDocumentConverter) this.TryFindResource("TextToFlowDocumentConverter");
             FlowDocument document = (FlowDocument) converter.Convert(text, typeof(FlowDocument), null, null);
 

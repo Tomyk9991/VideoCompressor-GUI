@@ -40,7 +40,7 @@ namespace VideoCompressorGUI.ContentControls
                 
                 if (GeneralSettings.ValidateFFmpegPath(loadedGeneralSettings.FFmpegPath).Count > 0)
                 {
-                    ((MainWindow)Application.Current.MainWindow).PushContentControl(new FailLoad());
+                    ((MainWindow)Application.Current.MainWindow).PushContentControl(new FailLoad(), false);
                     return;
                 }
 
@@ -79,7 +79,7 @@ namespace VideoCompressorGUI.ContentControls
 
             if (!wasInvalid)
             {
-                ((MainWindow)Application.Current.MainWindow).PushContentControl(new VideoEditorControl(files));
+                ((MainWindow)Application.Current.MainWindow).PushContentControl(new VideoEditorControl(files), true);
             }
         }
 

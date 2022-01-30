@@ -20,7 +20,7 @@ namespace VideoCompressorGUI.ContentControls.Components
 
         private void Settings_OnClick(object sender, RoutedEventArgs e)
         {
-            ((MainWindow)Application.Current.MainWindow).PushContentControl(new Settings());
+            ((MainWindow)Application.Current.MainWindow).PushContentControl(new Settings(), false);
         }
 
         private void FailLoad_OnLoaded(object sender, RoutedEventArgs e)

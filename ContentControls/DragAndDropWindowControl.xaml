@@ -16,26 +16,18 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid AllowDrop="True" Drop="UIElement_OnDrop">
-        <materialDesign:Card x:Name="DragDropCard">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="5*"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
-                <DockPanel Grid.Row="0">
-                    <components:MainMenuStrip Height="20" VerticalAlignment="Top"/>
-                </DockPanel>
-                
-                <Viewbox Grid.Row="1" Margin="0, -10, 0, 0">
-                    <materialDesign:PackIcon Kind="SelectDrag" />
-                </Viewbox>
-                
-                <TextBlock Margin="0, 0, 0, 32" TextDecorations="Underline" TextAlignment="Center" Grid.Row="2">
-                    <Label Cursor="Hand" MouseUp="UIElement_OnMouseUp" FontStyle="Oblique" Content="Oder durchsuchen Sie hier"></Label>
-                </TextBlock>
-                <materialDesign:Snackbar VerticalAlignment="Center" x:Name="snackbar" MessageQueue="{materialDesign:MessageQueue}" IsActive="False" Grid.Row="1" />
-            </Grid>
-        </materialDesign:Card>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        
+        <Viewbox Grid.Row="0" Margin="0, -10, 0, 0">
+            <materialDesign:PackIcon Kind="SelectDrag" />
+        </Viewbox>
+        
+        <TextBlock Margin="0, 0, 0, 32" TextDecorations="Underline" TextAlignment="Center" Grid.Row="1">
+            <Label Cursor="Hand" MouseUp="UIElement_OnMouseUp" FontStyle="Oblique" Content="Oder durchsuchen Sie hier"></Label>
+        </TextBlock>
+        <materialDesign:Snackbar VerticalAlignment="Center" x:Name="snackbar" MessageQueue="{materialDesign:MessageQueue}" IsActive="False" Grid.Row="1" />
     </Grid>
 </UserControl>
