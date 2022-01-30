@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -42,11 +43,15 @@ namespace VideoCompressorGUI.Utils.Github
         
         public async Task<GithubResponse> FetchData(string expectedAssetNameContents = "")
         {
+            string token = LoadStringFromSecret();
             using HttpClient client = new HttpClient();
             client.DefaultRequestHeaders
                 .Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; AcmeInc/1.0)");
+
+            if (token != "")
+                client.DefaultRequestHeaders.Add("authorization", token);
             
             HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Get, this.URL);
             
@@ -71,6 +76,12 @@ namespace VideoCompressorGUI.Utils.Github
                 Log.Warn(e.Message);
                 return null;
             }
+        }
+
+        private string LoadStringFromSecret()
+        {
+            string secretsTxt = Path.GetDirectoryName(typeof(GithubReleaseDownloader).Assembly.Location) + "\\secrets.txt";
+            return File.Exists(secretsTxt) ? File.ReadAllText(secretsTxt) : "";
         }
     }
 }

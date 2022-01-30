@@ -18,8 +18,15 @@ namespace VideoCompressorGUI.ContentControls.Components
             Dispatcher.Invoke(async () =>
             {
                 var ghReleaseChecker = new GithubReleaseCheck();
-                await ghReleaseChecker.FetchData();
-            
+                GithubResponse githubResponse = await ghReleaseChecker.FetchData();
+
+
+                if (githubResponse == null)
+                {
+                    hasUpdateNotification.Visibility = Visibility.Collapsed;
+                    return;
+                }
+                
                 hasUpdateNotification.Visibility = ghReleaseChecker.Check() ? Visibility.Visible : Visibility.Collapsed;
             });
         }

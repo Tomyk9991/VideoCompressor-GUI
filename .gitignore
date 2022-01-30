@@ -3,6 +3,7 @@
 /bin
 /obj
 /.[Vv]scode
+secrets.txt
 todos.md
 
 /libs

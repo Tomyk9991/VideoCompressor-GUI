@@ -1,13 +1,8 @@
 using System;
 using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using VideoCompressorGUI.ContentControls.Settingspages.InfoTab;
-using VideoCompressorGUI.Utils.Logger;
 
 namespace VideoCompressorGUI.Utils.Github
 {

@@ -58,8 +58,8 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
                 SetButtonLoadingAnimation(true);
             
                 GithubResponse response = await checker.FetchData();
-                
-                if (checker.Check())
+
+                if (response != null && checker.Check())
                 {
                     RenderMDText(response.ChangeLogs);
                     checker.OnDownloadFinished += () =>
@@ -89,7 +89,6 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
 
         private void RenderMDText(string text)
         {
-            
             text = text.Replace("\\r\\n", Environment.NewLine);
             TextToFlowDocumentConverter converter = (TextToFlowDocumentConverter) this.TryFindResource("TextToFlowDocumentConverter");
             FlowDocument document = (FlowDocument) converter.Convert(text, typeof(FlowDocument), null, null);

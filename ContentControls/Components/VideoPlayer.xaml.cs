@@ -94,6 +94,9 @@ namespace VideoCompressorGUI.ContentControls.Components
             this.textblockPlayedTime.Text = 0.0d.ToMinutesAndSecondsFromSeconds();
             this.textblockPlayedTime.Foreground = state ? white : gray;
             
+            this.textblockTotalTime.Text = 0.0d.ToMinutesAndSecondsFromSeconds();
+            this.textblockTotalTime.Foreground = state ? white : gray;
+            
             this.soundVolumeSlider.IsHitTestVisible = state;
             this.soundVolumeSlider.Foreground = state ? white : gray;
             
@@ -102,6 +105,7 @@ namespace VideoCompressorGUI.ContentControls.Components
             
             this.toLowerThumbIcon.IsHitTestVisible = state;
             this.toLowerThumbIcon.Foreground = state ? white : gray;
+            
             
             this.videoPlaybackSlider.SetEnabledColors(state);
 
@@ -198,6 +202,8 @@ namespace VideoCompressorGUI.ContentControls.Components
             this.videoPlayer.Open(new Uri(association.File));
             Dispatcher.DelayInvoke(() => { videoPlayer.Focus(); }, TimeSpan.FromMilliseconds(1000));
 
+            textblockTotalTime.Text = association.MetaData.Duration.TotalSeconds.ToMinutesAndSecondsFromSeconds();
+
             videoPlayerParent.Visibility = Visibility.Visible;
         }
 
@@ -240,29 +246,12 @@ namespace VideoCompressorGUI.ContentControls.Components
 
         private void SoundVolumeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            UpdateVolumeLabel(e.NewValue);
+            videoPlayer.Volume = e.NewValue / 100.0d;;
         }
 
         private void SetVolume(double newValue)
         {
-            UpdateVolumeLabel(newValue);
             soundVolumeSlider.Value = newValue;
-        }
-
-        private void UpdateVolumeLabel(double newValue)
-        {
-            if (soundVolumeSlider != null && volumeTextBlock != null)
-            {
-                double actualWidth = soundVolumeSlider.ActualWidth;
-                double percentage = newValue / 100.0d;
-                double value = percentage * (actualWidth - volumeTextBlock.ActualWidth);
-
-
-                volumeTextBlock.Margin = new Thickness(value, 0, 0, 0);
-
-                volumeTextBlock.Text = (int)newValue + "%";
-                videoPlayer.Volume = percentage;
-            }
         }
 
         #endregion
@@ -277,7 +266,6 @@ namespace VideoCompressorGUI.ContentControls.Components
         {
             AnimateGridDefinitionColumnWidth(vlmDef, 20, 5, () =>
             {
-                volumeTextBlock.Visibility = Visibility.Collapsed;
                 soundVolumeSlider.Visibility = Visibility.Collapsed;
                 volumeIcon.Visibility = Visibility.Visible;
 
@@ -305,7 +293,6 @@ namespace VideoCompressorGUI.ContentControls.Components
         {
             AnimateGridDefinitionColumnWidth(vlmDef, 5, 20, () =>
             {
-                volumeTextBlock.Visibility = Visibility.Visible;
                 soundVolumeSlider.Visibility = Visibility.Visible;
                 volumeIcon.Visibility = Visibility.Collapsed;
 

@@ -18,5 +18,5 @@
         MouseUp="MainWindow_OnMouseUp"
         Closing="MainWindow_OnClosing"
         SizeChanged="MainWindow_OnSizeChanged">
-    <ContentControl x:Name="contentControl"></ContentControl>
+    <ContentControl x:Name="contentControl"/>
 </Window>

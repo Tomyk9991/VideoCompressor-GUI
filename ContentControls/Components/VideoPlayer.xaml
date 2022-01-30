@@ -64,7 +64,6 @@
                                 Minimum="0"
                                 Maximum="100"
                                 Value="100" />
-                        <TextBlock Visibility="Collapsed" Foreground="Black" MouseLeave="VolumeMouseLeave" IsHitTestVisible="False" Margin="25, 0, 0, 0" x:Name="volumeTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" Text="50%"/>
                         
                         <Grid MouseEnter="VolumeCollapsedMouseOver" x:Name="volumeIcon">
                             <materialDesign:PackIcon Visibility="Visible" Kind="VolumeHigh" x:Name="volumeIconActually" />
@@ -75,7 +74,8 @@
                     </Grid>
                     
                     <components:VideoRangeSlider Margin="5, 0, 10, 0" Height="30" Grid.Column="4" x:Name="videoPlaybackSlider"/>
-                    
+                    <TextBlock Margin="0, 0, 5, 0" Grid.Column="5" Text="00:23" VerticalAlignment="Center" x:Name="textblockTotalTime" HorizontalAlignment="Center" />
+
                     <decorators1:NoSizeDecorator Grid.Column="4">
                         <materialDesign:Snackbar x:Name="snackbarNotifier"
                                                  Margin="0, -30, 0, -20"
