@@ -21,7 +21,7 @@ namespace VideoCompressorGUI.ContentControls.Components
     public partial class VideoBrowser : UserControl
     {
         private HashSet<string> files = new();
-        private ObservableCollection<VideoFileMetaData> videoFileMetaData = new();
+        private ObservableCollection<VideoFileMetaData> videoFileMetaDatas = new();
 
         private object syncLock = new();
 
@@ -41,7 +41,7 @@ namespace VideoCompressorGUI.ContentControls.Components
 
             LoadTemplate();
             
-            BindingOperations.EnableCollectionSynchronization(videoFileMetaData, syncLock);
+            BindingOperations.EnableCollectionSynchronization(videoFileMetaDatas, syncLock);
             TempFolder.ClearOnTimeExpired();
         }
         
@@ -53,7 +53,7 @@ namespace VideoCompressorGUI.ContentControls.Components
         private void LoadTemplate()
         {
             template = SettingsFolder.Load<VideoBrowserItemTemplate>();
-            foreach (var vid in videoFileMetaData)
+            foreach (var vid in videoFileMetaDatas)
             {
                 vid.ShowButtonField = template.BitField;
             }
@@ -110,11 +110,18 @@ namespace VideoCompressorGUI.ContentControls.Components
                 loadingProgressBar.Visibility = Visibility.Collapsed;
                 this.listboxFiles.ItemsSource = Array.Empty<Object>();
 
-                videoFileMetaData = new ObservableCollection<VideoFileMetaData>(videoFileMetaData.OrderByDescending(t1 => t1.CreatedOn));
-                this.listboxFiles.ItemsSource = videoFileMetaData;
+                videoFileMetaDatas = new ObservableCollection<VideoFileMetaData>(videoFileMetaDatas.OrderByDescending(t1 => t1.CreatedOn));
+                this.listboxFiles.ItemsSource = videoFileMetaDatas;
+
                 dragAndDrop.Visibility = this.listboxFiles.Items.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
 
                 CreateSystemFileWatchers(newFiles);
+                
+                if (videoFileMetaDatas.Count == 1)
+                {
+                    this.listboxFiles.SelectedIndex = 0;
+                    this.OnSelectionChanged?.Invoke(videoFileMetaDatas[0]);
+                }
             };
             
             worker.RunWorkerAsync();
@@ -160,7 +167,7 @@ namespace VideoCompressorGUI.ContentControls.Components
 
                         Dispatcher.Invoke(() =>
                         {
-                            VideoFileMetaData metaData = videoFileMetaData.FirstOrDefault(t => t.File == args.FullPath);
+                            VideoFileMetaData metaData = videoFileMetaDatas.FirstOrDefault(t => t.File == args.FullPath);
                             RemoveItem(metaData, false);
                         });
                         
@@ -198,10 +205,10 @@ namespace VideoCompressorGUI.ContentControls.Components
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            bool needAdd = videoFileMetaData.All(data => data.File != file);
+                            bool needAdd = videoFileMetaDatas.All(data => data.File != file);
 
                             if (needAdd)
-                                videoFileMetaData.Add(new VideoFileMetaData(file, thumbnail[0].Result, metaData[0].Result, now, template.BitField));
+                                videoFileMetaDatas.Add(new VideoFileMetaData(file, thumbnail[0].Result, metaData[0].Result, now, template.BitField));
                         });
                     }
                 }));
@@ -251,7 +258,7 @@ namespace VideoCompressorGUI.ContentControls.Components
         {
             if (target == null)
             {
-                return this.videoFileMetaData.Count;
+                return this.videoFileMetaDatas.Count;
             }
 
             if (checkWatchers)
@@ -272,19 +279,19 @@ namespace VideoCompressorGUI.ContentControls.Components
             this.currentlyContextMenuOpen = target;
 
             this.files.Remove(this.currentlyContextMenuOpen.File);
-            this.videoFileMetaData.Remove(this.currentlyContextMenuOpen);
+            this.videoFileMetaDatas.Remove(this.currentlyContextMenuOpen);
 
             this.currentlyContextMenuOpen = null;
 
-            videoFileMetaData = new ObservableCollection<VideoFileMetaData>(videoFileMetaData.OrderByDescending(t1 => t1.CreatedOn));
+            videoFileMetaDatas = new ObservableCollection<VideoFileMetaData>(videoFileMetaDatas.OrderByDescending(t1 => t1.CreatedOn));
 
             this.listboxFiles.ItemsSource = Array.Empty<Object>();
-            this.listboxFiles.ItemsSource = videoFileMetaData;
+            this.listboxFiles.ItemsSource = videoFileMetaDatas;
             
             dragAndDrop.Visibility = this.listboxFiles.Items.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
             
             this.OnSelectionChanged?.Invoke(null);
-            return this.videoFileMetaData.Count;
+            return this.videoFileMetaDatas.Count;
         }
 
         private void BrowseFile_OnMouseUp(object sender, MouseButtonEventArgs e)
