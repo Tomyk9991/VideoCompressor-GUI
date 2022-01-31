@@ -125,7 +125,7 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
             Compressor compressor = new Compressor();
 
             compressor.OnCompressProgress += OnCompressProgress;
-            compressor.OnCompressFinished += OnCompressFinished;
+            compressor.OnCompressFinished += OnCompressFinishedStartAnimation;
 
             string folderWithoutFile = folderPathTextBox.Text;
             string fileEnding = fileEndingComboBox.Text;
@@ -189,7 +189,7 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
             });
         }
 
-        private void OnCompressFinished(VideoFileMetaData file)
+        private void OnCompressFinishedStartAnimation(VideoFileMetaData file)
         {
             Dispatcher.Invoke(() =>
             {
