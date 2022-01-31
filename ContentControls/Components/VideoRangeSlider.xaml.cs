@@ -93,7 +93,6 @@ namespace VideoCompressorGUI.ContentControls.Components
         {
             CalculateMinimalMaximalPixelValues();
             CalculatePercentages();
-            SetThumbTextToUndefined();
 
             CheckEnabledColors();
         }

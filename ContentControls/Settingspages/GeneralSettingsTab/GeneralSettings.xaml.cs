@@ -50,7 +50,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab
                 _ => "Es fehlen folgende Dateien: " + Environment.NewLine + "    - " + string.Join(Environment.NewLine + "    - ", missingFiles)
             };
 
-            this.downloadFFmpegButton.IsEnabled = missing;
+            this.downloadFFmpegButton.IsEnabled = missing && ffmpegPathTextBox.Text != "";
         }
 
         private void ApplySettingsLoad(GeneralSettingsData settings)

@@ -34,7 +34,7 @@
                     <Grid>
                         <Grid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Click="MenuItem_OnClick" Header="Löschen"></MenuItem>
+                                <MenuItem Click="MenuItemOnDelete_OnClick" Header="Löschen"/>
                             </ContextMenu>
                         </Grid.ContextMenu>
                         <Grid>

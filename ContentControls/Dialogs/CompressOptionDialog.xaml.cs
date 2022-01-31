@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using ffmpegCompressor;
 using Microsoft.VisualBasic.FileIO;
 using Ookii.Dialogs.Wpf;
 using VideoCompressorGUI.ContentControls.Components;
@@ -159,13 +158,6 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
                 if (generalSettings.OpenExplorerAfterCompress)
                     UtilMethods.OpenExplorerAndSelectFile(options.OutputPath);
 
-                if (generalSettings.DeleteOriginalFileAfterCompress)
-                {
-                    Log.Info("Move file to Bin: " + file.File);
-                    FileSystem.DeleteFile(file.File, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
-                        UICancelOption.DoNothing);
-                }
-
                 if (generalSettings.DeleteOriginalFileAfterCompress || generalSettings.RemoveFromItemsList)
                 {
                     Dispatcher.Invoke(() =>
@@ -176,6 +168,19 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
                             UtilMethods.OpenExplorerAndSelectFile(options.OutputPath);
                     });
                 }
+
+                Dispatcher.DelayInvoke(() =>
+                {
+                    //Flushing the video from the player takes time. 2 seconds delay guarantees, that is completely flushed  
+                    if (generalSettings.DeleteOriginalFileAfterCompress)
+                    {
+                        Log.Info("Move file to Bin: " + file.File);
+                        FileSystem.DeleteFile(file.File, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
+                            UICancelOption.DoNothing);
+                    }
+                }, TimeSpan.FromSeconds(2));
+
+
             };
 
             await compressor.Compress(currentlySelectedPreset, currentlySelectedVideoFile, options);
