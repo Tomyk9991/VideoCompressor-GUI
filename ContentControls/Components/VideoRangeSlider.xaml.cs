@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
 using VideoCompressorGUI.Utils;
 
 namespace VideoCompressorGUI.ContentControls.Components
@@ -59,26 +61,30 @@ namespace VideoCompressorGUI.ContentControls.Components
 
         private double minimalDistance = 40;
         private double maximalDistance = 0;
+        private bool enabledState;
 
         public VideoRangeSlider()
         {
             InitializeComponent();
+
             MainWindow instance = (MainWindow)Application.Current.MainWindow;
             instance.OnWindowSizeChanged += (e) => { CalculateMinimalMaximalPixelValues(); };
+
+            SetThumbTextToUndefined();
         }
-        
+
         public void ResetThumbs()
         {
             Point lowerThumbPoint =
                 lowerThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
             Point upperThumbPoint =
                 upperThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
-            
+
             sliderParent.Margin = new Thickness(0, 0, 0, 0);
             lineParent.Margin = new Thickness(0, 0, 0, 0);
             textParent.Margin = new Thickness(0, 0, 0, 0);
             CalculatePercentages();
-            
+
             this.OnLowerThumbChanged?.Invoke(this.LowerThumb);
             this.OnUpperThumbChanged?.Invoke(this.UpperThumb);
         }
@@ -87,6 +93,8 @@ namespace VideoCompressorGUI.ContentControls.Components
         {
             CalculateMinimalMaximalPixelValues();
             CalculatePercentages();
+
+            CheckEnabledColors();
         }
 
         private void CalculatePercentages()
@@ -273,6 +281,83 @@ namespace VideoCompressorGUI.ContentControls.Components
             SetValueThumb(x / this.maximalPixelValue);
 
             this.OnEndedMainDrag?.Invoke(this.Value);
+        }
+
+        public void SetThumbTextToUndefined()
+        {
+            lowerThumbText.Text = "∞";
+            upperThumbText.Text = "∞";
+        }
+
+        public void SetEnabledColors(bool state)
+        {
+            this.enabledState = state;
+
+            if (this.IsLoaded)
+                CheckEnabledColors();
+        }
+
+        private void CheckEnabledColors()
+        {
+            if (!enabledState)
+                SetThumbTextToUndefined();
+
+            byte offsetValue = 100;
+
+            var yellow = new SolidColorBrush(Color.FromRgb(231, 210, 80));
+            var darkerYellow = new SolidColorBrush(Color.FromRgb(
+                (byte) Math.Clamp(231 - offsetValue, 0, 255), 
+                (byte) Math.Clamp(210 - offsetValue, 0, 255),
+                (byte) Math.Clamp(80 - offsetValue, 0, 255)
+                )
+            );
+
+            var blue = new SolidColorBrush(Color.FromRgb(128, 204, 194));
+            var darkerBlue = new SolidColorBrush(Color.FromRgb(
+                (byte) Math.Clamp(128 - offsetValue, 0, 255), 
+                (byte) Math.Clamp(204 - offsetValue, 0, 255), 
+                (byte) Math.Clamp(194 - offsetValue, 0, 255)
+                )
+            );
+
+            var gridBlue = new SolidColorBrush(Color.FromRgb(0, 153, 137));
+            var gridDarkerBlue = new SolidColorBrush(Color.FromRgb(
+                0, 
+                (byte) Math.Clamp(153 - offsetValue, 0, 255), 
+                (byte) Math.Clamp(137- offsetValue, 0, 255)
+                )
+            );
+
+            var white = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            var gray = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
+
+            Rectangle rectangle = (Rectangle)mainThumb.Template.FindName("rectMainThumb", mainThumb);
+            rectangle.Fill = enabledState ? yellow : darkerYellow;
+
+            rectangle = (Rectangle) lowerThumb.Template.FindName("lowerThumbRect", lowerThumb);
+            rectangle.Fill = enabledState ? yellow : darkerYellow;
+
+            rectangle = (Rectangle)upperThumb.Template.FindName("upperThumbRect", upperThumb);
+            rectangle.Fill = enabledState ? yellow : darkerYellow;
+            
+            rectangle = (Rectangle) lowerBall.Template.FindName("rect", lowerBall);
+            rectangle.Fill = enabledState ? yellow : darkerYellow;
+            
+            rectangle = (Rectangle) upperBall.Template.FindName("rect", upperBall);
+            rectangle.Fill = enabledState ? yellow : darkerYellow;
+            
+            Ellipse ellipse = (Ellipse) lowerBall.Template.FindName("ball", lowerBall);
+            ellipse.Fill = enabledState ? yellow : darkerYellow;
+            
+            ellipse = (Ellipse) upperBall.Template.FindName("ball", upperBall);
+            ellipse.Fill = enabledState ? yellow : darkerYellow;
+
+
+            midThumb0.Background = enabledState ? blue : darkerBlue;
+            sliderParent.BorderBrush = enabledState ? gridBlue : gridDarkerBlue;
+
+            lowerThumbText.Foreground = enabledState ? white : gray;
+            upperThumbText.Foreground = enabledState ? white : gray;
         }
     }
 }

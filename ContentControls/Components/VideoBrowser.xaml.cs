@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using FFmpeg.NET;
+using Ookii.Dialogs.Wpf;
 using VideoCompressorGUI.ffmpeg;
 using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
@@ -20,11 +21,11 @@ namespace VideoCompressorGUI.ContentControls.Components
     public partial class VideoBrowser : UserControl
     {
         private HashSet<string> files = new();
-        private ObservableCollection<VideoFileMetaData> videoFileMetaData = new();
+        private ObservableCollection<VideoFileMetaData> videoFileMetaDatas = new();
 
         private object syncLock = new();
 
-        private VideoFileMetaData currentlyContextMenuOpen = null;
+        private VideoFileMetaData currentlyContextMenuOpen;
 
         private readonly Mp4FileValidator validator = new();
         private readonly Compressor compressor = new();
@@ -40,8 +41,10 @@ namespace VideoCompressorGUI.ContentControls.Components
 
             LoadTemplate();
             
-            BindingOperations.EnableCollectionSynchronization(videoFileMetaData, syncLock);
+            BindingOperations.EnableCollectionSynchronization(videoFileMetaDatas, syncLock);
             TempFolder.ClearOnTimeExpired();
+
+            this.listboxFiles.ItemsSource = videoFileMetaDatas;
         }
         
         private void VideoBrowser_OnLoaded(object sender, RoutedEventArgs e)
@@ -52,7 +55,7 @@ namespace VideoCompressorGUI.ContentControls.Components
         private void LoadTemplate()
         {
             template = SettingsFolder.Load<VideoBrowserItemTemplate>();
-            foreach (var vid in videoFileMetaData)
+            foreach (var vid in videoFileMetaDatas)
             {
                 vid.ShowButtonField = template.BitField;
             }
@@ -77,9 +80,10 @@ namespace VideoCompressorGUI.ContentControls.Components
             }
         }
 
-        private void MenuItem_OnClick(object sender, RoutedEventArgs e)
+        private void MenuItemOnDelete_OnClick(object sender, RoutedEventArgs e)
         {
-            RemoveItem(this.currentlyContextMenuOpen);
+            if (!this.currentlyContextMenuOpen.CompressData.IsCompressing)
+                RemoveItem(this.currentlyContextMenuOpen);
         }
         
         private void DeleteListItem_OnClick(object sender, RoutedEventArgs e)
@@ -99,7 +103,7 @@ namespace VideoCompressorGUI.ContentControls.Components
             loadingProgressBar.Visibility = Visibility.Visible;
 
             BackgroundWorker worker = new BackgroundWorker();
-            worker.DoWork += (s, e) =>
+            worker.DoWork += (_, _) =>
             {
                 ExtractMetaData(newFiles).GetAwaiter().GetResult();
             };
@@ -107,12 +111,15 @@ namespace VideoCompressorGUI.ContentControls.Components
             worker.RunWorkerCompleted += (_, _) =>
             {
                 loadingProgressBar.Visibility = Visibility.Collapsed;
-                this.listboxFiles.ItemsSource = Array.Empty<Object>();
-
-                videoFileMetaData = new ObservableCollection<VideoFileMetaData>(videoFileMetaData.OrderByDescending(t1 => t1.CreatedOn));
-                this.listboxFiles.ItemsSource = videoFileMetaData;
-
+                dragAndDrop.Visibility = this.listboxFiles.Items.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
+                
                 CreateSystemFileWatchers(newFiles);
+                
+                if (videoFileMetaDatas.Count == 1)
+                {
+                    this.listboxFiles.SelectedIndex = 0;
+                    this.OnSelectionChanged?.Invoke(videoFileMetaDatas[0]);
+                }
             };
             
             worker.RunWorkerAsync();
@@ -147,8 +154,9 @@ namespace VideoCompressorGUI.ContentControls.Components
 
                     fileSystemWatchers.Add(new FileSystemWatcherReferenceCounter(watcher, newFile));
 
-                    watcher.Deleted += (sender, args) =>
+                    watcher.Deleted += (_, args) =>
                     {
+                        Console.WriteLine("File system watcher delete");
                         var watcherToRemove =
                             fileSystemWatchers.FirstOrDefault(t => t.Watcher.Path == Path.GetDirectoryName(args.FullPath));
 
@@ -158,7 +166,7 @@ namespace VideoCompressorGUI.ContentControls.Components
 
                         Dispatcher.Invoke(() =>
                         {
-                            VideoFileMetaData metaData = videoFileMetaData.FirstOrDefault(t => t.File == args.FullPath);
+                            VideoFileMetaData metaData = videoFileMetaDatas.FirstOrDefault(t => t.File == args.FullPath);
                             RemoveItem(metaData, false);
                         });
                         
@@ -196,10 +204,10 @@ namespace VideoCompressorGUI.ContentControls.Components
                     {
                         Dispatcher.Invoke(() =>
                         {
-                            bool needAdd = videoFileMetaData.All(data => data.File != file);
+                            bool needAdd = videoFileMetaDatas.All(data => data.File != file);
 
                             if (needAdd)
-                                videoFileMetaData.Add(new VideoFileMetaData(file, thumbnail[0].Result, metaData[0].Result, now, template.BitField));
+                                videoFileMetaDatas.Add(new VideoFileMetaData(file, thumbnail[0].Result, metaData[0].Result, now, template.BitField));
                         });
                     }
                 }));
@@ -247,9 +255,10 @@ namespace VideoCompressorGUI.ContentControls.Components
         /// <returns>The amount of items in the list after the remove</returns>
         public int RemoveItem(VideoFileMetaData target, bool checkWatchers = true)
         {
+            Console.WriteLine("Remove Item + checkWatchers: " + checkWatchers);
             if (target == null)
             {
-                return this.videoFileMetaData.Count;
+                return this.videoFileMetaDatas.Count;
             }
 
             if (checkWatchers)
@@ -267,20 +276,36 @@ namespace VideoCompressorGUI.ContentControls.Components
                 }
             }
             
-            this.currentlyContextMenuOpen = target;
+            this.files.Remove(target.File);
+            this.videoFileMetaDatas.Remove(target);
 
-            this.files.Remove(this.currentlyContextMenuOpen.File);
-            this.videoFileMetaData.Remove(this.currentlyContextMenuOpen);
+            dragAndDrop.Visibility = this.listboxFiles.Items.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
 
-            this.currentlyContextMenuOpen = null;
+            var currentlySelected = (VideoFileMetaData) listboxFiles.SelectedItem;
 
-            videoFileMetaData = new ObservableCollection<VideoFileMetaData>(videoFileMetaData.OrderByDescending(t1 => t1.CreatedOn));
-
-            this.listboxFiles.ItemsSource = Array.Empty<Object>();
-            this.listboxFiles.ItemsSource = videoFileMetaData;
+            Console.WriteLine(currentlySelected == null ? "selected: null" : "selected: nicht null");
             
-            this.OnSelectionChanged?.Invoke(null);
-            return this.videoFileMetaData.Count;
+            if (currentlySelected == target || currentlySelected == null)
+            {
+                this.OnSelectionChanged?.Invoke(null);
+            }
+            
+            return this.videoFileMetaDatas.Count;
+        }
+
+        private void BrowseFile_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var dialog = new VistaOpenFileDialog
+            {
+                Multiselect = true,
+                Filter = "Supported video formats (*.mp4)|*.mp4",
+            };
+
+            if ((bool)dialog.ShowDialog(Window.GetWindow(this)))
+            {
+                var selectedFiles = dialog.FileNames;
+                HandleFiles(selectedFiles);
+            }
         }
     }
 }

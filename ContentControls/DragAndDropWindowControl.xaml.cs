@@ -2,12 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Ookii.Dialogs.Wpf;
+using Unosquare.FFME;
+using VideoCompressorGUI.ContentControls.Components;
+using VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab;
 using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
+using VideoCompressorGUI.Utils.Logger;
 
 namespace VideoCompressorGUI.ContentControls
 {
@@ -18,10 +23,31 @@ namespace VideoCompressorGUI.ContentControls
         public DragAndDropWindowControl()
         {
             InitializeComponent();
+        }
+        
+        private void DragAndDropWindowControl_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Init();
+        }
+
+        private void Init()
+        {
             Dispatcher.DelayInvoke(() =>
             {
                 var loadedGeneralSettings = SettingsFolder.Load<GeneralSettingsData>();
-            
+                
+                GeneralSettings.ValidateFFmpegPath(loadedGeneralSettings.FFmpegPath);
+                
+                if (GeneralSettings.ValidateFFmpegPath(loadedGeneralSettings.FFmpegPath).Count > 0)
+                {
+                    ((MainWindow)Application.Current.MainWindow).PushContentControl(new FailLoad(), false);
+                    return;
+                }
+
+                Log.Info($"Loading ffmpeg from path: {loadedGeneralSettings.FFmpegPath}");
+                Library.FFmpegDirectory = loadedGeneralSettings.FFmpegPath;
+                Task.Run(async () => {await Library.LoadFFmpegAsync();}).GetAwaiter().GetResult();
+                
                 if (loadedGeneralSettings.AutomaticallyUseNewestVideos)
                 {
                     List<string> files = loadedGeneralSettings.FetchNewFiles();
@@ -29,19 +55,7 @@ namespace VideoCompressorGUI.ContentControls
                     if (files.Count != 0)
                         HandleFiles(files);
                 }
-            
-                // HandleFiles(new List<string>
-                // {
-                //     "F:/Videos/Valorant/smart teleport.mp4",
-                //     "F:/Videos/Valorant/absolute clean C hold.mp4",
-                //     "F:/Videos/Valorant/buggy flash.mp4",
-                //     "F:/Videos/Valorant/juicy.mp4"
-                // });
-                //
-                // HandleFiles(new List<string>
-                // {
-                //     "F:/Videos/Testing/test.mp4",
-                // });
+                
             }, TimeSpan.FromMilliseconds(1));
         }
 
@@ -65,7 +79,7 @@ namespace VideoCompressorGUI.ContentControls
 
             if (!wasInvalid)
             {
-                ((MainWindow)Application.Current.MainWindow).PushContentControl(new VideoEditorControl(files));
+                ((MainWindow)Application.Current.MainWindow).PushContentControl(new VideoEditorControl(files), true);
             }
         }
 

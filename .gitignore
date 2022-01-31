@@ -3,7 +3,10 @@
 /bin
 /obj
 /.[Vv]scode
+secrets.txt
 todos.md
-ffmpeg.exe
+
+/libs
+
 Folder*
 *.DS_Store

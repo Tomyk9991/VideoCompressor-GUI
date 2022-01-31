@@ -11,6 +11,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.teal.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Resource Directories/RangeSlider.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Resource Directories/CollapsibleGroupBoxStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Resource Directories/MarkdownStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Resource Directories/WindowChromeInteractionStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

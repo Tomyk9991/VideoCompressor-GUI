@@ -3,9 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        
-        Title="Video Compressor" MinWidth="1032" MinHeight="610" Width="1600" Height="900"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+
+        Title="Compri" MinWidth="1032" MinHeight="610" Width="1600" Height="900"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -13,8 +16,93 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
+
         KeyDown="MainWindow_OnKeyDown"
+        MouseUp="MainWindow_OnMouseUp"
         Closing="MainWindow_OnClosing"
         SizeChanged="MainWindow_OnSizeChanged">
-    <ContentControl x:Name="contentControl"></ContentControl>
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="25"
+            CornerRadius="0"
+            GlassFrameThickness="1"
+            ResizeBorderThickness="6" />
+    </WindowChrome.WindowChrome>
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="#212121">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="175" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="175" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Main Menu strip -->
+            <Grid x:Name="menubarGrid" Style="{StaticResource TitleBarOverrideStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="iconImage" Width="25" Height="25"/>
+                    <Menu Height="25" Background="#212121" IsMainMenu="True">
+                        <MenuItem FontSize="12" VerticalAlignment="Center" Header="_Datei">
+                            <MenuItem Click="MenuBarSettings_OnClick" Header="Einstellungen"
+                                      Icon="{materialDesign:PackIcon Kind=Settings}" />
+                            <Separator />
+                            <MenuItem Click="MenuBarExit_OnClick" Header="Exit"
+                                      Icon="{materialDesign:PackIcon Kind=ExitToApp}" />
+                        </MenuItem>
+                        <MenuItem FontSize="12" VerticalAlignment="Center" Header="_Presets">
+                            <MenuItem Click="MenuBarPresetsEdit_OnClick" Header="Presets bearbeiten"
+                                      Icon="{materialDesign:PackIcon Kind=Edit}" />
+                        </MenuItem>
+                    </Menu>
+                    
+                    <Grid x:Name="hasUpdateNotification" Background="#212121" Height="25">
+                        <materialDesign:PackIcon MouseUp="MenuBarOnUpdateNotification_OnClick" Grid.Column="1"
+                                                 Background="Transparent"
+                                                 HorizontalAlignment="Right" VerticalAlignment="Center" Width="20"
+                                                 Kind="Update" Cursor="Hand"/>
+                    </Grid>
+                </StackPanel>
+
+            </Grid>
+
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="DarkGray" Grid.Column="1" Text="Compri" />
+
+            <Grid Grid.Column="2" Style="{StaticResource TitleBarOverrideStyle}">
+                <StackPanel Grid.Column="2" Height="25" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Click="Minimize_OnClick"
+                            Style="{StaticResource MaterialDesignFlatDarkButton}"
+                            Foreground="White"
+                            HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="Minimieren"
+                            Background="Transparent" BorderBrush="Transparent">
+                        <Rectangle HorizontalAlignment="Center" VerticalAlignment="Center" Width="10" Height="1"
+                                   Fill="White">
+                        </Rectangle>
+                    </Button>
+                    <Button Click="Maximize_OnClick"
+                            Style="{StaticResource MaterialDesignFlatDarkButton}"
+                            Foreground="White"
+                            HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="Maximieren"
+                            Background="Transparent" BorderBrush="Transparent">
+                        <materialDesign:PackIcon Width="15" Height="15" HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center" Kind="RectangleOutline" />
+                    </Button>
+                    <Button Click="Close_OnClick"
+                            Style="{StaticResource MaterialDesignFlatDarkButton}"
+                            Foreground="White"
+                            HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="Schließen"
+                            BorderBrush="Transparent">
+                        <materialDesign:PackIcon Width="15" Height="15" HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center" Kind="Close" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <ContentControl Margin="0, 15, 0, 0" Grid.Row="1" x:Name="contentControl" />
+    </Grid>
 </Window>

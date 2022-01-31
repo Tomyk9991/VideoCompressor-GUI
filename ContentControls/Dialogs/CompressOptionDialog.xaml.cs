@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using ffmpegCompressor;
 using Microsoft.VisualBasic.FileIO;
 using Ookii.Dialogs.Wpf;
 using VideoCompressorGUI.ContentControls.Components;
@@ -125,7 +124,7 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
             Compressor compressor = new Compressor();
 
             compressor.OnCompressProgress += OnCompressProgress;
-            compressor.OnCompressFinished += OnCompressFinished;
+            compressor.OnCompressFinished += OnCompressFinishedStartAnimation;
 
             string folderWithoutFile = folderPathTextBox.Text;
             string fileEnding = fileEndingComboBox.Text;
@@ -141,7 +140,16 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
 
 
             string outputPath = folderWithoutFile + "/" + builtName + fileEnding;
-            CompressOptions options = new CompressOptions(outputPath, ExtensionOption.FromFileEnding(fileEnding));
+            var extensionOption = ExtensionOption.FromFileEnding(fileEnding);
+            
+            if (extensionOption is GifExtensionOption gifOptions)
+            {
+                gifOptions.Scale = int.Parse(scaleTextBox.Text);
+                gifOptions.FPS = int.Parse(targetFPSTextBox.Text);
+            }
+            
+            CompressOptions options = new CompressOptions(outputPath, extensionOption);
+
 
             this.Visibility = Visibility.Collapsed;
 
@@ -149,13 +157,6 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
             {
                 if (generalSettings.OpenExplorerAfterCompress)
                     UtilMethods.OpenExplorerAndSelectFile(options.OutputPath);
-
-                if (generalSettings.DeleteOriginalFileAfterCompress)
-                {
-                    Log.Info("Move file to Bin: " + file.File);
-                    FileSystem.DeleteFile(file.File, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
-                        UICancelOption.DoNothing);
-                }
 
                 if (generalSettings.DeleteOriginalFileAfterCompress || generalSettings.RemoveFromItemsList)
                 {
@@ -167,6 +168,19 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
                             UtilMethods.OpenExplorerAndSelectFile(options.OutputPath);
                     });
                 }
+
+                Dispatcher.DelayInvoke(() =>
+                {
+                    //Flushing the video from the player takes time. 2 seconds delay guarantees, that is completely flushed  
+                    if (generalSettings.DeleteOriginalFileAfterCompress)
+                    {
+                        Log.Info("Move file to Bin: " + file.File);
+                        FileSystem.DeleteFile(file.File, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin,
+                            UICancelOption.DoNothing);
+                    }
+                }, TimeSpan.FromSeconds(2));
+
+
             };
 
             await compressor.Compress(currentlySelectedPreset, currentlySelectedVideoFile, options);
@@ -177,16 +191,14 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
             Dispatcher.Invoke(() =>
             {
                 file.CompressData.Progress = percentage;
-                file.CompressData.ProgressColor = CompressData.FromPercentage(percentage);
             });
         }
 
-        private void OnCompressFinished(VideoFileMetaData file)
+        private void OnCompressFinishedStartAnimation(VideoFileMetaData file)
         {
             Dispatcher.Invoke(() =>
             {
                 file.CompressData.Progress = 1.0d;
-                file.CompressData.ProgressColor = CompressData.FromPercentage(1.0d);
 
                 var animation = new DoubleAnimation
                 {
@@ -200,7 +212,6 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
                 animation.Completed += (s, e) =>
                 {
                     file.CompressData.Progress = 0.0d;
-                    file.CompressData.ProgressColor = CompressData.FromPercentage(0.0d);
                 };
 
                 animation.BeginAnimation(OpacityProperty, animation);

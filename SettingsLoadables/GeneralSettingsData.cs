@@ -15,6 +15,8 @@ namespace VideoCompressorGUI.SettingsLoadables
         public bool DeleteOriginalFileAfterCompress { get; set; }
         public bool RemoveFromItemsList { get; set; }
         public bool OpenExplorerAfterLastCompression { get; set; }
+        
+        public string FFmpegPath { get; set; }
 
         public GeneralSettingsData CreateDefault()
         {
@@ -23,6 +25,7 @@ namespace VideoCompressorGUI.SettingsLoadables
                 AutomaticallyUseNewestVideos = false,
                 PathToNewestVideos = "",
                 LatestTimeWatched = DateTime.Now,
+                FFmpegPath = "",
             
                 OpenExplorerAfterCompress = false,
                 DeleteOriginalFileAfterCompress = false,

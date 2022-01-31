@@ -18,14 +18,7 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0">
-            <components:MainMenuStrip Height="20" />
-        </DockPanel>
-        <Grid Grid.Row="1">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="3*" />
                 <RowDefinition Height="Auto" />
@@ -34,9 +27,11 @@
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="5*" />
             </Grid.ColumnDefinitions>
-            <components:VideoBrowser x:Name="videoBrowser" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"></components:VideoBrowser>
+            <components:VideoBrowser x:Name="videoBrowser" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" />
+            
             <StackPanel Grid.Row="0" Grid.Column="1">
-                <components:VideoPlayer Margin="15, 15, 15, 15" x:Name="videoPlayer" />
+                <components:VideoPlayer Margin="15, 0, 15, 15" x:Name="videoPlayer" />
+                
                 <Grid x:Name="informationParent" HorizontalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition />

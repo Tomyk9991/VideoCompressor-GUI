@@ -7,12 +7,13 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
              xmlns:decorators1="clr-namespace:VideoCompressorGUI.WPFCustomBehaviours.Decorators"
+             xmlns:ffme="clr-namespace:Unosquare.FFME;assembly=ffme.win"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
              TextOptions.TextFormattingMode="Ideal"
              TextOptions.TextRenderingMode="Auto"
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="636" d:DesignWidth="1132"
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}"
              Loaded="VideoPlayer_OnLoaded"
@@ -25,8 +26,13 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid>
-                <MediaElement Focusable="True" MediaEnded="Element_MediaEnded" LoadedBehavior="Manual" MouseLeftButtonUp="VideoPlayer_OnMouseUp" x:Name="videoPlayer"/>
-                <materialDesign:PackIcon Opacity="0.0" Kind="Play" x:Name="playPauseIcon" HorizontalAlignment="Center" Width="370" Height="370" VerticalAlignment="Center"></materialDesign:PackIcon>
+                <ffme:MediaElement MinWidth="1132" MinHeight="636" Focusable="True" MediaEnded="Element_MediaEnded" UnloadedBehavior="Play" LoadedBehavior="Manual" x:Name="videoPlayer">
+                    <ffme:MediaElement.Background>
+                        <SolidColorBrush Color="#111111" />
+                    </ffme:MediaElement.Background>
+                </ffme:MediaElement>
+                <TextBlock FontSize="16" x:Name="noVideoSelectedTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray" Text="Kein Video ausgewählt."/>
+                <materialDesign:PackIcon Opacity="0.0" Kind="Play" x:Name="playPauseIcon" HorizontalAlignment="Center" Width="370" Height="370" VerticalAlignment="Center"/>
                 <Grid VerticalAlignment="Bottom" Margin="0, 0, 0, 5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition x:Name="playDef" Width="Auto" />
@@ -45,7 +51,10 @@
                         </Rectangle.Fill>
                     </Rectangle>
                     
-                    <materialDesign:PackIcon x:Name="resumeStopIcon" MouseUp="ResumeStopIcon_OnMouseUp" Margin="5, 0, 5, 0" Kind="Play" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <!-- Transparent background so it's still clickable on the transparent parts -->
+                    <materialDesign:PackIcon MouseUp="ResumeStopIcon_OnMouseUp" x:Name="resumeStopIcon" Background="Transparent" Margin="5, 0, 5, 0" Kind="Play" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    
+                    
                     
                     <TextBlock Grid.Column="1" Text="00:00" x:Name="textblockPlayedTime" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     <Grid VerticalAlignment="Center" Margin="5, 0, 5, 0" Grid.Column="2">
@@ -55,20 +64,19 @@
                                 Minimum="0"
                                 Maximum="100"
                                 Value="100" />
-                        <TextBlock Visibility="Collapsed" MouseLeave="VolumeMouseLeave" IsHitTestVisible="False" Margin="25, 0, 0, 0" x:Name="volumeTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" Text="50%"/>
                         
                         <Grid MouseEnter="VolumeCollapsedMouseOver" x:Name="volumeIcon">
-                            <materialDesign:PackIcon Visibility="Visible" Kind="VolumeHigh" />
+                            <materialDesign:PackIcon Visibility="Visible" Kind="VolumeHigh" x:Name="volumeIconActually" />
                         </Grid>
                     </Grid>
                     <Grid Grid.Column="3" MouseUp="ToLowerThumbIcon_OnMouseUp">
-                        <materialDesign:PackIcon x:Name="toLowerThumbIcon" Kind="StepBackward" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <materialDesign:PackIcon x:Name="toLowerThumbIcon" Background="Transparent" Kind="StepBackward" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Grid>
                     
                     <components:VideoRangeSlider Margin="5, 0, 10, 0" Height="30" Grid.Column="4" x:Name="videoPlaybackSlider"/>
                     <TextBlock Margin="0, 0, 5, 0" Grid.Column="5" Text="00:23" VerticalAlignment="Center" x:Name="textblockTotalTime" HorizontalAlignment="Center" />
-                    
-                    <decorators1:NoSizeDecorator Grid.Column="2">
+
+                    <decorators1:NoSizeDecorator Grid.Column="4">
                         <materialDesign:Snackbar x:Name="snackbarNotifier"
                                                  Margin="0, -30, 0, -20"
                                                  Height="50"

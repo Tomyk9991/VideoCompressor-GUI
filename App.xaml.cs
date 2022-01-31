@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
+using Unosquare.FFME;
 using VideoCompressorGUI.Utils.Logger;
 
 namespace VideoCompressorGUI
@@ -11,6 +13,7 @@ namespace VideoCompressorGUI
     public partial class App : Application
     {
         private Log logger = new();
+        
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);

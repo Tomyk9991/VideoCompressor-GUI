@@ -34,7 +34,8 @@ namespace VideoCompressorGUI.ffmpeg
     
         public Compressor()
         {
-            this.ffmpeg = new Engine();
+            string exePath = Path.GetDirectoryName(typeof(Compressor).Assembly.Location) + "/libs/bin/ffmpeg.exe";
+            this.ffmpeg = new Engine(exePath);
         }
 
         public async Task<string> GetThumbnail(string file)
