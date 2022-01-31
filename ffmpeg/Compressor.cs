@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using FFmpeg.NET;
+using Unosquare.FFME;
 using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
 
@@ -34,7 +35,9 @@ namespace VideoCompressorGUI.ffmpeg
     
         public Compressor()
         {
-            string exePath = Path.GetDirectoryName(typeof(Compressor).Assembly.Location) + "/libs/bin/ffmpeg.exe";
+            var loadedGeneralSettings = SettingsFolder.Load<GeneralSettingsData>();
+
+            string exePath = loadedGeneralSettings.FFmpegPath + "/ffmpeg.exe";
             this.ffmpeg = new Engine(exePath);
         }
 
