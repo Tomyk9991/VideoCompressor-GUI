@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,12 +20,12 @@ namespace VideoCompressorGUI.ContentControls
     public partial class DragAndDropWindowControl : UserControl
     {
         private Mp4FileValidator validator = new();
-    
+
         public DragAndDropWindowControl()
         {
             InitializeComponent();
         }
-        
+
         private void DragAndDropWindowControl_OnLoaded(object sender, RoutedEventArgs e)
         {
             Init();

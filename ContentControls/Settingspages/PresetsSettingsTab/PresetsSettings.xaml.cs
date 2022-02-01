@@ -1,4 +1,5 @@
 using System;
+using System.Management;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -6,6 +7,7 @@ using System.Windows.Media;
 using MaterialDesignThemes.Wpf;
 using VideoCompressorGUI.ContentControls.Components;
 using VideoCompressorGUI.SettingsLoadables;
+using VideoCompressorGUI.Utils;
 
 namespace VideoCompressorGUI.ContentControls.Settingspages
 {
@@ -26,7 +28,8 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
         {
             InitializeComponent();
 
-
+            supportedCodecItem.IsEnabled = NvidiaNvencSupport.Supported(); 
+            
             originalButtonNewPresetItemColor = buttonNewPresetItem.Background.Clone();
             collapsibleGroupboxPredefinedBitrate.IsVisibleContent = true;
 
@@ -115,6 +118,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
             buttonsNewPresetItemIcon.Foreground = Brushes.Black;
 
             nameTextBox.Text = newPreset.PresetName;
+            selectedCodecComboBox.SelectedIndex = (int) newPreset.Codec;
 
             this.collapsibleGroupboxPredefinedBitrate.IsVisibleContent = newPreset.UseBitrate;
             this.collapsibleGroupboxCalculatedBitrate.IsVisibleContent = newPreset.UseTargetSizeCalculation;
@@ -148,6 +152,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
             buttonsNewPresetItemIcon.Foreground = Brushes.White;
 
             nameTextBox.Text = "";
+            selectedCodecComboBox.SelectedIndex = 0;
             bitrateTextBox.Text = "";
             targetSizeTextBox.Text = "";
 
@@ -209,6 +214,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
                 bool useBitrate = collapsibleGroupboxPredefinedBitrate.IsVisibleContent;
                 bool useTargetSize = collapsibleGroupboxCalculatedBitrate.IsVisibleContent;
                 bool askLater = useTargetSize ? targetSizeAskLaterCheckBox.IsChecked.Value : false;
+                CodecDTO codec = (CodecDTO)selectedCodecComboBox.SelectedIndex;
 
                 int? bitrate = useBitrate ? int.Parse(bitrateTextBox.Text) : null;
                 int? targetSize = useTargetSize ? (askLater ? null : int.Parse(targetSizeTextBox.Text)) : null;
@@ -216,7 +222,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
                 if (isAdding)
                 {
                     CompressPreset newPreset =
-                        new CompressPreset(presetName, useBitrate, bitrate, useTargetSize, askLater, targetSize);
+                        new CompressPreset(presetName, codec, useBitrate, bitrate, useTargetSize, askLater, targetSize);
 
                     compressPresetCollection.CompressPresets.Add(newPreset);
                     AddTab(newPreset, true);
@@ -227,6 +233,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
                     lastPreset.UseBitrate = useBitrate;
                     lastPreset.UseTargetSizeCalculation = useTargetSize;
                     lastPreset.AskLater = askLater;
+                    lastPreset.Codec = codec;
 
                     lastPreset.TargetSize = targetSize;
                     lastPreset.Bitrate = bitrate;

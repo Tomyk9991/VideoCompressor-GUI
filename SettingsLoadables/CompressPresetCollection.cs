@@ -14,7 +14,7 @@ namespace VideoCompressorGUI.SettingsLoadables
             {
                 CompressPresets = new List<CompressPreset>
                 {
-                    new("Discord", true, 4500, false, false, null),
+                    new("Discord", CodecDTO.StandardCodec, true, 4500, false, false, null),
                 }
             };
         }
