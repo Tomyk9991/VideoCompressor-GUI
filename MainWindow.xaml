@@ -47,14 +47,14 @@
                 <StackPanel Orientation="Horizontal">
                     <Image x:Name="iconImage" Width="25" Height="25"/>
                     <Menu Height="25" Background="#212121" IsMainMenu="True">
-                        <MenuItem FontSize="12" VerticalAlignment="Center" Header="_Datei">
+                        <MenuItem Height="25" FontSize="12" VerticalAlignment="Center" Header="_Datei">
                             <MenuItem Click="MenuBarSettings_OnClick" Header="Einstellungen"
                                       Icon="{materialDesign:PackIcon Kind=Settings}" />
                             <Separator />
                             <MenuItem Click="MenuBarExit_OnClick" Header="Exit"
                                       Icon="{materialDesign:PackIcon Kind=ExitToApp}" />
                         </MenuItem>
-                        <MenuItem FontSize="12" VerticalAlignment="Center" Header="_Presets">
+                        <MenuItem Height="25" FontSize="12" VerticalAlignment="Center" Header="_Presets">
                             <MenuItem Click="MenuBarPresetsEdit_OnClick" Header="Presets bearbeiten"
                                       Icon="{materialDesign:PackIcon Kind=Edit}" />
                         </MenuItem>
