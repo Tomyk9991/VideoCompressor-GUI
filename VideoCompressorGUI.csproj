@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <Nullable>disable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <TargetFramework>net6.0-windows</TargetFramework>
     <LangVersion>9</LangVersion>
-    <AssemblyVersion>0.0.0.5</AssemblyVersion>
+    <AssemblyVersion>0.0.0.6</AssemblyVersion>
     <Product>Compri</Product>
   </PropertyGroup>
 

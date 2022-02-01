@@ -200,21 +200,11 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
             {
                 file.CompressData.Progress = 1.0d;
 
-                var animation = new DoubleAnimation
+                Dispatcher.InvokeAsync(async () =>
                 {
-                    From = 1.0d,
-                    To = 1.2d,
-                    BeginTime = TimeSpan.FromSeconds(0),
-                    Duration = TimeSpan.FromSeconds(1.0),
-                    FillBehavior = FillBehavior.Stop
-                };
-
-                animation.Completed += (s, e) =>
-                {
+                    await Task.Delay(1000);
                     file.CompressData.Progress = 0.0d;
-                };
-
-                animation.BeginAnimation(OpacityProperty, animation);
+                });
             });
         }
 
