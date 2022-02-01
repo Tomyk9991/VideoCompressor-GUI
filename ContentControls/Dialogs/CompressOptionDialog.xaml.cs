@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
 using Microsoft.VisualBasic.FileIO;
 using Ookii.Dialogs.Wpf;
 using VideoCompressorGUI.ContentControls.Components;
@@ -179,8 +178,6 @@ namespace VideoCompressorGUI.ContentControls.Dialogs
                             UICancelOption.DoNothing);
                     }
                 }, TimeSpan.FromSeconds(2));
-
-
             };
 
             await compressor.Compress(currentlySelectedPreset, currentlySelectedVideoFile, options);

@@ -25,6 +25,7 @@ namespace VideoCompressorGUI.ContentControls.Components
         public VideoPlayer()
         {
             InitializeComponent();
+            
 
             PlaybackSpeedKeyBinding pbsKB = new PlaybackSpeedKeyBinding(this.snackbarNotifier, this.videoPlayer);
             ResumeHaltKeyBinding rhKB = new ResumeHaltKeyBinding(TogglePlayPause);
@@ -197,9 +198,10 @@ namespace VideoCompressorGUI.ContentControls.Components
 
             this.currentlySelectedVideo = association;
             this.videoPlaybackSlider.ResetThumbs();
-
-
+            
             this.videoPlayer.Open(new Uri(association.File));
+
+            // this.videoPlayer.Open(new Uri(association.File));
             Dispatcher.DelayInvoke(() => { videoPlayer.Focus(); }, TimeSpan.FromMilliseconds(1000));
 
             textblockTotalTime.Text = association.MetaData.Duration.TotalSeconds.ToMinutesAndSecondsFromSeconds();
