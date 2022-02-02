@@ -31,6 +31,7 @@
                         <SolidColorBrush Color="#111111" />
                     </ffme:MediaElement.Background>
                 </ffme:MediaElement>
+                <ffme:MediaElement Visibility="Collapsed" x:Name="thumbnailPreview" Width="150" Height="84" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0, 0, 0, 35"/>
                 <TextBlock FontSize="16" x:Name="noVideoSelectedTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray" Text="Kein Video ausgewählt."/>
                 <materialDesign:PackIcon Opacity="0.0" Kind="Play" x:Name="playPauseIcon" HorizontalAlignment="Center" Width="370" Height="370" VerticalAlignment="Center"/>
                 <Grid VerticalAlignment="Bottom" Margin="0, 0, 0, 5">

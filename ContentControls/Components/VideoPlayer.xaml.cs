@@ -1,9 +1,11 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using MahApps.Metro.Controls;
 using MaterialDesignThemes.Wpf;
 using Unosquare.FFME.Common;
@@ -22,10 +24,14 @@ namespace VideoCompressorGUI.ContentControls.Components
         private bool isPlayingVideo = false;
         private bool canSeek = true;
 
+        private DispatcherTimer thumbnailTimer;
+
         public VideoPlayer()
         {
             InitializeComponent();
-            
+
+            var settings = SettingsFolder.Load<GeneralSettingsData>();
+            PrepareThumbnailUse(settings.ShowThumbnailForUpperThumb);
 
             PlaybackSpeedKeyBinding pbsKB = new PlaybackSpeedKeyBinding(this.snackbarNotifier, this.videoPlayer);
             ResumeHaltKeyBinding rhKB = new ResumeHaltKeyBinding(TogglePlayPause);
@@ -35,16 +41,32 @@ namespace VideoCompressorGUI.ContentControls.Components
             instance.OnKeyPressed += pbsKB.OnKeybinding;
             instance.OnKeyPressed += rhKB.OnKeybinding;
             instance.OnMousePressed += lmKB.OnMouseClick;
+            
 
             this.videoPlaybackSlider.BlockValueOverrideOnDrag = true;
             this.videoPlaybackSlider.OnEndedMainDrag += (d) => OnPlaybackMainValueChanged(d, true);
-            this.videoPlaybackSlider.OnUpperThumbChanged += (d) =>
+            
+            this.videoPlaybackSlider.OnUpperThumbChanged += (d, actualPixelX) =>
             {
                 this.currentlySelectedVideo.CutSeek.End = d * currentlySelectedVideo.MetaData.Duration;
                 this.videoPlaybackSlider.upperThumbText.Text = (d * currentlySelectedVideo.MetaData.Duration)
                     .TotalSeconds.ToMinutesAndSecondsFromSeconds();
 
                 ValidateLowerUpperThumbDistance(this.currentlySelectedVideo.CutSeek);
+
+
+                if (settings.ShowThumbnailForUpperThumb)
+                {
+                    thumbnailPreview.Visibility = Visibility.Visible;
+                    thumbnailPreview.Margin = new Thickness(actualPixelX, 0, 0, 35);
+                }
+                
+                if (settings.ShowThumbnailForUpperThumb && !thumbnailPreview.IsSeeking)
+                {
+                    thumbnailTimer.Stop();
+                    thumbnailTimer.Start();
+                    thumbnailPreview.Position = d * currentlySelectedVideo.MetaData.Duration;
+                }
             };
 
             this.videoPlaybackSlider.OnLowerThumbChanged += (d) =>
@@ -77,6 +99,41 @@ namespace VideoCompressorGUI.ContentControls.Components
             SetCanUseControlUI(false);
 
             ((MainWindow)Application.Current.MainWindow).OnWindowClosing += _ => SavePersistentStates();
+        }
+        
+        private void VideoPlayer_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var playerCache = SettingsFolder.Load<VideoPlayerCache>();
+            var settings = SettingsFolder.Load<GeneralSettingsData>();
+            
+            PrepareThumbnailUse(settings.ShowThumbnailForUpperThumb);
+            SetVolume(playerCache.Volume);
+        }
+
+        private void VideoPlayer_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            SavePersistentStates();
+        }
+
+        private void PrepareThumbnailUse(bool state)
+        {
+            if (state)
+            {
+                this.thumbnailTimer = new DispatcherTimer
+                {
+                    Interval = TimeSpan.FromSeconds(1)
+                };
+                    
+                thumbnailTimer.Tick += (_, _) =>
+                {
+                    thumbnailTimer.Stop();
+                    thumbnailPreview.Visibility = Visibility.Hidden;
+                };
+
+                return;
+            }
+
+            this.thumbnailTimer = null;
         }
 
         private void SetCanUseControlUI(bool state)
@@ -143,18 +200,6 @@ namespace VideoCompressorGUI.ContentControls.Components
                 this.videoPlaybackSlider.lowerThumbText.Text = distance.ToMilliSecondsFromSeconds();
         }
 
-
-        private void VideoPlayer_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            var playerCache = SettingsFolder.Load<VideoPlayerCache>();
-            SetVolume(playerCache.Volume);
-        }
-
-        private void VideoPlayer_OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            SavePersistentStates();
-        }
-
         private void SavePersistentStates()
         {
             var playerCache = new VideoPlayerCache(soundVolumeSlider.Value);
@@ -200,8 +245,8 @@ namespace VideoCompressorGUI.ContentControls.Components
             this.videoPlaybackSlider.ResetThumbs();
             
             this.videoPlayer.Open(new Uri(association.File));
-
-            // this.videoPlayer.Open(new Uri(association.File));
+            this.thumbnailPreview.Open(new Uri(association.File));
+            
             Dispatcher.DelayInvoke(() => { videoPlayer.Focus(); }, TimeSpan.FromMilliseconds(1000));
 
             textblockTotalTime.Text = association.MetaData.Duration.TotalSeconds.ToMinutesAndSecondsFromSeconds();

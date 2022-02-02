@@ -15,6 +15,7 @@ namespace VideoCompressorGUI.SettingsLoadables
         public bool DeleteOriginalFileAfterCompress { get; set; }
         public bool RemoveFromItemsList { get; set; }
         public bool OpenExplorerAfterLastCompression { get; set; }
+        public bool ShowThumbnailForUpperThumb { get; set; }
         
         public string FFmpegPath { get; set; }
 
@@ -30,6 +31,7 @@ namespace VideoCompressorGUI.SettingsLoadables
                 OpenExplorerAfterCompress = false,
                 DeleteOriginalFileAfterCompress = false,
                 RemoveFromItemsList = false,
+                ShowThumbnailForUpperThumb = false,
                 OpenExplorerAfterLastCompression = false
             };
         }

@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -32,7 +28,8 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab
         
         private void GeneralSettings_OnLoaded(object sender, RoutedEventArgs e)
         {
-            
+            var settingsLoad = SettingsFolder.Load<GeneralSettingsData>();
+            ApplySettingsLoad(settingsLoad);
         }
         
         private void ApplySettingsLoad(GeneralSettingsData settings)
@@ -40,6 +37,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab
             this.collapsibleGroupBoxNewestVideo.IsVisibleContent = settings.AutomaticallyUseNewestVideos;
             this.SelectedPath = settings.PathToNewestVideos;
             this.openExplorerAfterCompressCheckbox.IsChecked = settings.OpenExplorerAfterCompress;
+            this.thumbnailUpperThumbCheckBox.IsChecked = settings.ShowThumbnailForUpperThumb;
             this.deleteOriginalFileAfterCompressCheckbox.IsChecked = settings.DeleteOriginalFileAfterCompress;
             this.removeFromItemsListAfterCompressCheckbox.IsChecked = settings.RemoveFromItemsList;
             this.openExplorerAfterLastCompressCheckbox.IsChecked = settings.OpenExplorerAfterLastCompression;
@@ -80,6 +78,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab
                 PathToNewestVideos = collapsibleGroupBoxNewestVideo.IsVisibleContent ? this.SelectedPath : "",
                 OpenExplorerAfterCompress = openExplorerAfterCompressCheckbox.IsChecked.Value,
                 FFmpegPath = oldData.FFmpegPath,
+                ShowThumbnailForUpperThumb = thumbnailUpperThumbCheckBox.IsChecked.Value,
                 DeleteOriginalFileAfterCompress = deleteOriginalFileAfterCompressCheckbox.IsChecked.Value,
                 RemoveFromItemsList = removeFromItemsListAfterCompressCheckbox.IsChecked.Value,
                 OpenExplorerAfterLastCompression = openExplorerAfterLastCompressCheckbox.IsChecked.Value
