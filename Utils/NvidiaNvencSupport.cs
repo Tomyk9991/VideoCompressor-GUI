@@ -17,7 +17,6 @@ namespace VideoCompressorGUI.Utils
                 break;
             }
 
-            Console.WriteLine(name);
             name = name.ToLower();
 
             return name.Contains("rtx") || name.Contains("gtx");

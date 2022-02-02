@@ -13,7 +13,6 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
 {
     public partial class PresetsEditor : UserControl
     {
-        // true, if the "hinzufügen" tab is open, otherwise false
         private bool isAdding = true;
 
         private TextBlock lastPresetTextBlock = null;
@@ -23,6 +22,8 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
         private Brush originalButtonNewPresetItemColor;
 
         private CompressPresetCollection compressPresetCollection;
+
+        private CompressPreset lastPresetCopy = null;
 
         public PresetsEditor()
         {
@@ -50,11 +51,17 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
             var r2 = isDigitValidationRule.Validate(bitrateTextBox.Text, null);
             var r3 = isDigitValidationRule.Validate(targetSizeTextBox.Text, null);
 
+            bool nothingChanged = true;
+            
+            if (lastPresetCopy != null)
+                nothingChanged = lastPresetCopy.Equals(lastPreset);
+
             bool everythingValid = r1.IsValid &&
                                    (!collapsibleGroupboxPredefinedBitrate.IsVisibleContent || r2.IsValid) &&
                                    (!collapsibleGroupboxCalculatedBitrate.IsVisibleContent || r3.IsValid ||
                                     (collapsibleGroupboxCalculatedBitrate.IsVisibleContent &&
-                                     targetSizeAskLaterCheckBox.IsChecked.Value));
+                                     targetSizeAskLaterCheckBox.IsChecked.Value)) &&
+                                   !nothingChanged;
 
             savingButton.IsEnabled = everythingValid;
 
@@ -106,10 +113,13 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
         {
             isAdding = false;
 
+            lastPresetCopy = newPreset.Copy();
+            
             savingButtonsTextBox.Text = "Übernehmen";
             savingButtonsIcon.Kind = PackIconKind.Update;
+            
 
-            savingButton.IsEnabled = true;
+            savingButton.IsEnabled = false;
             deleteButton.Visibility = Visibility.Visible;
             deleteButton.IsEnabled = this.compressPresetCollection.CompressPresets.Count > 1;
 
@@ -137,6 +147,9 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
         private void StackPanelPresetNew_OnClick(object sender, RoutedEventArgs e)
         {
             isAdding = true;
+
+            lastPreset = null;
+            lastPresetCopy = null;
 
             savingButtonsTextBox.Text = "Hinzufügen";
             savingButtonsIcon.Kind = PackIconKind.Add;
@@ -167,12 +180,42 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
 
         private void OnName_Enter(object sender, TextChangedEventArgs e)
         {
+            string originalName = lastPreset.PresetName;
+            lastPreset.PresetName = nameTextBox.Text;
             ValidateCanUse();
+            lastPreset.PresetName = originalName;
         }
 
         private void OnDigit_Enter(object sender, TextChangedEventArgs e)
         {
+            bool wasDigit = false;
+            int? oldValue = null;
+            if (isDigitValidationRule.Validate(((TextBox)sender).Text, null).IsValid)
+            {
+                wasDigit = true;
+
+                if (((TextBox)sender).Name == "bitrateTextBox")
+                {
+                    oldValue = lastPreset.Bitrate;
+                    lastPreset.Bitrate = int.Parse(((TextBox)sender).Text);
+                }
+                else
+                {
+                    oldValue = lastPreset.TargetSize;
+                    lastPreset.TargetSize = int.Parse(((TextBox)sender).Text);
+                }
+            }
+
             ValidateCanUse();
+            
+            if (wasDigit && ((TextBox)sender).Name == "bitrateTextBox")
+            {
+                lastPreset.Bitrate = oldValue;
+            }
+            else if (wasDigit && ((TextBox)sender).Name == "targetSizeTextBox")
+            {
+                lastPreset.TargetSize = oldValue;
+            }
         }
 
         private void ClosePresets_OnClick(object sender, RoutedEventArgs e)
@@ -206,44 +249,44 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
 
         private void SaveOrAdd_OnClick(object sender, RoutedEventArgs e)
         {
-            bool everythingValid = ValidateCanUse();
+            string presetName = nameTextBox.Text;
+            bool useBitrate = collapsibleGroupboxPredefinedBitrate.IsVisibleContent;
+            bool useTargetSize = collapsibleGroupboxCalculatedBitrate.IsVisibleContent;
+            bool askLater = useTargetSize ? targetSizeAskLaterCheckBox.IsChecked.Value : false;
+            Console.WriteLine((CodecDTO)selectedCodecComboBox.SelectedIndex);
+            CodecDTO codec = (CodecDTO)selectedCodecComboBox.SelectedIndex;
 
-            if (everythingValid)
+            int? bitrate = useBitrate ? int.Parse(bitrateTextBox.Text) : null;
+            int? targetSize = useTargetSize ? (askLater ? null : int.Parse(targetSizeTextBox.Text)) : null;
+
+            if (isAdding)
             {
-                string presetName = nameTextBox.Text;
-                bool useBitrate = collapsibleGroupboxPredefinedBitrate.IsVisibleContent;
-                bool useTargetSize = collapsibleGroupboxCalculatedBitrate.IsVisibleContent;
-                bool askLater = useTargetSize ? targetSizeAskLaterCheckBox.IsChecked.Value : false;
-                CodecDTO codec = (CodecDTO)selectedCodecComboBox.SelectedIndex;
+                CompressPreset newPreset =
+                    new CompressPreset(presetName, codec, useBitrate, bitrate, useTargetSize, askLater, targetSize);
 
-                int? bitrate = useBitrate ? int.Parse(bitrateTextBox.Text) : null;
-                int? targetSize = useTargetSize ? (askLater ? null : int.Parse(targetSizeTextBox.Text)) : null;
-
-                if (isAdding)
-                {
-                    CompressPreset newPreset =
-                        new CompressPreset(presetName, codec, useBitrate, bitrate, useTargetSize, askLater, targetSize);
-
-                    compressPresetCollection.CompressPresets.Add(newPreset);
-                    AddTab(newPreset, true);
-                }
-                else
-                {
-                    lastPreset.PresetName = presetName;
-                    lastPreset.UseBitrate = useBitrate;
-                    lastPreset.UseTargetSizeCalculation = useTargetSize;
-                    lastPreset.AskLater = askLater;
-                    lastPreset.Codec = codec;
-
-                    lastPreset.TargetSize = targetSize;
-                    lastPreset.Bitrate = bitrate;
-
-
-                    lastPresetTextBlock.Text = presetName;
-                }
-
-                SettingsFolder.Save(compressPresetCollection);
+                compressPresetCollection.CompressPresets.Add(newPreset);
+                AddTab(newPreset, true);
             }
+            else
+            {
+                lastPreset.PresetName = presetName;
+                lastPreset.UseBitrate = useBitrate;
+                lastPreset.UseTargetSizeCalculation = useTargetSize;
+                lastPreset.AskLater = askLater;
+                lastPreset.Codec = codec;
+
+                lastPreset.TargetSize = targetSize;
+                lastPreset.Bitrate = bitrate;
+
+
+                lastPresetTextBlock.Text = presetName;
+
+                savingButton.IsEnabled = false;
+
+                lastPresetCopy = lastPreset.Copy();
+            }
+
+            SettingsFolder.Save(compressPresetCollection);
         }
 
         private void DeleteSelectedPreset_OnClick(object sender, RoutedEventArgs e)
@@ -262,6 +305,17 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
         private void TargetSizeAskLaterCheckBox_OnChecked(object sender, RoutedEventArgs e)
         {
             ValidateCanUse();
+        }
+
+        private void SelectedCodecComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lastPreset != null)
+            {
+                CodecDTO oldValue = lastPreset.Codec;
+                lastPreset.Codec = (CodecDTO)selectedCodecComboBox.SelectedIndex;
+                ValidateCanUse();
+                lastPreset.Codec = oldValue;
+            }
         }
     }
 }

@@ -48,5 +48,31 @@ namespace VideoCompressorGUI.SettingsLoadables
         
             return newFiles;
         }
+        
+        public static List<string> ValidateFFmpegPath(string path)
+        {
+            List<string> neededFiles = new()
+            {
+                "avcodec", "avdevice", "avfilter", "avformat", "avutil", "ffmpeg", "ffplay", "ffprobe", "postproc",
+                "swresample", "swscale"
+            };
+
+            if (!Directory.Exists(path)) return neededFiles;
+            
+            DirectoryInfo dir = new DirectoryInfo(path);
+
+            foreach (FileInfo file in dir.EnumerateFiles())
+            {
+                for (int i = neededFiles.Count - 1; i >= 0; i--)
+                {
+                    if (file.Name.ToLower().Contains(neededFiles[i]))
+                    {
+                        neededFiles.RemoveAt(i);
+                    }
+                }
+            }
+            
+            return neededFiles;
+        }
     }
 }

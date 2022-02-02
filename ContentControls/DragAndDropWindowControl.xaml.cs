@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Management;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,7 +9,6 @@ using System.Windows.Input;
 using Ookii.Dialogs.Wpf;
 using Unosquare.FFME;
 using VideoCompressorGUI.ContentControls.Components;
-using VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab;
 using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
 using VideoCompressorGUI.Utils.Logger;
@@ -37,9 +35,9 @@ namespace VideoCompressorGUI.ContentControls
             {
                 var loadedGeneralSettings = SettingsFolder.Load<GeneralSettingsData>();
                 
-                GeneralSettings.ValidateFFmpegPath(loadedGeneralSettings.FFmpegPath);
+                GeneralSettingsData.ValidateFFmpegPath(loadedGeneralSettings.FFmpegPath);
                 
-                if (GeneralSettings.ValidateFFmpegPath(loadedGeneralSettings.FFmpegPath).Count > 0)
+                if (GeneralSettingsData.ValidateFFmpegPath(loadedGeneralSettings.FFmpegPath).Count > 0)
                 {
                     ((MainWindow)Application.Current.MainWindow).PushContentControl(new FailLoad(), false);
                     return;

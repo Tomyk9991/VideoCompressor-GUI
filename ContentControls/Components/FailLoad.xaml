@@ -1,9 +1,13 @@
 <UserControl x:Class="VideoCompressorGUI.ContentControls.Components.FailLoad"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
              Loaded="FailLoad_OnLoaded"
+             d:DesignHeight="450" d:DesignWidth="800"
              Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
@@ -11,25 +15,46 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
         <materialDesign:Card FontSize="16" Grid.Row="0"
                              Background="{DynamicResource PrimaryHueDarkBrush}">
             <TextBlock TextWrapping="WrapWithOverflow" VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       x:Name="headerTextBlock" />
+                       HorizontalAlignment="Center" FontSize="24"
+                       x:Name="headerTextBlock" Text="Fehlermeldung hier" />
         </materialDesign:Card>
         
-        <Grid Grid.Row="1">
-            <Button Click="Settings_OnClick" Content="Einstellungen" Margin="30"/>
-        </Grid>
-        
-        <Grid Grid.Row="2">
+        <!-- <Grid Grid.Row="1"> -->
+        <!--     <Button Click="Settings_OnClick" Content="Einstellungen" Margin="30"/> -->
+        <!-- </Grid> -->
+        <Grid Grid.Row="1" Margin="0, 15, 0, 0">
             <StackPanel>
                 <components:HeaderedSeperator Header="Ein Fehler ist aufgetreten"/>
                 <TextBlock FontSize="22" TextWrapping="WrapWithOverflow" Margin="15, 0, 0, 5" x:Name="failFirstTextBlock"/>
                 <TextBlock FontSize="22" TextWrapping="WrapWithOverflow" Margin="15" x:Name="failMessageTextBlock"/>
             </StackPanel>
         </Grid>
+        
+        <StackPanel Grid.Row="2">
+            <components:HeaderedSeperator Header="Downloadmöglichkeit"/>
+            <Grid Margin="15, 0, 15, 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Height="30" VerticalContentAlignment="Center" Grid.Column="0" Text="C:\ffmpeg\bin" x:Name="ffmpegPathTextBox" 
+                         PreviewMouseUp="SelectFFmpegPath_OnClick" IsReadOnly="True" Margin="0, 0, 15, 0"
+                         materialDesign:HintAssist.Hint="FFmpeg Verzeichnis"/>
+                        
+                <Button Click="DownloadFFmpegButton_OnClick" x:Name="downloadFFmpegButton" Grid.Column="1"
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        materialDesign:ButtonProgressAssist.IsIndicatorVisible="True">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Download"/>
+                        <TextBlock Text="FFmpeg dahin runterladen"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </StackPanel> 
     </Grid>
 </UserControl>

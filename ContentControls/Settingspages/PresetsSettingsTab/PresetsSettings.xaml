@@ -82,7 +82,7 @@
                                 <materialDesign:PackIcon Margin="0, 0, 5, 0" Grid.Column="0"
                                                           Kind="ArrowCollapseVertical" HorizontalAlignment="Center"
                                                           VerticalAlignment="Center" />
-                                <ComboBox x:Name="selectedCodecComboBox" Grid.Column="1" HorizontalContentAlignment="Left">
+                                <ComboBox SelectionChanged="SelectedCodecComboBox_OnSelectionChanged" x:Name="selectedCodecComboBox" Grid.Column="1" HorizontalContentAlignment="Left">
                                     <ComboBoxItem IsSelected="True">
                                         <TextBlock Text="Standardcodec" />
                                     </ComboBoxItem>
