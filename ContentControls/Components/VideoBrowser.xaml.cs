@@ -226,7 +226,7 @@ namespace VideoCompressorGUI.ContentControls.Components
                     string extension = Path.GetExtension(newFiles[i]);
                     this.snackbar.MessageQueue.DiscardDuplicates = true;
 
-                    this.snackbar.MessageQueue.Enqueue(extension + " not supported", null, null, null, false, false,
+                    this.snackbar.MessageQueue.Enqueue(extension + " " + Properties.Resources.NotSupported, null, null, null, false, false,
                         TimeSpan.FromSeconds(1.5));
                     wasInvalid = true;
                     break;

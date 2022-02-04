@@ -8,6 +8,7 @@
              xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
              xmlns:decorators1="clr-namespace:VideoCompressorGUI.WPFCustomBehaviours.Decorators"
              xmlns:ffme="clr-namespace:Unosquare.FFME;assembly=ffme.win"
+             xmlns:p="clr-namespace:VideoCompressorGUI.Properties"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
@@ -32,7 +33,7 @@
                     </ffme:MediaElement.Background>
                 </ffme:MediaElement>
                 <ffme:MediaElement Visibility="Collapsed" x:Name="thumbnailPreview" Width="150" Height="84" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0, 0, 0, 35"/>
-                <TextBlock FontSize="16" x:Name="noVideoSelectedTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray" Text="Kein Video ausgewählt."/>
+                <TextBlock FontSize="16" x:Name="noVideoSelectedTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray" Text="{x:Static p:Resources.NoVideoSelected}"/>
                 <materialDesign:PackIcon Opacity="0.0" Kind="Play" x:Name="playPauseIcon" HorizontalAlignment="Center" Width="370" Height="370" VerticalAlignment="Center"/>
                 <Grid VerticalAlignment="Bottom" Margin="0, 0, 0, 5">
                     <Grid.ColumnDefinitions>

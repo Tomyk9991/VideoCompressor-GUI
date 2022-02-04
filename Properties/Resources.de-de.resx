@@ -1,0 +1,239 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="OrSearchHere" xml:space="preserve">
+        <value>Oder durchsuchen Sie hier</value>
+    </data>
+    <data name="NotSupported" xml:space="preserve">
+        <value>nicht unterstützt</value>
+    </data>
+    <data name="NoVideoSelected" xml:space="preserve">
+        <value>Kein Video ausgewählt</value>
+    </data>
+    <data name="ErrorOccurred" xml:space="preserve">
+        <value>Ein Fehler ist aufgetreten</value>
+    </data>
+    <data name="Downloadability" xml:space="preserve">
+        <value>Downloadmöglichkeit</value>
+    </data>
+    <data name="DownloadFFmpegHere" xml:space="preserve">
+        <value>FFmpeg dahin runterladen</value>
+    </data>
+    <data name="FFmpegCouldntBeLoaded" xml:space="preserve">
+        <value>FFmpeg konnte nicht geladen werden</value>
+    </data>
+    <data name="FollowingFileMissing" xml:space="preserve">
+        <value>Es fehlt folgende Datei</value>
+    </data>
+    <data name="FollowingFilesMissing" xml:space="preserve">
+        <value>Es fehlen folgende Dateien</value>
+    </data>
+    <data name="Directory" xml:space="preserve">
+        <value>Verzeichnis</value>
+    </data>
+    <data name="AreYouSure" xml:space="preserve">
+        <value>Sind Sie sicher?</value>
+    </data>
+    <data name="YoureAboutRedCells" xml:space="preserve">
+        <value>Sie sind im Begriff alle rot markierten Zeilen zu löschen, da diese fehlerhaft sind.</value>
+    </data>
+    <data name="WannaContinue" xml:space="preserve">
+        <value>Möchten Sie fortfahren?</value>
+    </data>
+    <data name="Yes" xml:space="preserve">
+        <value>Ja</value>
+    </data>
+    <data name="No" xml:space="preserve">
+        <value>Nein</value>
+    </data>
+    <data name="LastCompressOptions" xml:space="preserve">
+        <value>Letzte Komprimierungsoptionen</value>
+    </data>
+    <data name="TargetDirectory" xml:space="preserve">
+        <value>Zielverzeichnis</value>
+    </data>
+    <data name="Filename" xml:space="preserve">
+        <value>Dateiname</value>
+    </data>
+    <data name="Scale" xml:space="preserve">
+        <value>Skalierung</value>
+    </data>
+    <data name="TargetsizeOfFile" xml:space="preserve">
+        <value>Zielgröße der Datei</value>
+    </data>
+    <data name="Compress" xml:space="preserve">
+        <value>Komprimiere</value>
+    </data>
+    <data name="Cancel" xml:space="preserve">
+        <value>Abbrechen</value>
+    </data>
+    <data name="Seconds" xml:space="preserve">
+        <value>Sekunden</value>
+    </data>
+    <data name="Minutes" xml:space="preserve">
+        <value>Minuten</value>
+    </data>
+    <data name="Videoinformation" xml:space="preserve">
+        <value>Videoinformationen</value>
+    </data>
+    <data name="Length" xml:space="preserve">
+        <value>Länge</value>
+    </data>
+    <data name="Size" xml:space="preserve">
+        <value>Größe</value>
+    </data>
+    <data name="FramesPerSecond" xml:space="preserve">
+        <value>Bilder / sekunde</value>
+    </data>
+    <data name="General" xml:space="preserve">
+        <value>Allgemein</value>
+    </data>
+    <data name="Pathrules" xml:space="preserve">
+        <value>Pfadregeln</value>
+    </data>
+    <data name="About" xml:space="preserve">
+        <value>Über</value>
+    </data>
+    <data name="VideoBrowserListItem" xml:space="preserve">
+        <value>Videobrowserlistenelement</value>
+    </data>
+    <data name="OpenThisElementInExplorer" xml:space="preserve">
+        <value>Öffne dieses Element im Explorer</value>
+    </data>
+    <data name="DeleteThisElement" xml:space="preserve">
+        <value>Lösche dieses Element von der Liste</value>
+    </data>
+    <data name="Apply" xml:space="preserve">
+        <value>Übernehmen</value>
+    </data>
+    <data name="Add" xml:space="preserve">
+        <value>Hinzufügen</value>
+    </data>
+    <data name="NameOfPreset" xml:space="preserve">
+        <value>Name des Presets</value>
+    </data>
+    <data name="SetDuringCompress" xml:space="preserve">
+        <value>Beim Komprimieren festlegen</value>
+    </data>
+    <data name="Delete" xml:space="preserve">
+        <value>Löschen</value>
+    </data>
+    <data name="Close" xml:space="preserve">
+        <value>Schließen</value>
+    </data>
+    <data name="PredefinedBitrate" xml:space="preserve">
+        <value>Vordefinierte Bitrate</value>
+    </data>
+    <data name="CalculateTargetSize" xml:space="preserve">
+        <value>Berechnung der Mediengröße</value>
+    </data>
+    <data name="StandardcaseForRules" xml:space="preserve">
+        <value>Standardfall der Pfadregeln für das Komprimierungsdateiziel</value>
+    </data>
+    <data name="InCaseNoPath" xml:space="preserve">
+        <value>Sollte kein Fall angegeben sein, so wird das Komprimierungsdateiziel innerhalb des Ordners der Originaldatei impliziert.</value>
+    </data>
+    <data name="UserDefinedCases" xml:space="preserve">
+        <value>Benutzerdefinierte Fälle</value>
+    </data>
+    <data name="UpdateAndRestart" xml:space="preserve">
+        <value>Update durchführen (Neustart erforderlich)</value>
+    </data>
+    <data name="NoUpdateAvailable" xml:space="preserve">
+        <value>Keine neuen Versionen verfügbar</value>
+    </data>
+    <data name="AboutCompri" xml:space="preserve">
+        <value>Über Compri</value>
+    </data>
+    <data name="AboutDescription" xml:space="preserve">
+        <value>Compri ist eine visuelle Schnittstelle zwischen FFmpeg und einer einfachen Nutzbarkeit. Unser Ziel ist es, das Bearbeiten von Medien zu vereinfachen.</value>
+    </data>
+    <data name="CheckUpdates" xml:space="preserve">
+        <value>Auf Updates überprüfen</value>
+    </data>
+    <data name="References" xml:space="preserve">
+        <value>Referenzen</value>
+    </data>
+    <data name="GeneralSettings" xml:space="preserve">
+        <value>Allgemeine Einstellungen</value>
+    </data>
+    <data name="AfterCompression" xml:space="preserve">
+        <value>Nach dem Komprimieren</value>
+    </data>
+    <data name="OpenExplorerAfterCompression" xml:space="preserve">
+        <value>Öffne den Explorer nach der Komprimierung</value>
+    </data>
+    <data name="OpenExplorerAfterLastCompression" xml:space="preserve">
+        <value>Öffne den Explorer nach der letzten Komprimierung in der Liste</value>
+    </data>
+    <data name="DeleteOriginalAfterCompression" xml:space="preserve">
+        <value>Lösche die die Originaldatei, nach der Komprimierung</value>
+    </data>
+    <data name="DeleteListItemAfterCompression" xml:space="preserve">
+        <value>Lösche das Listenobjekt nach der Komprimierung</value>
+    </data>
+    <data name="ShowThumbnail" xml:space="preserve">
+        <value>Zeige Vorschau des hinteren Schiebeelements</value>
+    </data>
+    <data name="NewestVideos" xml:space="preserve">
+        <value>Neuste Videos automatisch hinzufügen</value>
+    </data>
+    <data name="HighestDirectory" xml:space="preserve">
+        <value>Oberster Pfad für die Videos</value>
+    </data>
+    <data name="Playbackspeed" xml:space="preserve">
+        <value>Wiedergabegeschwindigkeit</value>
+    </data>
+    <data name="DigitRequired" xml:space="preserve">
+        <value>Zahl ist notwendig</value>
+    </data>
+    <data name="DigitTooLong" xml:space="preserve">
+        <value>Zahl zu lang</value>
+    </data>
+    <data name="OnlyDigits" xml:space="preserve">
+        <value>Nur Zahlen</value>
+    </data>
+    <data name="EnterFilename" xml:space="preserve">
+        <value>Dateinamen eingeben</value>
+    </data>
+    <data name="NameRequired" xml:space="preserve">
+        <value>Name ist notwendig</value>
+    </data>
+    <data name="NameTooLong" xml:space="preserve">
+        <value>Name zu lang</value>
+    </data>
+    <data name="NameAlreadyUsed" xml:space="preserve">
+        <value>Name wird bereits genutzt</value>
+    </data>
+    <data name="Language" xml:space="preserve">
+        <value>Sprache</value>
+    </data>
+    <data name="English" xml:space="preserve">
+        <value>Englisch</value>
+    </data>
+    <data name="German" xml:space="preserve">
+        <value>Deutsch</value>
+    </data>
+    <data name="File" xml:space="preserve">
+        <value>Datei</value>
+    </data>
+    <data name="Settings" xml:space="preserve">
+        <value>Einstellungen</value>
+    </data>
+    <data name="Exit" xml:space="preserve">
+        <value>Verlassen</value>
+    </data>
+    <data name="EditPresets" xml:space="preserve">
+        <value>Presets bearbeiten</value>
+    </data>
+</root>

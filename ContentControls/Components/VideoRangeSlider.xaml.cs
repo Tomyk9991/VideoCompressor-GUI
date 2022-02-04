@@ -75,16 +75,15 @@ namespace VideoCompressorGUI.ContentControls.Components
 
         public void ResetThumbs()
         {
-            Point lowerThumbPoint =
-                lowerThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
-            Point upperThumbPoint =
-                upperThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
-
             sliderParent.Margin = new Thickness(0, 0, 0, 0);
             lineParent.Margin = new Thickness(0, 0, 0, 0);
             textParent.Margin = new Thickness(0, 0, 0, 0);
+            
             CalculatePercentages();
 
+            this.LowerThumb = 0.0d;
+            this.UpperThumb = 1.0d;
+            
             this.OnLowerThumbChanged?.Invoke(this.LowerThumb);
             this.OnUpperThumbChanged?.Invoke(this.UpperThumb, upperThumb.TransformToAncestor(parent).Transform(new Point(0, 0)).X);
         }

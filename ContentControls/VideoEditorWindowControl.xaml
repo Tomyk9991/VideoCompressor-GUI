@@ -7,6 +7,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
              xmlns:dialogs="clr-namespace:VideoCompressorGUI.ContentControls.Dialogs"
+             xmlns:p="clr-namespace:VideoCompressorGUI.Properties"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
@@ -44,14 +45,26 @@
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="2*" />
                     </Grid.ColumnDefinitions>
-                    <components:HeaderedSeperator Margin="0, 0, 0, 10" Header="Videoinformationen" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"/>
-                    <TextBlock Foreground="#aaaaaa" Margin="15, 0, 0, 0" Grid.Row="1" Grid.Column="0" Text="Dateiname:" />
+                    <components:HeaderedSeperator Margin="0, 0, 0, 10" Header="{x:Static p:Resources.Videoinformation}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"/>
+                    <TextBlock Foreground="#aaaaaa" Margin="15, 0, 0, 0" Grid.Row="1" Grid.Column="0">
+                        <TextBlock Text="{x:Static p:Resources.Filename}"/>
+                        <TextBlock Text=":"/>
+                    </TextBlock>
                     <TextBlock Foreground="#aaaaaa" FontStyle="Italic" x:Name="fileNameTextBox" TextWrapping="WrapWithOverflow" Grid.Row="1" Grid.Column="1" Text="Battlefield V 2021.09.16 - 12.12.32.03.DVR.mp4" />
-                    <TextBlock Foreground="#aaaaaa" Margin="15, 0, 0, 0" Grid.Row="2" Grid.Column="0" Text="Länge:" />
+                    <TextBlock Foreground="#aaaaaa" Margin="15, 0, 0, 0" Grid.Row="2" Grid.Column="0">
+                        <TextBlock Text="{x:Static p:Resources.Length}"/>
+                        <TextBlock Text=":"/>
+                    </TextBlock>
                     <TextBlock Foreground="#aaaaaa" FontStyle="Italic" x:Name="fileDurationTextBox" TextWrapping="WrapWithOverflow" Grid.Row="2" Grid.Column="1" Text="03:00 Minuten" />
-                    <TextBlock Foreground="#aaaaaa" Grid.Row="1" Grid.Column="2" Text="Größe:" />
+                    <TextBlock Foreground="#aaaaaa" Grid.Row="1" Grid.Column="2">
+                        <TextBlock Text="{x:Static p:Resources.Size}"/>
+                        <TextBlock Text=":"/>
+                    </TextBlock>
                     <TextBlock Foreground="#aaaaaa" FontStyle="Italic" Margin="0, 0, 15, 0" TextAlignment="Right" x:Name="fileSizeTextBox" TextWrapping="WrapWithOverflow" Grid.Row="1" Grid.Column="4" Text="267MB" />
-                    <TextBlock Foreground="#aaaaaa" Grid.Row="2" Grid.Column="2" Text="Bilder / Sekunde:" />
+                    <TextBlock Foreground="#aaaaaa" Grid.Row="2" Grid.Column="2">
+                        <TextBlock Text="{x:Static p:Resources.FramesPerSecond}"/>
+                        <TextBlock Text=":"/>
+                    </TextBlock>
                     <TextBlock Foreground="#aaaaaa" FontStyle="Italic" Margin="0, 0, 15, 0" TextAlignment="Right" x:Name="fileFPSTextBox" TextWrapping="WrapWithOverflow" Grid.Row="2" Grid.Column="4" Text="60FPS" />
                 </Grid>
             </StackPanel>

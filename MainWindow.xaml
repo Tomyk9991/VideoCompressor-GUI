@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:p="clr-namespace:VideoCompressorGUI.Properties"
         mc:Ignorable="d"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
@@ -47,15 +48,15 @@
                 <StackPanel Orientation="Horizontal">
                     <Image x:Name="iconImage" Width="25" Height="25"/>
                     <Menu Height="25" Background="#212121" IsMainMenu="True">
-                        <MenuItem Height="25" FontSize="12" VerticalAlignment="Center" Header="_Datei">
-                            <MenuItem Click="MenuBarSettings_OnClick" Header="Einstellungen"
+                        <MenuItem Height="25" FontSize="12" VerticalAlignment="Center" Header="{x:Static p:Resources.File}">
+                            <MenuItem Click="MenuBarSettings_OnClick" Header="{x:Static p:Resources.Settings}"
                                       Icon="{materialDesign:PackIcon Kind=Settings}" />
                             <Separator />
-                            <MenuItem Click="MenuBarExit_OnClick" Header="Exit"
+                            <MenuItem Click="MenuBarExit_OnClick" Header="{x:Static p:Resources.Exit}"
                                       Icon="{materialDesign:PackIcon Kind=ExitToApp}" />
                         </MenuItem>
-                        <MenuItem Height="25" FontSize="12" VerticalAlignment="Center" Header="_Presets">
-                            <MenuItem Click="MenuBarPresetsEdit_OnClick" Header="Presets bearbeiten"
+                        <MenuItem Height="25" FontSize="12" VerticalAlignment="Center" Header="Presets">
+                            <MenuItem Click="MenuBarPresetsEdit_OnClick" Header="{x:Static p:Resources.EditPresets}"
                                       Icon="{materialDesign:PackIcon Kind=Edit}" />
                         </MenuItem>
                     </Menu>

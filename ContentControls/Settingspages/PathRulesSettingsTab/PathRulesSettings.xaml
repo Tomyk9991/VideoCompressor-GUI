@@ -6,6 +6,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
              xmlns:dialogs="clr-namespace:VideoCompressorGUI.ContentControls.Dialogs"
+             xmlns:p="clr-namespace:VideoCompressorGUI.Properties"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              Loaded="PathRulesSettings_OnLoaded"
@@ -21,18 +22,18 @@
         <!-- Header -->
         <materialDesign:Card Grid.Row="0" Background="{StaticResource PrimaryHueDarkBrush}">
             <TextBlock FontSize="16" HorizontalAlignment="Center"
-                       Text="Standardfall der Pfadregeln für das Komprimierungsdateiziel" />
+                       Text="{x:Static p:Resources.StandardcaseForRules}" />
         </materialDesign:Card>
         <StackPanel Grid.Row="1">
             <TextBlock Margin="15, 15, 15, 0" TextAlignment="Center" TextWrapping="WrapWithOverflow"
-                       Text="Sollte kein Fall angegeben sein, so wird das Komprimierungsdateiziel innerhalb des Ordners der Originaldatei impliziert." />
+                       Text="{x:Static p:Resources.InCaseNoPath}" />
 
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="9*" />
                     <ColumnDefinition Width="50" />
                 </Grid.ColumnDefinitions>
-                <components:HeaderedSeperator Margin="0, 15, 0, 15" Header="Benutzerdefinierte Fälle" />
+                <components:HeaderedSeperator Margin="0, 15, 0, 15" Header="{x:Static p:Resources.UserDefinedCases}" />
                 <Button x:Name="addRuleButton" Click="AddRuleButton_OnClick" Grid.Column="1" Margin="0, 0, 5, 0">
                     <materialDesign:PackIcon Kind="Add" />
                 </Button>

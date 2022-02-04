@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -41,6 +42,12 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab
             this.deleteOriginalFileAfterCompressCheckbox.IsChecked = settings.DeleteOriginalFileAfterCompress;
             this.removeFromItemsListAfterCompressCheckbox.IsChecked = settings.RemoveFromItemsList;
             this.openExplorerAfterLastCompressCheckbox.IsChecked = settings.OpenExplorerAfterLastCompression;
+            languageCombobox.SelectedIndex = settings.Language switch
+            {
+                "en-EN" => 0,
+                "de-DE" => 1,
+                _ => 0
+            };
         }
 
         private void SelectNewVideoWatcherPath_OnClick(object sender, MouseButtonEventArgs e)
@@ -81,7 +88,12 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab
                 ShowThumbnailForUpperThumb = thumbnailUpperThumbCheckBox.IsChecked.Value,
                 DeleteOriginalFileAfterCompress = deleteOriginalFileAfterCompressCheckbox.IsChecked.Value,
                 RemoveFromItemsList = removeFromItemsListAfterCompressCheckbox.IsChecked.Value,
-                OpenExplorerAfterLastCompression = openExplorerAfterLastCompressCheckbox.IsChecked.Value
+                OpenExplorerAfterLastCompression = openExplorerAfterLastCompressCheckbox.IsChecked.Value,
+                Language = languageCombobox.SelectedIndex switch
+                {
+                    0 => "en-EN",
+                    1 => "de-DE",
+                }
             };
 
             SettingsFolder.Save(data);

@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
+             xmlns:p="clr-namespace:VideoCompressorGUI.Properties"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
@@ -26,7 +26,7 @@
         </Viewbox>
         
         <TextBlock Margin="0, 0, 0, 32" TextDecorations="Underline" TextAlignment="Center" Grid.Row="1">
-            <Label Cursor="Hand" MouseUp="UIElement_OnMouseUp" FontStyle="Oblique" Content="Oder durchsuchen Sie hier"></Label>
+            <Label Cursor="Hand" MouseUp="UIElement_OnMouseUp" FontStyle="Oblique" Content="{x:Static p:Resources.OrSearchHere}"></Label>
         </TextBlock>
         <materialDesign:Snackbar VerticalAlignment="Center" x:Name="snackbar" MessageQueue="{materialDesign:MessageQueue}" IsActive="False" Grid.Row="1" />
     </Grid>

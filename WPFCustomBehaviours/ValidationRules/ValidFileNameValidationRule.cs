@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.IO;
 using System.Windows.Controls;
+using VideoCompressorGUI.Properties;
 
 namespace VideoCompressorGUI.WPFCustomBehaviours.ValidationRules
 {
@@ -12,10 +13,10 @@ namespace VideoCompressorGUI.WPFCustomBehaviours.ValidationRules
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             if (string.IsNullOrWhiteSpace((value ?? "").ToString()))
-                return new ValidationResult(false, "Dateinamen eingeben");
+                return new ValidationResult(false, Resources.EnterFilename);
 
             if (File.Exists(FolderWithoutFile + "/" + (string)value + FileEnding))
-                return new ValidationResult(false, "Dateiname vergeben");
+                return new ValidationResult(false, Resources.EnterFilename);
                 
                 
             return ValidationResult.ValidResult;

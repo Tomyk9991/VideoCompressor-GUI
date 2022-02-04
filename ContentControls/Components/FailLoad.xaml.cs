@@ -16,8 +16,13 @@ namespace VideoCompressorGUI.ContentControls.Components
     public partial class FailLoad : UserControl
     {
         private string lastHeader = "";
-        public FailLoad(string header = "FFmpeg konnte nicht geladen werden")
+        public FailLoad(string header = "")
         {
+            if (header == "")
+            {
+                header = Properties.Resources.FFmpegCouldntBeLoaded;
+            }
+            
             InitializeComponent();
             lastHeader = header;
         }
@@ -28,10 +33,10 @@ namespace VideoCompressorGUI.ContentControls.Components
             
             List<string> missingFiles = GeneralSettingsData.ValidateFFmpegPath(path);
             failMessageTextBlock.Text = missingFiles.Count == 0 ? "" :
-                missingFiles.Count == 1 ? "Es fehlt folgende Datei: " + Environment.NewLine + missingFiles[0] :
-                "Es fehlen folgende Dateien: " + Environment.NewLine + "    - " + string.Join(Environment.NewLine + "    - ", missingFiles);
+                missingFiles.Count == 1 ? Properties.Resources.FollowingFileMissing +  ": " + Environment.NewLine + missingFiles[0] :
+                Properties.Resources.FollowingFilesMissing + ": " + Environment.NewLine + "    - " + string.Join(Environment.NewLine + "    - ", missingFiles);
 
-            failFirstTextBlock.Text = "Verzeichnis: \'" + path + "'";
+            failFirstTextBlock.Text = $"{Properties.Resources.Directory}: '{path}'";
             
             if (missingFiles.Count == 0)
             {
@@ -45,7 +50,7 @@ namespace VideoCompressorGUI.ContentControls.Components
 
         private void FailLoad_OnLoaded(object sender, RoutedEventArgs e)
         {
-            Log.Warn("Fail Control loaded");
+            Log.Warn($"Fail Control loaded with: {lastHeader}");
             
             GeneralSettingsData settings = SettingsFolder.Load<GeneralSettingsData>();
             CheckPath(settings.FFmpegPath);

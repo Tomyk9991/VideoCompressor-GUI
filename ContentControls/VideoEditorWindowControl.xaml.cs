@@ -78,7 +78,7 @@ namespace VideoCompressorGUI.ContentControls
 
             fileNameTextBox.Text = Path.GetFileName(file.File);
             fileDurationTextBox.Text = file.MetaData.Duration.TotalSeconds.ToMinutesAndSecondsFromSeconds() 
-                                       + (file.MetaData.Duration.TotalMinutes < 1 ? " Sekunden" :  " Minuten");
+                                       + (file.MetaData.Duration.TotalMinutes < 1 ? $" {Properties.Resources.Seconds}" :  $" {Properties.Resources.Minutes}");
             fileSizeTextBox.Text = MathHelper.BytesToString(file.MetaData.FileInfo.Length);
             fileFPSTextBox.Text = (int)file.MetaData.VideoData.Fps + "FPS";
         }

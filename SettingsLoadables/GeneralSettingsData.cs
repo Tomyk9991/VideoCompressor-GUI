@@ -10,6 +10,7 @@ namespace VideoCompressorGUI.SettingsLoadables
         public bool AutomaticallyUseNewestVideos { get; set; }
         public string PathToNewestVideos { get; set; }
         public DateTime LatestTimeWatched { get; set; }
+        public string Language { get; set; }
     
         public bool OpenExplorerAfterCompress { get; set; }
         public bool DeleteOriginalFileAfterCompress { get; set; }
@@ -27,6 +28,8 @@ namespace VideoCompressorGUI.SettingsLoadables
                 PathToNewestVideos = "",
                 LatestTimeWatched = DateTime.Now,
                 FFmpegPath = "",
+                
+                Language = "en-EN",
             
                 OpenExplorerAfterCompress = false,
                 DeleteOriginalFileAfterCompress = false,

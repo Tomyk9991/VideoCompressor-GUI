@@ -115,7 +115,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
 
             lastPresetCopy = newPreset.Copy();
             
-            savingButtonsTextBox.Text = "Übernehmen";
+            savingButtonsTextBox.Text = Properties.Resources.Apply;
             savingButtonsIcon.Kind = PackIconKind.Update;
             
 
@@ -151,7 +151,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
             lastPreset = null;
             lastPresetCopy = null;
 
-            savingButtonsTextBox.Text = "Hinzufügen";
+            savingButtonsTextBox.Text = Properties.Resources.Add;
             savingButtonsIcon.Kind = PackIconKind.Add;
 
             savingButton.IsEnabled = false;
@@ -180,10 +180,13 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
 
         private void OnName_Enter(object sender, TextChangedEventArgs e)
         {
-            string originalName = lastPreset.PresetName;
-            lastPreset.PresetName = nameTextBox.Text;
-            ValidateCanUse();
-            lastPreset.PresetName = originalName;
+            if (lastPreset != null)
+            {
+                string originalName = lastPreset.PresetName;
+                lastPreset.PresetName = nameTextBox.Text;
+                ValidateCanUse();
+                lastPreset.PresetName = originalName;
+            }
         }
 
         private void OnDigit_Enter(object sender, TextChangedEventArgs e)
