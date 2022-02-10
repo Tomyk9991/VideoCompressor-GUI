@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:validationRules="clr-namespace:VideoCompressorGUI.WPFCustomBehaviours.ValidationRules"
+             xmlns:p="clr-namespace:VideoCompressorGUI.Properties"
              mc:Ignorable="d"
              Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
              d:DesignHeight="200" d:DesignWidth="800"
@@ -35,7 +36,7 @@
                     <!-- Header -->
                     <materialDesign:Card FontSize="16" Grid.Row="0" Background="{DynamicResource PrimaryHueDarkBrush}">
                         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
-                                   Text="Letzte Komprimierungoptionen" />
+                                   Text="{x:Static p:Resources.LastCompressOptions}" />
                     </materialDesign:Card>
 
                     <StackPanel Grid.Row="1">
@@ -57,10 +58,10 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBox Margin="0, 0, 5, 0" Grid.Column="0" x:Name="folderPathTextBox"
                                          PreviewMouseUp="OnSelectFolderPath" IsReadOnly="True"
-                                         materialDesign:HintAssist.Hint="Zielordner" />
+                                         materialDesign:HintAssist.Hint="{x:Static p:Resources.TargetDirectory}" />
 
                                 <TextBox Focusable="True" Margin="0, 0, 5, 0" Grid.Column="1" x:Name="filenameTextBox"
-                                         materialDesign:HintAssist.Hint="Dateiname" TextChanged="OnFileNameChanged">
+                                         materialDesign:HintAssist.Hint="{x:Static p:Resources.Filename}" TextChanged="OnFileNameChanged">
                                     <TextBox.Text>
                                         <Binding
                                             RelativeSource="{RelativeSource Self}" Path="Text"
@@ -124,7 +125,7 @@
                                                          VerticalAlignment="Center" />
 
                                 <TextBox x:Name="scaleTextBox" Grid.Column="1" Margin="0, 0, 10, 20"
-                                         materialDesign:HintAssist.Hint="Skalierung"
+                                         materialDesign:HintAssist.Hint="{x:Static p:Resources.Scale}"
                                          TextChanged="TargetSizeTextbox_OnTextChanged">
                                     <TextBox.Text>
                                         <Binding
@@ -153,7 +154,7 @@
                                                      VerticalAlignment="Center" />
 
                             <TextBox x:Name="targetSizeTextbox" Grid.Column="1" Margin="0, 0, 10, 20"
-                                     materialDesign:HintAssist.Hint="Zielgröße der Datei"
+                                     materialDesign:HintAssist.Hint="{x:Static p:Resources.TargetsizeOfFile}"
                                      TextChanged="TargetSizeTextbox_OnTextChanged">
                                 <TextBox.Text>
                                     <Binding
@@ -173,14 +174,14 @@
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center"
                                                              Kind="Compress" />
-                                    <TextBlock Text="Komprimiere..."></TextBlock>
+                                    <TextBlock Text="{x:Static p:Resources.Compress}"></TextBlock>
                                 </StackPanel>
                             </Button>
                             <Button Click="DialogCancel_OnClick">
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center"
                                                              Kind="Close" />
-                                    <TextBlock Text="Abbrechen"></TextBlock>
+                                    <TextBlock Text="{x:Static p:Resources.Cancel}"></TextBlock>
                                 </StackPanel>
                             </Button>
                         </StackPanel>

@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using Unosquare.FFME;
+using VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab;
+using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils.Logger;
 
 namespace VideoCompressorGUI
@@ -21,6 +24,13 @@ namespace VideoCompressorGUI
             logger.LogToFile = false;
 #endif
             SetupExceptionHandling();
+
+            var data = SettingsFolder.Load<GeneralSettingsData>();
+            
+            if (string.IsNullOrEmpty(data.Language))
+                data.Language = new GeneralSettingsData().CreateDefault().Language;
+            
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(data.Language);
         }
 
         private void SetupExceptionHandling()

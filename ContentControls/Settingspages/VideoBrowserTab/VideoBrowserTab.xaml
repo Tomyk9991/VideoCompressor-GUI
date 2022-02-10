@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:VideoCompressorGUI.ContentControls.Settingspages.VideoBrowserTab"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
+             xmlns:p="clr-namespace:VideoCompressorGUI.Properties"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              Loaded="VideoBrowserTab_OnLoaded"
@@ -25,19 +25,19 @@
             <TextBlock FontSize="16" HorizontalAlignment="Center"
                        Text="Video Browser" />
         </materialDesign:Card>
-        <components:HeaderedSeperator Grid.Row="1" Margin="0, 15, 0, 15" Header="Videobrowserlistenelement" />
+        <components:HeaderedSeperator Grid.Row="1" Margin="0, 15, 0, 15" Header="{x:Static p:Resources.VideoBrowserListItem}" />
         
             <UniformGrid Grid.Row="2">
             <CheckBox IsChecked="False" x:Name="openFolderCheckbox">
                 <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Margin="0, 0, 5, 0" Kind="FolderArrowRight"/>
-                    <TextBlock Text="Öffne dieses Element im Explorer"/>
+                    <TextBlock Text="{x:Static p:Resources.OpenThisElementInExplorer}"/>
                 </StackPanel>
             </CheckBox>
             <CheckBox IsChecked="False" x:Name="deleteItemCheckbox">
                 <StackPanel Orientation="Horizontal">
                 <materialDesign:PackIcon Margin="0, 0, 5, 0" Kind="Delete"/>
-                <TextBlock Text="Lösche dieses Element von der Liste"/>
+                <TextBlock Text="{x:Static p:Resources.DeleteThisElement}"/>
                 </StackPanel>
             </CheckBox>
                 

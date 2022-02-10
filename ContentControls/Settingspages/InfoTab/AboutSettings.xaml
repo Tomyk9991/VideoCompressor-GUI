@@ -6,6 +6,7 @@
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
+             xmlns:p="clr-namespace:VideoCompressorGUI.Properties"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
@@ -41,8 +42,8 @@
                     <ColumnDefinition Width="15*"/>
                 </Grid.ColumnDefinitions>
                 <Image x:Name="iconImage" Stretch="Uniform" Grid.RowSpan="2" Grid.Column="0"/>
-                <TextBlock Grid.Column="1" Margin="15, 0, 0, 0" Grid.Row="0" FontSize="60" FontWeight="Bold"  Text="About Compri" />
-                <TextBlock Grid.Column="1" Margin="15, 0, 0, 0" Grid.Row="1" TextWrapping="WrapWithOverflow" FontStyle="Italic" FontSize="24" Text="Compri ist eine visuelle Schnittstelle zwischen FFmpeg und einer einfachen Nutzbarkeit. Unser Ziel ist es, das Bearbeiten von Medien zu vereinfachen." />
+                <TextBlock Grid.Column="1" Margin="15, 0, 0, 0" Grid.Row="0" FontSize="60" FontWeight="Bold"  Text="{x:Static p:Resources.AboutCompri}" />
+                <TextBlock Grid.Column="1" Margin="15, 0, 0, 0" Grid.Row="1" TextWrapping="WrapWithOverflow" FontStyle="Italic" FontSize="24" Text="{x:Static p:Resources.AboutDescription}" />
             </Grid>
             
             <!-- Updates panel -->
@@ -57,7 +58,7 @@
                         materialDesign:ButtonProgressAssist.Value="-1"
                         materialDesign:ButtonProgressAssist.IsIndicatorVisible="False"
                         materialDesign:ButtonProgressAssist.IsIndeterminate="True"
-                        Grid.Column="0" x:Name="updateButton" VerticalAlignment="Top" Click="OnCheckUpdate_Click" Content="Auf Updates überprüfen" Margin="0, 0, 10, 0" HorizontalAlignment="Left"/>
+                        Grid.Column="0" x:Name="updateButton" VerticalAlignment="Top" Click="OnCheckUpdate_Click" Content="{x:Static p:Resources.CheckUpdates}" Margin="0, 0, 10, 0" HorizontalAlignment="Left"/>
                     
                     <FlowDocumentScrollViewer IsSelectionEnabled="False" x:Name="markdownRenderer" Height="500" Grid.Column="1"
                                               HorizontalContentAlignment="Stretch"
@@ -69,7 +70,7 @@
         <Grid Grid.Row="2">
             <Border Margin="0, 0, 0, 15" HorizontalAlignment="Center" CornerRadius="5"  BorderBrush="#9f9f9f" BorderThickness="1">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="16" Margin="10, 0, 10, 0" VerticalAlignment="Center" Text="Referenzen"/>
+                    <TextBlock FontSize="16" Margin="10, 0, 10, 0" VerticalAlignment="Center" Text="{x:Static p:Resources.References}"/>
                     <StackPanel Margin="0, 0, 10, 0" Orientation="Horizontal">
                         <Button Width="24" Height="24" Click="SourceCode_Click" HorizontalAlignment="Center" VerticalAlignment="Center"
                                 Style="{StaticResource MaterialDesignIconForegroundButton}">

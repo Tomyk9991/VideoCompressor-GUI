@@ -65,7 +65,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
                     checker.OnDownloadFinished += () =>
                     {
                         SetButtonLoadingAnimation(false);
-                        updateButton.Content = "Update durchführen (Neustart erforderlich)";
+                        updateButton.Content = Properties.Resources.UpdateAndRestart;
                         updateNext = true;
                     };
                     
@@ -73,7 +73,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages.InfoTab
                 }
                 else
                 {
-                    RenderMDText("Keine neuen Versionen verfügbar");
+                    RenderMDText(Properties.Resources.NoUpdateAvailable);
                     SetButtonLoadingAnimation(false);
                 }
             }

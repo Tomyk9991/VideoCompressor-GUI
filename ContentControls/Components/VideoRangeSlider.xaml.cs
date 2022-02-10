@@ -12,7 +12,7 @@ namespace VideoCompressorGUI.ContentControls.Components
     public partial class VideoRangeSlider : UserControl
     {
         public event Action<double> OnLowerThumbChanged;
-        public event Action<double> OnUpperThumbChanged;
+        public event Action<double, double> OnUpperThumbChanged;
 
         public event Action<double> OnStartedMainDrag;
         public event Action<double> OnEndedMainDrag;
@@ -75,18 +75,17 @@ namespace VideoCompressorGUI.ContentControls.Components
 
         public void ResetThumbs()
         {
-            Point lowerThumbPoint =
-                lowerThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
-            Point upperThumbPoint =
-                upperThumb.TransformToAncestor(parent).Transform(new Point(0, 0));
-
             sliderParent.Margin = new Thickness(0, 0, 0, 0);
             lineParent.Margin = new Thickness(0, 0, 0, 0);
             textParent.Margin = new Thickness(0, 0, 0, 0);
+            
             CalculatePercentages();
 
+            this.LowerThumb = 0.0d;
+            this.UpperThumb = 1.0d;
+            
             this.OnLowerThumbChanged?.Invoke(this.LowerThumb);
-            this.OnUpperThumbChanged?.Invoke(this.UpperThumb);
+            this.OnUpperThumbChanged?.Invoke(this.UpperThumb, upperThumb.TransformToAncestor(parent).Transform(new Point(0, 0)).X);
         }
 
         private void VideoRangeSlider_OnLoaded(object sender, RoutedEventArgs e)
@@ -164,7 +163,7 @@ namespace VideoCompressorGUI.ContentControls.Components
             this.ClampingRight = value == 0.0d;
             CalculatePercentages();
 
-            this.OnUpperThumbChanged?.Invoke(this.UpperThumb);
+            this.OnUpperThumbChanged?.Invoke(this.UpperThumb, upperThumb.TransformToAncestor(parent).Transform(new Point(0, 0)).X);
 
             return this.ClampingRight;
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Windows.Controls;
+using VideoCompressorGUI.Properties;
 using VideoCompressorGUI.SettingsLoadables;
 
 namespace VideoCompressorGUI.WPFCustomBehaviours.ValidationRules
@@ -13,9 +14,9 @@ namespace VideoCompressorGUI.WPFCustomBehaviours.ValidationRules
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             var validation = string.IsNullOrWhiteSpace((value ?? "").ToString())
-                ? new ValidationResult(false, "Name ist notwendig.")
+                ? new ValidationResult(false, Resources.NameRequired)
                 : ((string)value).Length > 8
-                    ? new ValidationResult(false, "Name zu lang.")
+                    ? new ValidationResult(false, Resources.NameTooLong)
                     : ValidationResult.ValidResult;
 
             if (IgnorePreset != null)
@@ -26,7 +27,7 @@ namespace VideoCompressorGUI.WPFCustomBehaviours.ValidationRules
                 bool contains = collection.Contains(t => t != IgnorePreset && 
                                                          String.Equals(t.PresetName, ((string)value), StringComparison.CurrentCultureIgnoreCase));
 
-                return contains ? new ValidationResult(false, "Name bereits verwendet.") : validation;
+                return contains ? new ValidationResult(false, Resources.NameAlreadyUsed) : validation;
             }
         
             return validation;

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:p="clr-namespace:VideoCompressorGUI.Properties"
              mc:Ignorable="d"
              d:DesignHeight="200" d:DesignWidth="800">
     <materialDesign:Card MouseDown="OutsideDialog_OnPreviewMouseDown"
@@ -30,22 +31,22 @@
                             
                             <!-- Header -->
                             <materialDesign:Card Grid.Row="0" Background="{DynamicResource PrimaryHueDarkBrush}">
-                                <TextBlock FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Sind Sie sicher?"/>
+                                <TextBlock FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{x:Static p:Resources.AreYouSure}"/>
                             </materialDesign:Card>
                             
                             <StackPanel Margin="5, 15, 5, 0" Grid.Row="1">
-                                <TextBlock TextWrapping="WrapWithOverflow" Text="Sie sind im Begriff alle rot markierten Zeilen zu löschen, da diese fehlerhaft sind."/>
-                                <TextBlock TextWrapping="WrapWithOverflow" Text="Möchten Sie fortfahren?"/>
+                                <TextBlock TextWrapping="WrapWithOverflow" Text="{x:Static p:Resources.YoureAboutRedCells}"/>
+                                <TextBlock TextWrapping="WrapWithOverflow" Text="{x:Static p:Resources.WannaContinue}"/>
                                 <Grid Margin="0, 15, 0, 5">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <Button Click="Confirm_OnClick" Margin="0, 0, 2.5, 0" Grid.Column="0">
-                                        <TextBlock Text="Ja"/>
+                                        <TextBlock Text="{x:Static p:Resources.Yes}"/>
                                     </Button>
                                     <Button Click="Cancel_OnClick" Margin="2.5, 0, 0, 0" Grid.Column="1">
-                                        <TextBlock Text="Nein"/>
+                                        <TextBlock Text="{x:Static p:Resources.No}"/>
                                     </Button>
                                 </Grid>
                             </StackPanel>
