@@ -12,6 +12,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using FFmpeg.NET;
+using FFmpeg.NET.Enums;
 using MaterialDesignThemes.Wpf;
 using Unosquare.FFME;
 using VideoCompressorGUI.ffmpeg;
@@ -140,6 +141,7 @@ namespace VideoCompressorGUI.Utils
             
             ConversionOptions options = new ConversionOptions
             {
+                VideoCodec = CodecEnumConverter.CodecDTOToVideoCodec(preset.Codec),
                 ExtraArguments = extraArguments,
                 VideoBitRate = preset.UseTargetSizeCalculation ? preset.CalculateBitrateWithFixedTargetSize(snippetLength.TotalSeconds) : preset.Bitrate,
                 VideoFps = (int) file.MetaData.VideoData.Fps,

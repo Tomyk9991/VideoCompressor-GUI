@@ -7,6 +7,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
              xmlns:validationRules="clr-namespace:VideoCompressorGUI.WPFCustomBehaviours.ValidationRules"
+             xmlns:p="clr-namespace:VideoCompressorGUI.Properties"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
@@ -22,7 +23,7 @@
                 materialDesign:ColorZoneAssist.Mode="Standard"
                 materialDesign:ShadowAssist.ShadowDepth="Depth3">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <materialDesign:Card
@@ -37,17 +38,19 @@
                                 <Button Width="40" Height="40"
                                         x:Name="buttonNewPresetItem"
                                         Click="StackPanelPresetNew_OnClick"
-                                    Style="{StaticResource MaterialDesignFloatingActionSecondaryDarkButton}"
-                                    ToolTip="Füge ein neues Preset hinzu">
+                                        Style="{StaticResource MaterialDesignFloatingActionSecondaryDarkButton}"
+                                        ToolTip="Füge ein neues Preset hinzu">
                                     <materialDesign:PackIcon x:Name="buttonsNewPresetItemIcon" Kind="Add" />
                                 </Button>
-                                <TextBlock Text="Hinzufügen" FontSize="10" HorizontalAlignment="Center"></TextBlock>
+                                <TextBlock Text="{x:Static p:Resources.Add}" FontSize="10" HorizontalAlignment="Center"></TextBlock>
                             </StackPanel>
                         </StackPanel>
                     </ScrollViewer>
                 </materialDesign:Card>
                 <StackPanel Grid.Column="1">
-                        <GroupBox Header="Name">
+                    <GroupBox Header="{x:Static p:Resources.NameOfPreset}">
+                        <StackPanel>
+
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="30" />
@@ -58,7 +61,7 @@
                                                          VerticalAlignment="Center" />
                                 <TextBox x:Name="nameTextBox"
                                          TextChanged="OnName_Enter"
-                                         Grid.Column="1" Margin="0, 0, 0, 9"
+                                         Grid.Column="1" Margin="0, 0, 0, 18"
                                          materialDesign:HintAssist.Hint="Name">
                                     <TextBox.Text>
                                         <Binding
@@ -72,93 +75,116 @@
                                     </TextBox.Text>
                                 </TextBox>
                             </Grid>
-                        </GroupBox>
-                        <components:CollapsibleGroupBox
-                            IsVisibilityChanged="CollapsibleGroupboxPredefinedBitrate_OnIsVisibilityChanged"
-                            x:Name="collapsibleGroupboxPredefinedBitrate" Header="Vordefinierte Bitrate">
-                            <Grid>
+                            <Grid Margin="0, 0, 0, 10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="30" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="200" />
                                 </Grid.ColumnDefinitions>
                                 <materialDesign:PackIcon Margin="0, 0, 5, 0" Grid.Column="0"
-                                                         Kind="Numbers" HorizontalAlignment="Center"
-                                                         VerticalAlignment="Center" />
-                                
-                                <TextBox TextChanged="OnDigit_Enter" x:Name="bitrateTextBox"
-                                         Grid.Column="1" Margin="0, 0, 0, 9"
-                                         materialDesign:HintAssist.Hint="Bitrate">
-                                    <TextBox.Text>
-                                        <Binding
-                                            RelativeSource="{RelativeSource Self}" Path="Text"
-                                            UpdateSourceTrigger="LostFocus">
-                                            <Binding.ValidationRules>
-                                                <validationRules:IsDigitValidationRule
-                                                    x:Name="isDigitValidationRule" ValidatesOnTargetUpdated="True" />
-                                            </Binding.ValidationRules>
-                                        </Binding>
-                                    </TextBox.Text>
-                                </TextBox>
+                                                          Kind="ArrowCollapseVertical" HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center" />
+                                <ComboBox SelectionChanged="SelectedCodecComboBox_OnSelectionChanged" x:Name="selectedCodecComboBox" Grid.Column="1" HorizontalContentAlignment="Left">
+                                    <ComboBoxItem IsSelected="True">
+                                        <TextBlock Text="Standardcodec" />
+                                    </ComboBoxItem>
+                                    <ComboBoxItem x:Name="supportedCodecItem">
+                                        <TextBlock Text="h264_nvenc" />
+                                    </ComboBoxItem>
+                                </ComboBox>
                             </Grid>
-                        </components:CollapsibleGroupBox>
-                    
-                        <components:CollapsibleGroupBox
-                            IsVisibilityChanged="CollapsibleGroupboxCalculatedBitrate_OnIsVisibilityChanged"
-                            x:Name="collapsibleGroupboxCalculatedBitrate" Header="Berechnung der Mediengröße">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <materialDesign:PackIcon Margin="0, 0, 5, 0" Grid.Column="0"
-                                                         Kind="Numbers" HorizontalAlignment="Center"
-                                                         VerticalAlignment="Center" />
-                                
-                                <TextBox TextChanged="OnDigit_Enter" x:Name="targetSizeTextBox"
-                                         Grid.Column="1" Margin="0, 0, 0, 9"
-                                         IsEnabled="{Binding Path=IsChecked, ElementName=targetSizeAskLaterCheckBox, Converter={StaticResource InverseBooleanConverter}}"
-                                         materialDesign:HintAssist.Hint="Zielgröße der Datei">
-                                    <TextBox.Text>
-                                        <Binding
-                                            RelativeSource="{RelativeSource Self}" Path="Text"
-                                            UpdateSourceTrigger="LostFocus">
-                                            <Binding.ValidationRules>
-                                                <validationRules:IsDigitValidationRule ValidatesOnTargetUpdated="True" />
-                                            </Binding.ValidationRules>
-                                        </Binding>
-                                    </TextBox.Text>
-                                </TextBox>
-                                    <CheckBox x:Name="targetSizeAskLaterCheckBox" Checked="TargetSizeAskLaterCheckBox_OnChecked" Unchecked="TargetSizeAskLaterCheckBox_OnChecked" Grid.Column="2" Content="Beim Komprimieren festlegen" />
-                            </Grid>
-                        </components:CollapsibleGroupBox>
-                        <Grid HorizontalAlignment="Right" Margin="0, 5, 5, 0">
-                            <StackPanel Orientation="Horizontal">
-                                <Button 
-                                        x:Name="savingButton" Click="SaveOrAdd_OnClick" IsEnabled="False"
-                                        HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon x:Name="savingButtonsIcon" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                                                 Kind="Add" />
-                                        <TextBlock x:Name="savingButtonsTextBox" Text="Hinzufügen"></TextBlock>
-                                    </StackPanel>
-                                </Button>
-                                <Button Visibility="Collapsed" Click="DeleteSelectedPreset_OnClick" Margin="5, 0, 0, 0" 
-                                        x:Name="deleteButton"
-                                        HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon VerticalAlignment="Center" Foreground="Red" HorizontalAlignment="Center"
-                                                                 Kind="Delete" />
-                                        <TextBlock Text="Löschen" />
-                                    </StackPanel>
-                                </Button>
-                            </StackPanel>
+                        </StackPanel>
+                    </GroupBox>
+                    <components:CollapsibleGroupBox
+                        IsVisibilityChanged="CollapsibleGroupboxPredefinedBitrate_OnIsVisibilityChanged"
+                        x:Name="collapsibleGroupboxPredefinedBitrate" Header="{x:Static p:Resources.PredefinedBitrate}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:PackIcon Margin="0, 0, 5, 0" Grid.Column="0"
+                                                     Kind="Numbers" HorizontalAlignment="Center"
+                                                     VerticalAlignment="Center" />
+
+                            <TextBox TextChanged="OnDigit_Enter" x:Name="bitrateTextBox"
+                                     Grid.Column="1" Margin="0, 0, 0, 9"
+                                     materialDesign:HintAssist.Hint="Bitrate">
+                                <TextBox.Text>
+                                    <Binding
+                                        RelativeSource="{RelativeSource Self}" Path="Text"
+                                        UpdateSourceTrigger="LostFocus">
+                                        <Binding.ValidationRules>
+                                            <validationRules:IsDigitValidationRule
+                                                x:Name="isDigitValidationRule" ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                         </Grid>
-                    </StackPanel>
+                    </components:CollapsibleGroupBox>
+
+                    <components:CollapsibleGroupBox
+                        IsVisibilityChanged="CollapsibleGroupboxCalculatedBitrate_OnIsVisibilityChanged"
+                        x:Name="collapsibleGroupboxCalculatedBitrate" Header="{x:Static p:Resources.CalculateTargetSize}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:PackIcon Margin="0, 0, 5, 0" Grid.Column="0"
+                                                     Kind="Numbers" HorizontalAlignment="Center"
+                                                     VerticalAlignment="Center" />
+
+                            <TextBox TextChanged="OnDigit_Enter" x:Name="targetSizeTextBox"
+                                     Grid.Column="1" Margin="0, 0, 0, 9"
+                                     IsEnabled="{Binding Path=IsChecked, ElementName=targetSizeAskLaterCheckBox, Converter={StaticResource InverseBooleanConverter}}"
+                                     materialDesign:HintAssist.Hint="{x:Static p:Resources.TargetsizeOfFile}">
+                                <TextBox.Text>
+                                    <Binding
+                                        RelativeSource="{RelativeSource Self}" Path="Text"
+                                        UpdateSourceTrigger="LostFocus">
+                                        <Binding.ValidationRules>
+                                            <validationRules:IsDigitValidationRule ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <CheckBox x:Name="targetSizeAskLaterCheckBox"
+                                      Checked="TargetSizeAskLaterCheckBox_OnChecked"
+                                      Unchecked="TargetSizeAskLaterCheckBox_OnChecked" Grid.Column="2"
+                                      Content="{x:Static p:Resources.SetDuringCompress}" />
+                        </Grid>
+                    </components:CollapsibleGroupBox>
+                    <Grid HorizontalAlignment="Right" Margin="0, 5, 5, 0">
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                x:Name="savingButton" Click="SaveOrAdd_OnClick" IsEnabled="False"
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon x:Name="savingButtonsIcon" VerticalAlignment="Center"
+                                                             HorizontalAlignment="Center"
+                                                             Kind="Add" />
+                                    <TextBlock x:Name="savingButtonsTextBox" Text="{x:Static p:Resources.Add}"></TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button Visibility="Collapsed" Click="DeleteSelectedPreset_OnClick" Margin="5, 0, 0, 0"
+                                    x:Name="deleteButton"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon VerticalAlignment="Center" Foreground="Red"
+                                                             HorizontalAlignment="Center"
+                                                             Kind="Delete" />
+                                    <TextBlock Text="{x:Static p:Resources.Delete}" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
             </Grid>
         </materialDesign:Card>
         <Button HorizontalAlignment="Right" VerticalAlignment="Top" Click="ClosePresets_OnClick"
-                Style="{StaticResource MaterialDesignIconButton}" ToolTip="Schließen">
+                Style="{StaticResource MaterialDesignIconButton}" ToolTip="{x:Static p:Resources.Close}">
             <materialDesign:PackIcon Kind="Close" />
         </Button>
     </Grid>

@@ -9,7 +9,6 @@ using System.Windows.Input;
 using Ookii.Dialogs.Wpf;
 using Unosquare.FFME;
 using VideoCompressorGUI.ContentControls.Components;
-using VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab;
 using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
 using VideoCompressorGUI.Utils.Logger;
@@ -19,12 +18,12 @@ namespace VideoCompressorGUI.ContentControls
     public partial class DragAndDropWindowControl : UserControl
     {
         private Mp4FileValidator validator = new();
-    
+
         public DragAndDropWindowControl()
         {
             InitializeComponent();
         }
-        
+
         private void DragAndDropWindowControl_OnLoaded(object sender, RoutedEventArgs e)
         {
             Init();
@@ -36,9 +35,9 @@ namespace VideoCompressorGUI.ContentControls
             {
                 var loadedGeneralSettings = SettingsFolder.Load<GeneralSettingsData>();
                 
-                GeneralSettings.ValidateFFmpegPath(loadedGeneralSettings.FFmpegPath);
+                GeneralSettingsData.ValidateFFmpegPath(loadedGeneralSettings.FFmpegPath);
                 
-                if (GeneralSettings.ValidateFFmpegPath(loadedGeneralSettings.FFmpegPath).Count > 0)
+                if (GeneralSettingsData.ValidateFFmpegPath(loadedGeneralSettings.FFmpegPath).Count > 0)
                 {
                     ((MainWindow)Application.Current.MainWindow).PushContentControl(new FailLoad(), false);
                     return;
@@ -70,7 +69,7 @@ namespace VideoCompressorGUI.ContentControls
                     var extension = Path.GetExtension(files[i]);
                     this.snackbar.MessageQueue.DiscardDuplicates = true;
 
-                    this.snackbar.MessageQueue.Enqueue(extension + " not supported", null, null, null, false, false,
+                    this.snackbar.MessageQueue.Enqueue(extension + " " + Properties.Resources.NotSupported ,null, null, null, false, false,
                         TimeSpan.FromSeconds(1.5));
                     wasInvalid = true;
                     break;

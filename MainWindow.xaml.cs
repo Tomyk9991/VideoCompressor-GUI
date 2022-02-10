@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.PerformanceData;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,12 +33,7 @@ namespace VideoCompressorGUI
             
             AboutSettings.DeleteOldFiles();
             
-            System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
-            ni.Icon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetEntryAssembly()?.ManifestModule.Name);
-            ni.Visible = true;
-
-            iconImage.Source = ni.Icon.ToImageSource();
-            
+            iconImage.Source = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetEntryAssembly()?.ManifestModule.Name).ToImageSource();
             
             Dispatcher.Invoke(async () =>
             {

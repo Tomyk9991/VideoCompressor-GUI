@@ -6,6 +6,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:components="clr-namespace:VideoCompressorGUI.ContentControls.Components"
              xmlns:generalSettingsTab="clr-namespace:VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab"
+             xmlns:p="clr-namespace:VideoCompressorGUI.Properties"
              mc:Ignorable="d"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
@@ -24,20 +25,35 @@
         </Grid.RowDefinitions>
         
         <materialDesign:Card Grid.Row="0" Background="{StaticResource PrimaryHueDarkBrush}">
-            <TextBlock FontSize="16" HorizontalAlignment="Center" Text="Allgemeine Einstellungen"/>
+            <TextBlock FontSize="16" HorizontalAlignment="Center" Text="{x:Static p:Resources.GeneralSettings}"/>
         </materialDesign:Card>
         
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel>
+                <Grid Margin="5, 0, 0, 30">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <components:HeaderedSeperator Grid.Row="0" Header="{x:Static p:Resources.General}" />
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0, 15, 0, 0" Grid.Column="0">
+                        <TextBlock VerticalAlignment="Center" Margin="5, 0, 5, 0" Text="{x:Static p:Resources.Language}"/>
+                        <ComboBox x:Name="languageCombobox" Width="300">
+                            <ComboBoxItem Content="{x:Static p:Resources.English}"/>
+                            <ComboBoxItem Content="{x:Static p:Resources.German}"/>
+                        </ComboBox>
+                    </StackPanel>
+                </Grid>
+                
                 <Grid Margin="5, 0, 0, 0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     
-                    <components:HeaderedSeperator Margin="0, 15, 0, 0" Grid.Row="0" Header="Nach dem Komprimieren" />
+                    <components:HeaderedSeperator Margin="0, 15, 0, 0" Grid.Row="0" Header="{x:Static p:Resources.AfterCompression}" />
                     
-                    <Grid Margin="0, 0, 0, 30" Grid.Row="1">
+                    <Grid Margin="0, 0, 0, 15" Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
@@ -45,46 +61,34 @@
                         <StackPanel Margin="0, 15, 0, 0" Grid.Column="0">
                             <CheckBox x:Name="openExplorerAfterCompressCheckbox" 
                                       IsEnabled="{Binding ElementName=openExplorerAfterLastCompressCheckbox, Path=IsChecked, Converter={StaticResource InvertBooleanConverter}}"
-                                      Content="Öffne den Explorer nach der Komprimierung" />
+                                      Content="{x:Static p:Resources.OpenExplorerAfterCompression}" />
                             <CheckBox x:Name="openExplorerAfterLastCompressCheckbox"
                                       IsEnabled="{Binding ElementName=openExplorerAfterCompressCheckbox, Path=IsChecked, Converter={StaticResource InvertBooleanConverter}}"
-                                      Content="Öffne den Explorer nach der letzten Komprimierung in der Liste" />
+                                      Content="{x:Static p:Resources.OpenExplorerAfterLastCompression}" />
                         </StackPanel>
                         <StackPanel Margin="0, 15, 0, 0" Grid.Column="1">
-                            <CheckBox IsChecked="False" x:Name="deleteOriginalFileAfterCompressCheckbox" Content="Lösche die die Originaldatei, nach der Komprimierung" />
+                            <CheckBox IsChecked="False" x:Name="deleteOriginalFileAfterCompressCheckbox" Content="{x:Static p:Resources.DeleteOriginalAfterCompression}" />
                             <CheckBox x:Name="removeFromItemsListAfterCompressCheckbox" 
                                       IsEnabled="{Binding ElementName=deleteOriginalFileAfterCompressCheckbox, Path=IsChecked, Converter={StaticResource InvertBooleanConverter}}"
-                                      Content="Lösche das Listenobjekt nach der Komprimierung" />
+                                      Content="{x:Static p:Resources.DeleteListItemAfterCompression}" />
                         </StackPanel>
                     </Grid>
                 </Grid>
                 
-                <components:HeaderedSeperator Margin="0, 15, 0, 5" Header="Abhängigkeiten" />
-                <StackPanel>
-                    <Grid Margin="5, 0, 5, 0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="15*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox VerticalContentAlignment="Center" Grid.Column="0" Text="C:\ffmpeg\bin" x:Name="ffmpegPathTextBox" 
-                                 PreviewMouseUp="SelectFFmpegPath_OnClick" IsReadOnly="True" Margin="0, 0, 15, 0"
-                                 materialDesign:HintAssist.Hint="FFmpeg Verzeichnis"/>
-                        
-                        <Button Click="DownloadFFmpegButton_OnClick" x:Name="downloadFFmpegButton" Grid.Column="1"
-                                Style="{StaticResource MaterialDesignRaisedButton}"
-                                materialDesign:ButtonProgressAssist.IsIndicatorVisible="True">
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="Download"/>
-                                <TextBlock Text="FFmpeg dahin runterladen"/>
-                            </StackPanel>
-                        </Button>
-                    </Grid>
-                    
-                    <TextBlock Margin="15" x:Name="missingFilesTextBox"/>
-                </StackPanel>
+                <Grid Margin="5, 0, 0, 30">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <components:HeaderedSeperator Grid.Row="0" Header="Video editor" />
+                    <StackPanel Grid.Row="1" Margin="0, 15, 0, 0" Grid.Column="0">
+                        <CheckBox x:Name="thumbnailUpperThumbCheckBox" 
+                                  Content="{x:Static p:Resources.ShowThumbnail}" />
+                    </StackPanel>
+                </Grid>
                 
                 
-                <components:CollapsibleGroupBox x:Name="collapsibleGroupBoxNewestVideo" Header="Neuste Videos automatisch hinzufügen">
+                <components:CollapsibleGroupBox x:Name="collapsibleGroupBoxNewestVideo" Header="{x:Static p:Resources.NewestVideos}">
                     <Grid Margin="5, 0, 5, 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -92,7 +96,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBox Text="{Binding SelectedPath, RelativeSource={RelativeSource AncestorType={x:Type generalSettingsTab:GeneralSettings}}}" 
                             PreviewMouseUp="SelectNewVideoWatcherPath_OnClick" Grid.Column="0" IsReadOnly="True" Margin="0, 0, 5, 0"
-                                 materialDesign:HintAssist.Hint="Oberster Pfad für die Videos"/>
+                                 materialDesign:HintAssist.Hint="{x:Static p:Resources.HighestDirectory}"/>
                         <Grid Grid.Column="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />

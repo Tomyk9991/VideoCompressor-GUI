@@ -3,7 +3,6 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using FFmpeg.NET;
-using Unosquare.FFME;
 using VideoCompressorGUI.SettingsLoadables;
 using VideoCompressorGUI.Utils;
 

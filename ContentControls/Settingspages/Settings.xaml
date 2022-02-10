@@ -9,6 +9,7 @@
              xmlns:generalSettingsTab="clr-namespace:VideoCompressorGUI.ContentControls.Settingspages.GeneralSettingsTab"
              xmlns:infoTab="clr-namespace:VideoCompressorGUI.ContentControls.Settingspages.InfoTab"
              xmlns:videoBrowserTab="clr-namespace:VideoCompressorGUI.ContentControls.Settingspages.VideoBrowserTab"
+             xmlns:p="clr-namespace:VideoCompressorGUI.Properties"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
@@ -31,7 +32,7 @@
                                                      HorizontalAlignment="Center" Kind="Folder" />
                             <TextBlock
                                 HorizontalAlignment="Center"
-                                Text="Generall" />
+                                Text="{x:Static p:Resources.General}" />
                         </StackPanel>
                     </TabItem.Header>
                     <generalSettingsTab:GeneralSettings />
@@ -43,7 +44,7 @@
                                                      HorizontalAlignment="Center" Kind="Scroll" />
                             <TextBlock
                                 HorizontalAlignment="Center"
-                                Text="Pfadregeln" />
+                                Text="{x:Static p:Resources.Pathrules}" />
                         </StackPanel>
                     </TabItem.Header>
                     <settingspages:PathRulesSettings />
@@ -69,7 +70,7 @@
                                                      HorizontalAlignment="Center" Kind="Information" />
                             <TextBlock
                                 HorizontalAlignment="Center"
-                                Text="Über" />
+                                Text="{x:Static p:Resources.About}" />
                         </StackPanel>
                     </TabItem.Header>
                     <infoTab:AboutSettings />

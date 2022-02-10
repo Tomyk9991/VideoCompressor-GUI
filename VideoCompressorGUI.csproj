@@ -7,7 +7,7 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <TargetFramework>net6.0-windows</TargetFramework>
     <LangVersion>9</LangVersion>
-    <AssemblyVersion>0.0.0.5</AssemblyVersion>
+    <AssemblyVersion>0.0.0.6</AssemblyVersion>
     <Product>Compri</Product>
   </PropertyGroup>
 
@@ -25,6 +25,7 @@
     <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
+    <PackageReference Include="System.Management" Version="6.0.0" />
     <PackageReference Include="xFFmpeg.NET" Version="7.0.1" />
   </ItemGroup>
 
@@ -106,6 +107,21 @@
 
   <ItemGroup>
     <Folder Include="libs\bin" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

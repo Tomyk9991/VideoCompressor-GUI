@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using MaterialDesignThemes.Wpf;
 using Unosquare.FFME;
+using VideoCompressorGUI.Properties;
 
 namespace VideoCompressorGUI.Keybindings
 {
@@ -33,7 +34,7 @@ namespace VideoCompressorGUI.Keybindings
                         playbackSpeed = Math.Min(playbackSpeed + 0.25d, 2.0d);
                         
                         snackbarNotifier.MessageQueue.Clear();
-                        snackbarNotifier.MessageQueue.Enqueue("Wiedergabegeschwindigkeit: " + playbackSpeed.ToString("F"), null, null, null, false, false,
+                        snackbarNotifier.MessageQueue.Enqueue($"{Resources.Playbackspeed}: " + playbackSpeed.ToString("F"), null, null, null, false, false,
                             TimeSpan.FromSeconds(0.5));
                         
                         videoPlayer.SpeedRatio = playbackSpeed;
@@ -49,7 +50,7 @@ namespace VideoCompressorGUI.Keybindings
                         playbackSpeed = Math.Max(playbackSpeed - 0.25d, 0.25d);
                         
                         snackbarNotifier.MessageQueue.Clear();
-                        snackbarNotifier.MessageQueue.Enqueue("Wiedergabegeschwindigkeit: " + playbackSpeed.ToString("F"), null, null, null, false, false,
+                        snackbarNotifier.MessageQueue.Enqueue($"{Resources.Playbackspeed}: " + playbackSpeed.ToString("F"), null, null, null, false, false,
                             TimeSpan.FromSeconds(0.5));
                         
                         videoPlayer.SpeedRatio = playbackSpeed;

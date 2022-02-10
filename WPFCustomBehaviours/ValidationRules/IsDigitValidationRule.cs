@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
+using VideoCompressorGUI.Properties;
 
 namespace VideoCompressorGUI.WPFCustomBehaviours.ValidationRules
 {
@@ -10,11 +11,11 @@ namespace VideoCompressorGUI.WPFCustomBehaviours.ValidationRules
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
             => string.IsNullOrWhiteSpace((value ?? "").ToString())
-                ? new ValidationResult(false, "Zahl ist notwendig")
+                ? new ValidationResult(false, Resources.DigitRequired)
                 : ((string)value).Length > 7
-                    ? new ValidationResult(false, "Zahl zu lang.")
+                    ? new ValidationResult(false, Resources.DigitTooLong)
                     : onlyDigitsRegex.Match((string)value).Success
-                        ? new ValidationResult(false, "Nur Zahlen")
+                        ? new ValidationResult(false, Resources.OnlyDigits)
                         : ValidationResult.ValidResult;
     }
 }

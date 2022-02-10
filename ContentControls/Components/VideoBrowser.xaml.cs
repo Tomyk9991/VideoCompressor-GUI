@@ -156,7 +156,6 @@ namespace VideoCompressorGUI.ContentControls.Components
 
                     watcher.Deleted += (_, args) =>
                     {
-                        Console.WriteLine("File system watcher delete");
                         var watcherToRemove =
                             fileSystemWatchers.FirstOrDefault(t => t.Watcher.Path == Path.GetDirectoryName(args.FullPath));
 
@@ -227,7 +226,7 @@ namespace VideoCompressorGUI.ContentControls.Components
                     string extension = Path.GetExtension(newFiles[i]);
                     this.snackbar.MessageQueue.DiscardDuplicates = true;
 
-                    this.snackbar.MessageQueue.Enqueue(extension + " not supported", null, null, null, false, false,
+                    this.snackbar.MessageQueue.Enqueue(extension + " " + Properties.Resources.NotSupported, null, null, null, false, false,
                         TimeSpan.FromSeconds(1.5));
                     wasInvalid = true;
                     break;
@@ -255,7 +254,6 @@ namespace VideoCompressorGUI.ContentControls.Components
         /// <returns>The amount of items in the list after the remove</returns>
         public int RemoveItem(VideoFileMetaData target, bool checkWatchers = true)
         {
-            Console.WriteLine("Remove Item + checkWatchers: " + checkWatchers);
             if (target == null)
             {
                 return this.videoFileMetaDatas.Count;
@@ -282,8 +280,6 @@ namespace VideoCompressorGUI.ContentControls.Components
             dragAndDrop.Visibility = this.listboxFiles.Items.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
 
             var currentlySelected = (VideoFileMetaData) listboxFiles.SelectedItem;
-
-            Console.WriteLine(currentlySelected == null ? "selected: null" : "selected: nicht null");
             
             if (currentlySelected == target || currentlySelected == null)
             {
