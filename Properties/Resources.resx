@@ -323,4 +323,7 @@
 	<data name="EditPresets" xml:space="preserve">
 		<value>Edit presets</value>
 	</data>
+	<data name="FileEnding" xml:space="preserve">
+		<value>File ending</value>
+	</data>
 </root>
