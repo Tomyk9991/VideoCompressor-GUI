@@ -29,7 +29,7 @@
             
             <ListBox AllowDrop="True" Drop="ListboxFiles_OnDrop" Grid.Row="1"
                      VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling"
-                     Background="#343434" HorizontalContentAlignment="Stretch"
+                     Background="#303030" HorizontalContentAlignment="Stretch"
                      SelectionChanged="ListboxFiles_OnSelectionChanged" x:Name="listboxFiles">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
