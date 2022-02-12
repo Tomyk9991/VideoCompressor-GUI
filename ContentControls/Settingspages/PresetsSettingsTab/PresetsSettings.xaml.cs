@@ -1,5 +1,4 @@
 using System;
-using System.Management;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -51,7 +50,7 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
             var r2 = isDigitValidationRule.Validate(bitrateTextBox.Text, null);
             var r3 = isDigitValidationRule.Validate(targetSizeTextBox.Text, null);
 
-            bool nothingChanged = true;
+            bool nothingChanged = lastPreset != null;
             
             if (lastPresetCopy != null)
                 nothingChanged = lastPresetCopy.Equals(lastPreset);
@@ -191,7 +190,11 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
 
         private void OnDigit_Enter(object sender, TextChangedEventArgs e)
         {
-            if (lastPreset == null) return;
+            if (lastPreset == null)
+            {
+                ValidateCanUse();
+                return;
+            }
             
             bool wasDigit = false;
             int? oldValue = null;
