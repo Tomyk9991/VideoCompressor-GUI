@@ -7,16 +7,18 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <TargetFramework>net6.0-windows</TargetFramework>
     <LangVersion>9</LangVersion>
-    <AssemblyVersion>0.0.0.6</AssemblyVersion>
+    <AssemblyVersion>0.0.0.7</AssemblyVersion>
     <Product>Compri</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <PlatformTarget>x64</PlatformTarget>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PlatformTarget>x64</PlatformTarget>
+    <OutputType>WinExe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>

@@ -191,6 +191,8 @@ namespace VideoCompressorGUI.ContentControls.Settingspages
 
         private void OnDigit_Enter(object sender, TextChangedEventArgs e)
         {
+            if (lastPreset == null) return;
+            
             bool wasDigit = false;
             int? oldValue = null;
             if (isDigitValidationRule.Validate(((TextBox)sender).Text, null).IsValid)
