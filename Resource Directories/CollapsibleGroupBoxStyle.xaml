@@ -5,8 +5,11 @@
                     xmlns:valueConverters="clr-namespace:VideoCompressorGUI.WPFCustomBehaviours.ValueConverters">
 
     <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    
     <valueConverters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     <valueConverters:MathConverter x:Key="MathConverter" />
+    <valueConverters:FileNameFromPathConverter x:Key="FileNameFromPathConverter"/>
+    <valueConverters:FileExtensionFromPathConverter x:Key="ExtensionFromPathConverter"/>
 
     <Style TargetType="components:CollapsibleGroupBox">
         <Setter Property="Template">

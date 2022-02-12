@@ -313,6 +313,15 @@ namespace VideoCompressorGUI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File ending.
+        /// </summary>
+        public static string FileEnding {
+            get {
+                return ResourceManager.GetString("FileEnding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File name.
         /// </summary>
         public static string Filename {

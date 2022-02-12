@@ -236,4 +236,7 @@
     <data name="EditPresets" xml:space="preserve">
         <value>Presets bearbeiten</value>
     </data>
+    <data name="FileEnding" xml:space="preserve">
+        <value>Dateiendung</value>
+    </data>
 </root>

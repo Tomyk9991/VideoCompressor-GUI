@@ -18,81 +18,179 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <!-- Header -->
         <materialDesign:Card Grid.Row="0" Background="{StaticResource PrimaryHueDarkBrush}">
             <TextBlock FontSize="16" HorizontalAlignment="Center"
                        Text="Video Browser" />
         </materialDesign:Card>
-        <components:HeaderedSeperator Grid.Row="1" Margin="0, 15, 0, 15" Header="{x:Static p:Resources.VideoBrowserListItem}" />
-        
-            <UniformGrid Grid.Row="2">
+        <components:HeaderedSeperator Grid.Row="1" Margin="0, 15, 0, 15"
+                                      Header="{x:Static p:Resources.VideoBrowserListItem}" />
+
+        <UniformGrid Grid.Row="2">
             <CheckBox IsChecked="False" x:Name="openFolderCheckbox">
                 <StackPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Margin="0, 0, 5, 0" Kind="FolderArrowRight"/>
-                    <TextBlock Text="{x:Static p:Resources.OpenThisElementInExplorer}"/>
+                    <materialDesign:PackIcon Margin="0, 0, 5, 0" Kind="FolderArrowRight" />
+                    <TextBlock Text="{x:Static p:Resources.OpenThisElementInExplorer}" />
                 </StackPanel>
             </CheckBox>
             <CheckBox IsChecked="False" x:Name="deleteItemCheckbox">
                 <StackPanel Orientation="Horizontal">
-                <materialDesign:PackIcon Margin="0, 0, 5, 0" Kind="Delete"/>
-                <TextBlock Text="{x:Static p:Resources.DeleteThisElement}"/>
+                    <materialDesign:PackIcon Margin="0, 0, 5, 0" Kind="Delete" />
+                    <TextBlock Text="{x:Static p:Resources.DeleteThisElement}" />
                 </StackPanel>
             </CheckBox>
-                
-            </UniformGrid>
-        
-        
-        <Grid Grid.Row="3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
 
-                <Image Margin="5, 0, 0, 0" Grid.Column="0" Stretch="Uniform" Source="https://i.imgur.com/8jdHGe2.png" />
-                
-                <materialDesign:Card Grid.Column="1"
-                                     materialDesign:ShadowAssist.ShadowDepth="Depth3"
-                                     materialDesign:ShadowAssist.ShadowEdges="Bottom,Right">
+        </UniformGrid>
 
-                    <materialDesign:Card.Background>
-                        <LinearGradientBrush StartPoint="0, 1" EndPoint="1, 1">
-                            <GradientStop Color="#aa009688"
-                                          Offset="0.92" />
-                            <GradientStop Color="#00000000" Offset="0.92" />
-                        </LinearGradientBrush>
-                    </materialDesign:Card.Background>
 
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" Margin="15, 15, 15, 0">
-                            <TextBlock TextWrapping="WrapWithOverflow" Text="F:\Videos\Valorant"></TextBlock>
-                            <TextBlock
-                                Text="00:01:22">
-                            </TextBlock>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                                    Grid.Row="1" Margin="0, 0, 5, 0">
-                            <TextBlock HorizontalAlignment="Right"
-                                       Text="99.2%" />
+        <ListBox Grid.Row="3">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#414141" />
+                        </Trigger>
+                    </Style.Triggers>
 
-                            <Button Width="20" Height="20"
-                                    Visibility="{Binding ElementName=deleteItemCheckbox, Path=IsChecked, Converter={StaticResource BoolToVis}}"
-                                    Style="{StaticResource MaterialDesignIconForegroundButton}">
-                                <materialDesign:PackIcon Width="15" Height="15" Kind="Delete" />
-                            </Button>
-                            <Button Width="20" Height="20"
-                                    Visibility="{Binding ElementName=openFolderCheckbox, Path=IsChecked, Converter={StaticResource BoolToVis}}"
-                                    Style="{StaticResource MaterialDesignIconForegroundButton}">
-                                <materialDesign:PackIcon Width="15" Height="15" Kind="FolderArrowRight" />
-                            </Button>
-                        </StackPanel>
-                    </Grid>
-                </materialDesign:Card>
-            </Grid>
+                    <Style.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5,10,10,5" />
+                            <Setter Property="Background" Value="Black"/>
+                        </Style>
+                    </Style.Resources>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBoxItem HorizontalContentAlignment="Stretch" IsSelected="True">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Margin="5, 0, 0, 0" Grid.Column="0" Stretch="Uniform"
+                           Source="https://i.imgur.com/8jdHGe2.png" />
+
+                    <materialDesign:Card Grid.Column="1"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom,Right">
+
+                        <materialDesign:Card.Background>
+                            <LinearGradientBrush StartPoint="0, 1" EndPoint="1, 1">
+                                <GradientStop Color="#aa009688"
+                                              Offset="0.92" />
+                                <GradientStop Color="#00000000" Offset="0.92" />
+                            </LinearGradientBrush>
+                        </materialDesign:Card.Background>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Margin="15, 15, 15, 0">
+                                <TextBlock FontSize="16" FontWeight="Bold" FontStyle="Italic"
+                                           TextWrapping="WrapWithOverflow" Text="Videoname">
+                                </TextBlock>
+                                <Separator />
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontSize="9">
+                                        <TextBlock Text="{x:Static p:Resources.Length}" />
+                                        <TextBlock xml:space="preserve" Text=": " />
+                                        <TextBlock Text="00:01:22" />
+                                    </TextBlock>
+                                    <TextBlock Margin="15, 0, 0, 0" FontSize="9">
+                                        <TextBlock Text="{x:Static p:Resources.FileEnding}" />
+                                        <TextBlock Text="mp4" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                        Grid.Row="1" Margin="0, 0, 5, 0">
+                                <TextBlock HorizontalAlignment="Right"
+                                           Text="99.2%" />
+
+                                <Button Width="20" Height="20"
+                                        Visibility="{Binding ElementName=deleteItemCheckbox, Path=IsChecked, Converter={StaticResource BoolToVis}}"
+                                        Style="{StaticResource MaterialDesignIconForegroundButton}">
+                                    <materialDesign:PackIcon Width="15" Height="15" Kind="Delete" />
+                                </Button>
+                                <Button Width="20" Height="20"
+                                        Visibility="{Binding ElementName=openFolderCheckbox, Path=IsChecked, Converter={StaticResource BoolToVis}}"
+                                        Style="{StaticResource MaterialDesignIconForegroundButton}">
+                                    <materialDesign:PackIcon Width="15" Height="15" Kind="FolderArrowRight" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </materialDesign:Card>
+                </Grid>
+            </ListBoxItem>
+            <ListBoxItem HorizontalContentAlignment="Stretch">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Margin="5, 0, 0, 0" Grid.Column="0" Stretch="Uniform"
+                           Source="https://i.imgur.com/8jdHGe2.png" />
+
+                    <materialDesign:Card Grid.Column="1"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom,Right">
+
+                        <materialDesign:Card.Background>
+                            <LinearGradientBrush StartPoint="0, 1" EndPoint="1, 1">
+                                <GradientStop Color="#aa009688"
+                                              Offset="0.92" />
+                                <GradientStop Color="#00000000" Offset="0.92" />
+                            </LinearGradientBrush>
+                        </materialDesign:Card.Background>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Margin="15, 15, 15, 0">
+                                <TextBlock FontSize="16" FontWeight="Bold" FontStyle="Italic"
+                                           TextWrapping="WrapWithOverflow" Text="Videoname">
+                                </TextBlock>
+                                <Separator />
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontSize="9">
+                                        <TextBlock Text="{x:Static p:Resources.Length}" />
+                                        <TextBlock xml:space="preserve" Text=": " />
+                                        <TextBlock Text="00:01:22" />
+                                    </TextBlock>
+                                    <TextBlock Margin="15, 0, 0, 0" FontSize="9">
+                                        <TextBlock Text="{x:Static p:Resources.FileEnding}" />
+                                        <TextBlock Text="mp4" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                        Grid.Row="1" Margin="0, 0, 5, 0">
+                                <TextBlock HorizontalAlignment="Right"
+                                           Text="99.2%" />
+
+                                <Button Width="20" Height="20"
+                                        Visibility="{Binding ElementName=deleteItemCheckbox, Path=IsChecked, Converter={StaticResource BoolToVis}}"
+                                        Style="{StaticResource MaterialDesignIconForegroundButton}">
+                                    <materialDesign:PackIcon Width="15" Height="15" Kind="Delete" />
+                                </Button>
+                                <Button Width="20" Height="20"
+                                        Visibility="{Binding ElementName=openFolderCheckbox, Path=IsChecked, Converter={StaticResource BoolToVis}}"
+                                        Style="{StaticResource MaterialDesignIconForegroundButton}">
+                                    <materialDesign:PackIcon Width="15" Height="15" Kind="FolderArrowRight" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </materialDesign:Card>
+                </Grid>
+            </ListBoxItem>
+        </ListBox>
+
     </Grid>
 </UserControl>
